@@ -1,0 +1,109 @@
+/* Dark Mode Fixes for Modul AI Documentation */
+
+/* Table row alternating colors in dark mode */
+.dark tr.bg-gray-50 { background-color: rgba(30, 41, 59, 0.5) !important; }
+.dark tr.dark\:bg-gray-800\/50 { background-color: rgba(30, 41, 59, 0.5) !important; }
+
+/* Table overflow on mobile */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* Card dark mode fixes */
+.dark .border-gray-200 { border-color: rgba(55, 65, 81, 0.8) !important; }
+.dark .border-gray-300 { border-color: rgba(75, 85, 99, 0.8) !important; }
+
+/* Pre/code block overflow */
+pre {
+  overflow-x: auto;
+  max-width: 100%;
+}
+pre code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Mermaid diagram background in dark mode */
+.dark .mermaid {
+  background: #1e293b !important;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+/* TOC and nav dark mode */
+.dark .bg-gray-50 {
+  background-color: rgba(30, 41, 59, 0.4) !important;
+}
+
+/* Table header dark mode */
+.dark thead tr {
+  background-color: rgba(30, 41, 59, 0.7) !important;
+}
+
+/* Inline code in dark mode */
+.dark code:not(pre code) {
+  background-color: rgba(55, 65, 81, 0.5);
+  color: #fca5a5;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+/* Ensure text colors in dark mode for common patterns */
+.dark .text-gray-600 { color: #d1d5db !important; }
+.dark .text-gray-700 { color: #e5e7eb !important; }
+.dark .text-gray-800 { color: #f3f4f6 !important; }
+
+/* Card with border dark mode */
+.dark .border-red-200 { border-color: rgba(153, 27, 27, 0.6) !important; }
+.dark .border-green-200 { border-color: rgba(22, 101, 52, 0.6) !important; }
+.dark .border-orange-200 { border-color: rgba(154, 52, 18, 0.6) !important; }
+.dark .border-yellow-200 { border-color: rgba(161, 98, 7, 0.6) !important; }
+.dark .border-purple-200 { border-color: rgba(107, 33, 168, 0.6) !important; }
+
+/* Ensure bg-opacity overrides work */
+.dark .bg-red-50 { background-color: rgba(127, 29, 29, 0.2) !important; }
+.dark .bg-green-50 { background-color: rgba(20, 83, 45, 0.2) !important; }
+.dark .bg-orange-50 { background-color: rgba(124, 45, 18, 0.2) !important; }
+.dark .bg-yellow-50 { background-color: rgba(113, 63, 18, 0.2) !important; }
+.dark .bg-purple-50 { background-color: rgba(88, 28, 135, 0.2) !important; }
+
+/* Text color for coloured cards in dark mode */
+.dark .text-red-700 { color: #fca5a5 !important; }
+.dark .text-red-800 { color: #fecaca !important; }
+.dark .text-green-700 { color: #86efac !important; }
+.dark .text-green-800 { color: #bbf7d0 !important; }
+.dark .text-orange-700 { color: #fdba74 !important; }
+.dark .text-orange-800 { color: #fed7aa !important; }
+.dark .text-yellow-700 { color: #fde047 !important; }
+.dark .text-yellow-800 { color: #fef08a !important; }
+.dark .text-purple-700 { color: #d8b4fe !important; }
+.dark .text-purple-800 { color: #e9d5ff !important; }
+
+/* Primary text colors */
+.dark .text-primary-600 { color: #93c5fd !important; }
+.dark .text-primary-700 { color: #bfdbfe !important; }
+
+/* Links in dark mode */
+.dark a.text-gray-600:hover,
+.dark a.text-gray-700:hover {
+  color: #93c5fd !important;
+}
+
+/* Search results */
+.dark #search-results a:hover {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+/* Footer */
+.dark .text-gray-500 { color: #9ca3af !important; }
+
+/* Ensure pre tags don't overflow their cards */
+.card-prompt pre {
+  max-width: 100%;
+  overflow-x: auto;
+}

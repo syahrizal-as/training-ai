@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 7: Vector Database — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 7 — Vector Database</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 font-medium">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 7: Vector Database</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 7</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Vector Database</h1><p class="text-lg text-gray-600 dark:text-gray-400">Memahami vector database: arsitektur, indexing, dan perbandingan Pinecone, Chroma, Milvus, Weaviate, dan PGVector untuk aplikasi AI modern.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami definisi vector database dan perbedaannya dengan database tradisional</li><li>Mengetahui berbagai solusi vector database: Pinecone, Chroma, Milvus, Weaviate, PGVector</li><li>Memahami teknik indexing vektor: HNSW dan IVF</li><li>Menguasai konsep filtering, hybrid search, dan pertimbangan self-hosted vs cloud</li><li>Mampu memilih vector database yang tepat berdasarkan kebutuhan proyek</li></ul></div>
+
+<div class="callout callout-info" style="background:#faf5ff;border-left:4px solid #8b5cf6;color:#6b21a8;"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Membedakan kapan menggunakan vector database vs database tradisional</li><li>Menganalisis trade-off berbagai algoritma indexing (HNSW vs IVF)</li><li>Membandingkan fitur dan keterbatasan setiap solusi vector database</li><li>Merancang arsitektur sistem yang mengintegrasikan vector database</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#definisi" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.1 Definisi Vector Database</a></li><li><a href="#vs-tradisional" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.2 Vector DB vs Database Tradisional</a></li><li><a href="#pinecone" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.3 Pinecone</a></li><li><a href="#chroma" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.4 Chroma</a></li><li><a href="#milvus" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.5 Milvus</a></li><li><a href="#weaviate" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.6 Weaviate</a></li><li><a href="#pgvector" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.7 PGVector</a></li><li><a href="#indexing" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.8 Indexing: HNSW & IVF</a></li><li><a href="#perbandingan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.9 Perbandingan & Arsitektur</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7.10 Ringkasan</a></li></ul></nav>
+
+<section id="definisi" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.1 Definisi Vector Database</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Apa itu Vector Database?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Vector Database</strong> adalah sistem database yang dirancang khusus untuk <strong>menyimpan, mengindeks, dan mencari</strong> data dalam bentuk vektor embedding berdimensi tinggi. Tidak seperti database tradisional yang mencari berdasarkan pencocokan eksak (exact match) atau range query, vector database mencari berdasarkan <strong>kemiripan semantik</strong> — menemukan vektor yang paling mirip dengan vektor query menggunakan metrik seperti cosine similarity.</p>
+
+<div class="callout callout-info"><strong>📖 Mengapa diperlukan?</strong> Database tradisional (SQL, NoSQL) tidak dioptimalkan untuk operasi similarity search pada vektor berdimensi tinggi. Linear scan (membandingkan query dengan semua vektor satu per satu) menjadi sangat lambat ketika data mencapai jutaan atau miliaran vektor. Vector database menggunakan <strong>Approximate Nearest Neighbor (ANN)</strong> algorithms untuk mempercepat pencarian.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Komponen Utama Vector Database</h3>
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TD
+    subgraph "Vector Database"
+        A["📥 Ingestion Layer<br/>Insert / Upsert Vectors"]
+        B["📊 Indexing Engine<br/>(HNSW / IVF / PQ)"]
+        C["🗄️ Storage Layer<br/>Vectors + Metadata"]
+        D["🔍 Query Engine<br/>Similarity Search"]
+        E["🔧 Filtering<br/>Metadata + Vector"]
+        F["📤 API / SDK<br/>REST, gRPC, Python"]
+    end
+
+    G["🧠 Embedding Model"] -->|"Generate Vectors"| A
+    A --> B
+    B --> C
+    D --> B
+    E --> D
+    D --> F
+    F --> H["💻 Aplikasi Client<br/>(RAG, Search, RecSys)"]
+</div>
+</section>
+
+<section id="vs-tradisional" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.2 Vector DB vs Database Tradisional</h2>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Aspek</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Database Tradisional<br/>(SQL/NoSQL)</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Vector Database</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Tipe Data</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Structured (rows, columns), JSON, key-value</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Dense vectors (float arrays) + metadata</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Query</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Exact match, range, JOINs, aggregations</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Similarity / Nearest Neighbor (ANN)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Index</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">B-Tree, Hash, Inverted Index, GiST</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">HNSW, IVF, PQ, DiskANN</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Akurasi Query</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">100% exact (by default)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Approximate (tunable accuracy vs speed)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Use Case</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">OLTP, OLAP, general-purpose</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Semantic search, RAG, recommendation, anomaly detection</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Contoh Query</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-mono text-xs">SELECT * WHERE status='active'</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-mono text-xs">query(vector).top_k(10).filter(metadata)</td></tr>
+</tbody></table>
+
+<div class="callout callout-best"><strong>💡 Tidak mutually exclusive:</strong> Vector database dan database tradisional bukan "salah satu atau yang lain". Arsitektur modern sering menggabungkan keduanya: PostgreSQL untuk data transaksional + PGVector untuk similarity search, atau MongoDB (NoSQL) + dedicated vector index. Pattern ini disebut <strong>polyglot persistence</strong>.</div>
+</section>
+
+<section id="pinecone" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.3 Pinecone</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Overview</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Pinecone</strong> adalah vector database <strong>fully-managed cloud-native</strong> yang dirancang khusus untuk production workloads. Tidak ada opsi self-hosted — semuanya berjalan di cloud Pinecone. Fokus pada kemudahan penggunaan, skalabilitas otomatis, dan performa tinggi tanpa operational overhead.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Fitur Utama</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Fitur</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Deskripsi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Deployment</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Cloud-only (AWS, GCP, Azure). Serverless atau pod-based.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Indexing</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Proprietary ANN (pod-based) + serverless index</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Metadata Filtering</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Single-stage filtering (filter before/after ANN)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Hybrid Search</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">❌ Tidak native (perlu integrasi terpisah)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Dimensi Maks</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">20,000 dimensi</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">SDK</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Python, TypeScript, Java, Go</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Harga</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Free tier (1 pod), paid dari ~$70/bulan</td></tr>
+</tbody></table>
+
+<pre class="language-python"><code>from pinecone import Pinecone, ServerlessSpec
+
+# Inisialisasi
+pc = Pinecone(api_key="YOUR_API_KEY")
+
+# Buat index
+pc.create_index(
+    name="my-docs",
+    dimension=1536,
+    metric="cosine",
+    spec=ServerlessSpec(cloud="aws", region="us-east-1")
+)
+
+# Insert vectors
+index = pc.Index("my-docs")
+index.upsert(vectors=[
+    ("doc1", [0.1, 0.2, ..., 0.3], {"title": "AI Basics"}),
+    ("doc2", [0.4, 0.5, ..., 0.6], {"title": "ML Advanced"}),
+])
+
+# Query
+results = index.query(
+    vector=[0.15, 0.25, ..., 0.35],  # query embedding
+    top_k=5,
+    filter={"title": {"$eq": "AI Basics"}},  # metadata filter
+    include_metadata=True
+)
+</code></pre>
+</section>
+
+<section id="chroma" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.4 Chroma</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Overview</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Chroma</strong> adalah vector database <strong>open-source</strong> yang dirancang untuk kemudahan pengembangan (developer-friendly). Chroma sangat populer di kalangan AI engineer karena integrasi native dengan framework seperti LangChain dan LlamaIndex, serta kemampuannya berjalan secara embedded (in-process) maupun client-server.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Fitur Utama</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Fitur</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Deskripsi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Deployment</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Self-hosted open-source + Chroma Cloud (beta)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Indexing</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">HNSW (via hnswlib)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Metadata Filtering</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Basic filtering (eq, ne, gt, lt, in)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Hybrid Search</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">❌ Tidak native</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Embedding Integration</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Built-in: OpenAI, Cohere, HuggingFace, dll</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">SDK</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Python, JavaScript (first-class)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Harga</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Open-source (free), Cloud: TBD</td></tr>
+</tbody></table>
+
+<pre class="language-python"><code>import chromadb
+
+# Inisialisasi client (embedded mode)
+client = chromadb.PersistentClient(path="./chroma_data")
+
+# Buat collection
+collection = client.create_collection(
+    name="my_docs",
+    metadata={"hnsw:space": "cosine"}
+)
+
+# Insert vectors
+collection.add(
+    documents=["AI adalah kecerdasan buatan", "ML adalah subset AI"],
+    metadatas=[{"topic": "AI"}, {"topic": "ML"}],
+    ids=["doc1", "doc2"]
+)
+
+# Query
+results = collection.query(
+    query_texts=["apa itu artificial intelligence?"],
+    n_results=5,
+    where={"topic": "AI"}  # metadata filter
+)
+print(results["documents"])
+</code></pre>
+
+<div class="callout callout-warning"><strong>⚠️ Catatan:</strong> Chroma sangat cocok untuk prototyping dan project skala kecil-menengah. Untuk production skala besar (miliaran vektor), pertimbangkan Milvus atau Pinecone. Chroma Cloud masih dalam tahap awal (beta).</div>
+</section>
+
+<section id="milvus" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.5 Milvus</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Overview</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Milvus</strong> adalah vector database <strong>open-source cloud-native</strong> yang dirancang untuk skala miliaran vektor. Dikembangkan oleh Zilliz, Milvus menggunakan arsitektur <strong>disaggregated storage & compute</strong> — memisahkan storage, indexing, dan query ke komponen terpisah untuk skalabilitas horizontal.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Fitur Utama</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Fitur</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Deskripsi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Deployment</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Self-hosted (Docker/K8s) + Zilliz Cloud (managed)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Indexing</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">HNSW, IVF_FLAT, IVF_SQ8, IVF_PQ, DiskANN, GPU IVF</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Metadata Filtering</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Advanced: scalar filtering, boolean expressions</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Hybrid Search</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Native: BM25 + vector (since v2.4)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Dimensi Maks</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">32,768 dimensi</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Skalabilitas</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Horizontal scaling, miliaran vektor</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">SDK</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Python, Java, Go, Node.js, RESTful</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Harga</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Open-source (free), Zilliz Cloud: free tier + usage-based</td></tr>
+</tbody></table>
+
+<pre class="language-python"><code>from pymilvus import MilvusClient, DataType
+
+# Inisialisasi client
+client = MilvusClient("./milvus_demo.db")  # local / bisa remote
+
+# Buat schema + collection
+schema = client.create_schema(auto_id=True)
+schema.add_field("id", DataType.INT64, is_primary=True)
+schema.add_field("vector", DataType.FLOAT_VECTOR, dim=1536)
+schema.add_field("title", DataType.VARCHAR, max_length=256)
+
+client.create_collection(
+    collection_name="my_docs",
+    schema=schema,
+    index_params={
+        "metric_type": "COSINE",
+        "index_type": "HNSW",
+        "params": {"M": 16, "efConstruction": 200}
+    }
+)
+
+# Insert vectors
+client.insert("my_docs", [
+    {"vector": [0.1, 0.2, ..., 0.3], "title": "AI Basics"},
+    {"vector": [0.4, 0.5, ..., 0.6], "title": "ML Advanced"},
+])
+
+# Query
+results = client.search(
+    collection_name="my_docs",
+    data=[[0.15, 0.25, ..., 0.35]],
+    limit=5,
+    filter='title like "AI%"',
+    output_fields=["title"]
+)
+</code></pre>
+</section>
+
+<section id="weaviate" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.6 Weaviate</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Overview</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Weaviate</strong> adalah vector database <strong>open-source</strong> dengan arsitektur GraphQL-native dan dukungan <strong>hybrid search</strong> (vector + keyword) built-in. Weaviate menonjol karena kemampuannya menggabungkan semantic search dengan BM25 keyword search dalam satu query, serta dukungan untuk multi-tenancy.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Fitur Utama</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Fitur</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Deskripsi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Deployment</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Self-hosted (Docker/K8s) + Weaviate Cloud (WCD)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Indexing</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">HNSW + Flat (brute-force) + PQ (compression)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Metadata Filtering</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Advanced with GraphQL where filters</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Hybrid Search</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Native: BM25 + Vector (alpha tuning)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Multi-Tenancy</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Built-in tenant isolation</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Embedding Integration</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Auto-vectorization (OpenAI, Cohere, HuggingFace)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">API Style</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">GraphQL-first + REST</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Harga</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Open-source (free), Cloud: free sandbox + paid</td></tr>
+</tbody></table>
+
+<pre class="language-python"><code>import weaviate
+
+# Inisialisasi client
+client = weaviate.connect_to_local()  # atau Weaviate Cloud
+
+# Buat collection
+collection = client.collections.create(
+    name="MyDocs",
+    properties=[
+        weaviate.Property(name="title", data_type=weaviate.DataType.TEXT),
+        weaviate.Property(name="content", data_type=weaviate.DataType.TEXT),
+    ],
+    vectorizer_config=weaviate.Configure.Vectorizer.text2vec_openai()
+)
+
+# Insert dokumen (auto-vectorized)
+collection.data.insert({
+    "title": "AI Basics",
+    "content": "Artificial Intelligence adalah..."
+})
+
+# Hybrid search (vector + keyword)
+results = collection.query.hybrid(
+    query="apa itu artificial intelligence?",
+    alpha=0.5,  # 0 = pure keyword, 1 = pure vector
+    limit=5,
+    return_properties=["title", "content"]
+)
+</code></pre>
+
+<div class="callout callout-best"><strong>💡 Keunggulan Weaviate:</strong> Hybrid search native adalah fitur paling membedakan. Sistem bisa mencari dengan kombinasi semantic similarity + keyword matching dalam satu query. Sangat cocok untuk search engines dan RAG systems yang butuh precision tinggi.</div>
+</section>
+
+<section id="pgvector" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.7 PGVector</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Overview</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>PGVector</strong> adalah <strong>PostgreSQL extension</strong> yang menambahkan kemampuan vector search ke PostgreSQL. Alih-alih database terpisah, PGVector memungkinkan penyimpanan vektor dan metadata dalam tabel PostgreSQL yang sama — ideal untuk tim yang sudah menggunakan PostgreSQL dan ingin menambahkan vector search tanpa operational overhead database baru.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Fitur Utama</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Fitur</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Deskripsi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Deployment</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">PostgreSQL extension (self-hosted) atau Supabase/Neon/Tembo (managed)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Indexing</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">IVFFlat, HNSW (since v0.5.0)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Metadata Filtering</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Full SQL WHERE clauses + JOINs</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Hybrid Search</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Manual: vector search + text search (tsvector)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Dimensi Maks</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">2,000 dimensi (recommended)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Skalabilitas</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Vertical (PG single node). ~10-50M vektor practical limit.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">ACID</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Full transactional support</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Harga</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Open-source (free). Managed: Supabase free tier+</td></tr>
+</tbody></table>
+
+<pre class="language-sql"><code>-- Enable PGVector extension
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Buat tabel dengan kolom vektor
+CREATE TABLE documents (
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT,
+    embedding vector(1536),    -- Dimensi 1536 (text-embedding-3-small)
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Buat index HNSW
+CREATE INDEX ON documents USING hnsw (embedding vector_cosine_ops);
+
+-- Insert data
+INSERT INTO documents (title, content, embedding)
+VALUES (
+    'AI Basics',
+    'Artificial Intelligence adalah...',
+    '[0.012, -0.453, 0.789, ...]'::vector
+);
+
+-- Vector similarity search + metadata filtering
+SELECT id, title, content,
+       1 - (embedding <=> '[0.015, -0.448, 0.792, ...]'::vector) AS similarity
+FROM documents
+WHERE created_at > '2026-01-01'
+ORDER BY embedding <=> '[0.015, -0.448, 0.792, ...]'::vector
+LIMIT 10;
+</code></pre>
+
+<div class="callout callout-warning"><strong>⚠️ Keterbatasan PGVector:</strong> Tidak didesain untuk skala miliaran vektor seperti Milvus. Indexing HNSW bisa lambat untuk dataset sangat besar (>50M). Tidak ada native hybrid search — perlu dikombinasikan manual dengan PostgreSQL full-text search (tsvector).</div>
+</section>
+
+<section id="indexing" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.8 Indexing: HNSW & IVF</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Mengapa Perlu Indexing?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Tanpa index, vector database harus melakukan <strong>brute-force scan</strong> — membandingkan query vector dengan <strong>setiap</strong> vektor di database. Untuk N vektor, ini O(N) per query. Dengan jutaan atau miliaran vektor, ini tidak praktis. ANN (Approximate Nearest Neighbor) indexing mengorbankan sedikit akurasi untuk kecepatan yang jauh lebih tinggi.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">HNSW (Hierarchical Navigable Small World)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>HNSW</strong> adalah algoritma ANN berbasis <strong>graph</strong> yang membangun struktur multi-layer. Layer atas memiliki sedikit node (long-range connections), layer bawah memiliki banyak node (local connections). Pencarian dimulai dari layer atas dan turun ke bawah — mirip seperti "skip list" untuk vektor.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TD
+    subgraph "HNSW Multi-Layer Graph"
+        L2["Layer 2 (Top)<br/>Few nodes, long-range<br/>Fast global navigation"]
+        L1["Layer 1 (Middle)<br/>Medium density<br/>Regional navigation"]
+        L0["Layer 0 (Bottom)<br/>All nodes, dense connections<br/>Precise local search"]
+
+        L2 --> L1
+        L1 --> L0
+    end
+
+    Q["🔍 Query Vector"] --> L2
+    L2 -->|"Navigate"| L1
+    L1 -->|"Navigate"| L0
+    L0 --> R["✅ Nearest Neighbors"]
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">IVF (Inverted File Index)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>IVF (Inverted File Index)</strong> menggunakan <strong>clustering</strong>: vektor data dikelompokkan menjadi N clusters (menggunakan K-means). Saat query, hanya cluster-cluster terdekat yang dicari — bukan seluruh database. IVF lebih hemat memory dibanding HNSW, tapi akurasinya bergantung pada jumlah cluster yang di-probe.</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Aspek</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">HNSW</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">IVF</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Struktur</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Multi-layer graph</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Clusters + inverted lists</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Kecepatan Query</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">Sangat cepat</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Cepat (tergantung nprobe)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Memory Usage</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tinggi (menyimpan graph)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">Lebih rendah</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Insert Speed</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Cepat (incremental add)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Batch (perlu re-train clusters)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Akurasi</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">>99% (well-tuned)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">95-99% (tergantung nprobe)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Best For</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">High-performance search, real-time</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Large datasets, memory-constrained</td></tr>
+</tbody></table>
+</section>
+
+<section id="perbandingan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.9 Perbandingan & Arsitektur</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Perbandingan Fitur Lengkap</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Fitur</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Pinecone</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Chroma</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Milvus</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Weaviate</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">PGVector</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Self-Hosted</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-red-600">❌</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Managed Cloud</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅ Native</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-yellow-600">🔶 Beta</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅ Zilliz</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅ WCD</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅ Supabase/Neon</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Hybrid Search</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-red-600">❌</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-red-600">❌</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅ Native</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅ Native</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-yellow-600">🔶 Manual</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Multi-Tenancy</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-red-600">❌</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">✅ Native</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-yellow-600">🔶 Manual</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Skala Maks</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Miliaran</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Jutaan</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-green-600">Miliaran</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Ratusan Juta</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">~50 Juta</td></tr>
+</tbody></table>
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Arsitektur Integrasi</h3>
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TB
+    subgraph Application["💻 Application Layer"]
+        APP["Web / Mobile / API"]
+    end
+
+    subgraph AI["🧠 AI Layer"]
+        EMB["Embedding Model<br/>(OpenAI / Voyage / Cohere)"]
+        LLM["LLM<br/>(GPT / Claude / Gemini)"]
+    end
+
+    subgraph Storage["🗄️ Storage Layer"]
+        direction LR
+        VDB["Vector Database<br/>(Pinecone / Milvus / PGVector)"]
+        SQL[("PostgreSQL<br/>Transactional Data")]
+        OBJ["Object Storage<br/>(S3 / MinIO)"]
+    end
+
+    APP -->|"1. User Query"| EMB
+    EMB -->|"2. Query Embedding"| VDB
+    VDB -->|"3. Top-K Results + Metadata"| LLM
+    SQL -->|"Metadata / Context"| LLM
+    LLM -->|"4. Augmented Response"| APP
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Decision Guide: Memilih Vector Database</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Situasi</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Rekomendasi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Prototype / POC cepat</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Chroma (embedded mode, setup minimal)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Sudah pakai PostgreSQL</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">PGVector (tidak perlu database baru)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Production, zero ops</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Pinecone (fully-managed, serverless)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Skala miliaran vektor</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Milvus (disaggregated architecture, scaling horizontal)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Hybrid search native</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Weaviate (BM25 + Vector dalam satu query)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Multi-tenant SaaS</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Weaviate (native tenant isolation) atau Pinecone</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Budget minimal, self-hosted</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Chroma / Milvus (open-source) / PGVector</td></tr>
+</tbody></table>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">7.10 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>Vector Database</strong> menyimpan dan mencari vektor embedding berdasarkan kemiripan semantik, bukan pencocokan eksak seperti database tradisional.</li>
+<li><strong>Pinecone:</strong> Cloud-only, zero ops, serverless option. Ideal untuk tim yang tidak ingin mengelola infrastruktur.</li>
+<li><strong>Chroma:</strong> Open-source, developer-friendly, embedded mode. Ideal untuk prototyping dan project skala kecil-menengah.</li>
+<li><strong>Milvus:</strong> Open-source cloud-native, skalabilitas horizontal hingga miliaran vektor. Cocok untuk production skala besar.</li>
+<li><strong>Weaviate:</strong> Open-source, GraphQL-native, hybrid search (BM25 + vector) built-in. Cocok untuk search engines dan RAG.</li>
+<li><strong>PGVector:</strong> PostgreSQL extension. Ideal jika sudah menggunakan PostgreSQL — tidak perlu database tambahan.</li>
+<li><strong>Indexing:</strong> HNSW (graph-based, cepat, memory tinggi) vs IVF (cluster-based, hemat memory, perlu tuning).</li>
+<li><strong>Pemilihan:</strong> Tergantung skala data, kebutuhan hybrid search, self-hosted vs managed, dan existing infrastructure.</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl">
+<h4 class="font-semibold mb-2">📝 Quiz</h4>
+<ol class="space-y-4 text-sm">
+<li><p class="font-medium">1. Apa perbedaan utama vector database dengan database SQL tradisional?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Vector database lebih murah</li><li>B. Vector database mencari berdasarkan similarity/kemiripan semantik, bukan exact match</li><li>C. Vector database hanya untuk teks</li><li>D. Tidak ada perbedaan signifikan</li></ul></li>
+<li><p class="font-medium">2. Algoritma indexing mana yang berbasis graph multi-layer?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. IVF (Inverted File Index)</li><li>B. B-Tree</li><li>C. HNSW (Hierarchical Navigable Small World)</li><li>D. Hash Index</li></ul></li>
+<li><p class="font-medium">3. Vector database mana yang paling cocok jika tim sudah menggunakan PostgreSQL?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Milvus</li><li>B. Pinecone</li><li>C. PGVector</li><li>D. Weaviate</li></ul></li>
+<li><p class="font-medium">4. Apa keunggulan utama Weaviate dibanding vector database lain?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Paling murah</li><li>B. Hybrid search native (BM25 + Vector) dan multi-tenancy built-in</li><li>C. Paling cepat</li><li>D. Hanya support Python</li></ul></li>
+</ol>
+</div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl">
+<h4 class="font-semibold mb-3">🏋️ Latihan</h4>
+<ol class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+<li><strong>Chroma Setup:</strong> Install Chroma via pip, buat collection, insert 50 vektor embedding (dari OpenAI text-embedding-3-small), dan lakukan 10 query semantic search. Catat response time rata-rata.</li>
+<li><strong>PGVector Integration:</strong> Di PostgreSQL lokal atau Supabase, enable pgvector extension. Buat tabel dengan kolom vector(1536), insert data yang sama seperti latihan Chroma, dan bandingkan query performance.</li>
+<li><strong>HNSW Tuning:</strong> Gunakan Milvus dengan index HNSW. Variasikan parameter M (8, 16, 32, 64) dan efConstruction (100, 200, 400). Plot trade-off antara recall, QPS, dan memory usage.</li>
+<li><strong>Hybrid Search:</strong> Gunakan Weaviate untuk implementasi hybrid search. Bandingkan hasil pure vector search vs hybrid search (alpha=0.5) untuk 10 query yang mengandung nama produk spesifik. Kapan hybrid search lebih baik?</li>
+<li><strong>Decision Matrix:</strong> Berdasarkan 5 kriteria (skala data, budget, tim expertise, hybrid search need, compliance/privacy), buat decision matrix untuk memilih vector database untuk skenario: (a) startup AI 2 orang, (b) enterprise B2B SaaS, (c) government system on-premise.</li>
+</ol>
+</div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-06.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 6 — Embedding</a>
+  <a href="bab-08.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 8 — RAG<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

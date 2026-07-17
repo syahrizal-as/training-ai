@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 9: Model Context Protocol (MCP) — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 9 — Model Context Protocol (MCP)</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-medium transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 9: Model Context Protocol (MCP)</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 9</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Model Context Protocol (MCP)</h1><p class="text-lg text-gray-600 dark:text-gray-400">Memahami standar protokol terbuka (open protocol) untuk menghubungkan AI model dengan tools dan sumber data eksternal secara aman dan terstandarisasi.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami definisi, motivasi, dan arsitektur Model Context Protocol (MCP)</li><li>Menguasai komponen MCP: Client, Server, Tool, Resource, Prompt, dan Sampling</li><li>Memahami flow komunikasi antara MCP Client dan MCP Server</li><li>Mampu mengimplementasikan MCP Server dan Client sederhana menggunakan Python/TypeScript</li><li>Memahami hubungan MCP dengan AI Agent ecosystem</li></ul></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Mampu menjelaskan arsitektur client-server MCP</li><li>Mampu membangun MCP Server dengan Tools dan Resources</li><li>Mampu menghubungkan AI model ke MCP Server</li><li>Memahami perbedaan MCP dengan pendekatan function calling tradisional</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#definisi-mcp" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9.1 Definisi & Motivasi MCP</a></li><li><a href="#arsitektur-mcp" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9.2 Arsitektur MCP</a></li><li><a href="#komponen-mcp" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9.3 Komponen MCP</a></li><li><a href="#flow-komunikasi" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9.4 Flow Komunikasi MCP</a></li><li><a href="#implementasi" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9.5 Contoh Implementasi</a></li><li><a href="#mcp-agent" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9.6 MCP & AI Agent</a></li><li><a href="#best-practice-mcp" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9.7 Best Practice</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9.8 Ringkasan</a></li></ul></nav>
+
+<section id="definisi-mcp" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">9.1 Definisi & Motivasi MCP</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Definisi MCP</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Model Context Protocol (MCP)</strong> adalah protokol terbuka (open protocol) yang distandarisasi oleh Anthropic untuk menghubungkan AI model dengan <strong>tools</strong> dan <strong>sumber data eksternal</strong>. MCP menyediakan antarmuka standar bagi AI applications untuk mengakses konteks — seperti database, API, file system, dan layanan eksternal — melalui arsitektur client-server yang aman.</p>
+
+<div class="callout callout-info"><strong>📖 Analogi:</strong> MCP adalah seperti "USB-C untuk AI." Seperti USB-C menjadi standar universal untuk koneksi perangkat keras, MCP menjadi standar universal untuk koneksi AI ke tools dan data. Satu protokol, banyak implementasi.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Motivasi: Masalah yang Dipecahkan MCP</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Tanpa MCP</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Dengan MCP</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Setiap integrasi AI-tool membutuhkan kode kustom</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Satu protokol standar untuk semua tools</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Vendor lock-in pada ekosistem LLM tertentu</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Interoperabilitas antar provider AI</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Fragmentasi — setiap framework punya caranya sendiri</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Standar terbuka, komunitas-driven</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Keamanan tidak terstandarisasi</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Model keamanan built-in (auth, permission)</td></tr>
+</tbody></table>
+</section>
+
+<section id="arsitektur-mcp" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">9.2 Arsitektur MCP</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">MCP menggunakan arsitektur <strong>client-server</strong> dengan komunikasi berbasis <strong>JSON-RPC 2.0</strong>. MCP Host (aplikasi AI seperti Claude Desktop, IDE, atau custom app) menjalankan satu atau lebih MCP Client yang terhubung ke MCP Server melalui transport protocol (stdio atau HTTP/SSE).</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TB
+    subgraph HOST["🖥️ MCP Host (AI Application)"]
+        AI["🧠 AI Model / LLM"]
+        CLIENT["🔌 MCP Client"]
+    end
+
+    subgraph SERVERS["🔧 MCP Servers"]
+        S1["🗄️ Database Server"]
+        S2["📁 File System Server"]
+        S3["🌐 API Server"]
+        S4["🔍 Search Server"]
+    end
+
+    CLIENT <-->|"JSON-RPC 2.0 over stdio/HTTP"| S1
+    CLIENT <-->|"JSON-RPC 2.0 over stdio/HTTP"| S2
+    CLIENT <-->|"JSON-RPC 2.0 over stdio/HTTP"| S3
+    CLIENT <-->|"JSON-RPC 2.0 over stdio/HTTP"| S4
+
+    AI -->|"Tool Calls"| CLIENT
+
+    style HOST fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
+    style SERVERS fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+</div>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Setiap MCP Server menyediakan kemampuan spesifik (tools, resources, prompts). MCP Client bertindak sebagai jembatan yang menerjemahkan tool calls dari AI model menjadi request JSON-RPC yang dikirim ke MCP Server yang tepat.</p>
+</section>
+
+<section id="komponen-mcp" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">9.3 Komponen MCP</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.3.1 MCP Client</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>MCP Client</strong> adalah komponen yang berjalan di sisi MCP Host, bertanggung jawab untuk mengelola koneksi ke MCP Server, mengirim request, dan menerima response. Client menangani lifecycle connection (connect, initialize, disconnect) dan menyediakan interface bagi AI model untuk menemukan dan memanggil tools.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.3.2 MCP Server</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>MCP Server</strong> adalah proses independen yang mengekspos capabilities (tools, resources, prompts) melalui protokol JSON-RPC 2.0. Server dapat dibangun dalam bahasa apa pun (Python, TypeScript, Go, Rust) dan berkomunikasi via stdio (subprocess) atau HTTP dengan Server-Sent Events (SSE).</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.3.3 Tool</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Tool</strong> adalah fungsi yang dapat dipanggil oleh AI model melalui MCP. Setiap tool memiliki:</p>
+<ul class="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300 mb-4">
+  <li><strong>Name:</strong> Identifier unik tool</li>
+  <li><strong>Description:</strong> Deskripsi yang membantu AI model memahami kapan menggunakan tool</li>
+  <li><strong>Input Schema:</strong> JSON Schema yang mendefinisikan parameter input</li>
+  <li><strong>Handler:</strong> Fungsi yang dieksekusi saat tool dipanggil</li>
+</ul>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.3.4 Resource</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Resource</strong> adalah data kontekstual yang diekspos oleh MCP Server. Berbeda dengan Tool (fungsi/aksi), Resource menyediakan akses read-only ke data. Contoh: isi file, hasil query database, konfigurasi sistem. Resource diidentifikasi dengan URI (contoh: <code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">file:///docs/readme.txt</code>, <code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">db://users/list</code>).</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.3.5 Prompt</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Prompt</strong> adalah template prompt yang telah dikurasi dan dapat digunakan kembali. MCP Server dapat menyediakan prompt templates yang terstandarisasi untuk use case tertentu, memudahkan user atau AI model untuk memulai interaksi dengan format yang benar.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.3.6 Sampling</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Sampling</strong> adalah fitur yang memungkinkan MCP Server untuk meminta MCP Client melakukan LLM inference. Ini membalikkan arah komunikasi normal: Server bisa meminta Client untuk "menyelesaikan" prompt tertentu menggunakan LLM yang tersedia di sisi Client.</p>
+</section>
+
+<section id="flow-komunikasi" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">9.4 Flow Komunikasi MCP</h2>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+sequenceDiagram
+    participant AI as 🧠 AI Model
+    participant Client as 🔌 MCP Client
+    participant Server as 🔧 MCP Server
+
+    Note over Client,Server: 1. Initialization
+    Client->>Server: initialize (capabilities)
+    Server-->>Client: server info + capabilities
+    Client->>Server: initialized notification
+
+    Note over AI,Server: 2. Tool Discovery
+    AI->>Client: What tools are available?
+    Client->>Server: tools/list
+    Server-->>Client: [tool1, tool2, tool3, ...]
+    Client-->>AI: Tool definitions
+
+    Note over AI,Server: 3. Tool Execution
+    AI->>Client: Call tool "search_docs"
+    Client->>Server: tools/call (name, arguments)
+    Server-->>Server: Execute handler
+    Server-->>Client: Result / Content
+    Client-->>AI: Tool result
+
+    Note over AI,Server: 4. Resource Access (optional)
+    AI->>Client: Read resource
+    Client->>Server: resources/read (uri)
+    Server-->>Client: Resource content
+    Client-->>AI: Resource data
+</div>
+</section>
+
+<section id="implementasi" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">9.5 Contoh Implementasi</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.5.1 MCP Server (Python)</h3>
+<pre class="language-python"><code># server.py - MCP Server sederhana untuk weather & calculator
+from mcp.server import Server, NotificationOptions
+from mcp.server.models import InitializationCapabilities
+import mcp.server.stdio
+import mcp.types as types
+import json, httpx
+
+server = Server("weather-calc-server")
+
+# ============ TOOLS ============
+
+@server.list_tools()
+async def handle_list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="get_weather",
+            description="Get current weather for a city. Use Celsius.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "city": {
+                        "type": "string",
+                        "description": "City name, e.g., 'Jakarta'"
+                    }
+                },
+                "required": ["city"]
+            }
+        ),
+        types.Tool(
+            name="calculate",
+            description="Evaluate a mathematical expression",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "expression": {
+                        "type": "string",
+                        "description": "Math expression, e.g., '2 + 2 * 3'"
+                    }
+                },
+                "required": ["expression"]
+            }
+        )
+    ]
+
+@server.call_tool()
+async def handle_call_tool(
+    name: str, arguments: dict
+) -> list[types.TextContent]:
+    if name == "get_weather":
+        city = arguments["city"]
+        # Simulasi API call (ganti dengan API sungguhan)
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                f"https://wttr.in/{city}?format=j1"
+            )
+            data = resp.json()
+            temp = data["current_condition"][0]["temp_C"]
+            desc = data["current_condition"][0]["weatherDesc"][0]["value"]
+        
+        return [types.TextContent(
+            type="text",
+            text=f"🌤️ Weather in {city}: {temp}°C, {desc}"
+        )]
+    
+    elif name == "calculate":
+        expression = arguments["expression"]
+        try:
+            result = eval(expression)  # Hati-hati: gunakan safe eval di production
+            return [types.TextContent(
+                type="text",
+                text=f"🧮 {expression} = {result}"
+            )]
+        except Exception as e:
+            return [types.TextContent(
+                type="text",
+                text=f"Error: {str(e)}"
+            )]
+
+# ============ RESOURCES ============
+
+@server.list_resources()
+async def handle_list_resources() -> list[types.Resource]:
+    return [
+        types.Resource(
+            uri="weather://supported-cities",
+            name="Supported Cities",
+            description="List of cities with weather data",
+            mimeType="application/json"
+        )
+    ]
+
+@server.read_resource()
+async def handle_read_resource(uri: str) -> str:
+    if uri == "weather://supported-cities":
+        return json.dumps(["Jakarta", "Surabaya", "Bandung", "Medan"])
+
+# ============ RUN SERVER ============
+
+async def main():
+    async with mcp.server.stdio.stdio_server() as (read, write):
+        await server.run(
+            read, write,
+            InitializationCapabilities(
+                sampling={},
+                experimental={},
+                tools={},
+                resources={}
+            )
+        )
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.5.2 MCP Client (Python)</h3>
+<pre class="language-python"><code># client.py - MCP Client sederhana
+import asyncio
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+async def main():
+    # Buat koneksi ke MCP Server melalui stdio
+    server_params = StdioServerParameters(
+        command="python",
+        args=["server.py"]
+    )
+    
+    async with stdio_client(server_params) as (read, write):
+        async with ClientSession(read, write) as session:
+            # 1. Initialize
+            await session.initialize()
+            
+            # 2. List available tools
+            tools_result = await session.list_tools()
+            print("Available tools:")
+            for tool in tools_result.tools:
+                print(f"  - {tool.name}: {tool.description}")
+            
+            # 3. List available resources
+            resources = await session.list_resources()
+            print("\nAvailable resources:")
+            for resource in resources.resources:
+                print(f"  - {resource.uri}: {resource.name}")
+            
+            # 4. Call a tool
+            print("\n--- Calling get_weather ---")
+            result = await session.call_tool(
+                "get_weather",
+                arguments={"city": "Jakarta"}
+            )
+            print(f"Result: {result.content[0].text}")
+            
+            # 5. Call another tool
+            print("\n--- Calling calculate ---")
+            result = await session.call_tool(
+                "calculate",
+                arguments={"expression": "15 * 3 + 7"}
+            )
+            print(f"Result: {result.content[0].text}")
+            
+            # 6. Read a resource
+            print("\n--- Reading resource ---")
+            resource_content = await session.read_resource(
+                "weather://supported-cities"
+            )
+            print(f"Cities: {resource_content.contents[0].text}")
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">9.5.3 MCP Server (TypeScript)</h3>
+<pre class="language-typescript"><code>// server.ts - MCP Server dengan TypeScript
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+} from "@modelcontextprotocol/sdk/types.js";
+
+const server = new Server(
+  { name: "ts-weather-server", version: "1.0.0" },
+  { capabilities: { tools: {}, resources: {} } }
+);
+
+// Register tools
+server.setRequestHandler(ListToolsRequestSchema, async () => ({
+  tools: [
+    {
+      name: "get_weather",
+      description: "Get current weather for a city in Celsius",
+      inputSchema: {
+        type: "object",
+        properties: {
+          city: { type: "string", description: "City name" }
+        },
+        required: ["city"]
+      }
+    },
+    {
+      name: "get_time",
+      description: "Get current time for a timezone",
+      inputSchema: {
+        type: "object",
+        properties: {
+          timezone: { 
+            type: "string", 
+            description: "Timezone, e.g., 'Asia/Jakarta'" 
+          }
+        },
+        required: ["timezone"]
+      }
+    }
+  ]
+}));
+
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  const { name, arguments: args } = request.params;
+  
+  switch (name) {
+    case "get_weather": {
+      const city = args?.city as string;
+      // Simulasi — gunakan API sungguhan di production
+      return {
+        content: [{
+          type: "text",
+          text: `🌤️ Weather in ${city}: 28°C, Partly Cloudy`
+        }]
+      };
+    }
+    case "get_time": {
+      const tz = args?.timezone as string || "Asia/Jakarta";
+      const time = new Date().toLocaleString("id-ID", { timeZone: tz });
+      return {
+        content: [{
+          type: "text",
+          text: `🕐 Current time in ${tz}: ${time}`
+        }]
+      };
+    }
+    default:
+      throw new Error(`Unknown tool: ${name}`);
+  }
+});
+
+// Register resources
+server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+  resources: [{
+    uri: "config://server-info",
+    name: "Server Information",
+    mimeType: "application/json"
+  }]
+}));
+
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+  if (request.params.uri === "config://server-info") {
+    return {
+      contents: [{
+        uri: request.params.uri,
+        mimeType: "application/json",
+        text: JSON.stringify({
+          name: "TS Weather Server",
+          version: "1.0.0",
+          uptime: process.uptime()
+        })
+      }]
+    };
+  }
+  throw new Error(`Unknown resource: ${request.params.uri}`);
+});
+
+// Start server
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("MCP Server running on stdio");
+}
+
+main().catch(console.error);</code></pre>
+</section>
+
+<section id="mcp-agent" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">9.6 MCP & AI Agent</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">MCP memainkan peran penting dalam ekosistem AI Agent (yang akan dibahas di BAB 10). Dalam arsitektur AI Agent, MCP berfungsi sebagai <strong>standardized tool interface</strong> yang memungkinkan Agent untuk:</p>
+
+<ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300 mb-4">
+  <li><strong>Discover tools dynamically:</strong> Agent dapat menemukan tools yang tersedia tanpa hardcoding</li>
+  <li><strong>Access diverse data sources:</strong> Database, API, file system — semua melalui satu protokol</li>
+  <li><strong>Switch between AI providers:</strong> Agent yang sama dapat menggunakan Claude, GPT, atau model lain tanpa mengubah integrasi tool</li>
+  <li><strong>Compose complex workflows:</strong> Multiple MCP servers dapat dikomposisikan untuk membentuk workflow multi-step</li>
+</ul>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart LR
+    AGENT["🤖 AI Agent"] --> CLIENT["🔌 MCP Client"]
+    CLIENT --> S1["🗄️ Database MCP Server"]
+    CLIENT --> S2["🌐 Web Search MCP Server"]
+    CLIENT --> S3["💻 Code Exec MCP Server"]
+    CLIENT --> S4["📊 Analytics MCP Server"]
+    
+    AGENT --> LLM["🧠 LLM (any provider)"]
+    
+    style AGENT fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
+</div>
+
+<div class="callout callout-info"><strong>🔗 Ecosystem:</strong> MCP SDK tersedia untuk Python, TypeScript, Kotlin, dan C#. Tools populer seperti Claude Desktop, Cursor, Continue.dev, dan Zed telah mengadopsi MCP sebagai standar integrasi.</div>
+</section>
+
+<section id="best-practice-mcp" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">9.7 Best Practice</h2>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Best Practice</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Penjelasan</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Tool descriptions yang jelas</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Deskripsi tool adalah prompt engineering. Tulis deskripsi yang menjelaskan kapan tool digunakan, apa input-nya, dan apa output-nya. AI model membaca deskripsi ini untuk memutuskan tool mana yang dipanggil.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Input schema yang ketat</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gunakan JSON Schema yang lengkap dengan type, description, enum, dan constraints. Semakin ketat schema, semakin kecil kemungkinan AI salah menggunakan tool.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Error handling yang informatif</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Return error messages yang jelas dan dapat digunakan AI untuk koreksi diri. Jangan return generic "Error occurred."</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Satu server, satu domain</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Setiap MCP Server sebaiknya fokus pada satu domain (database, filesystem, search). Komposisikan multiple server untuk workflow kompleks.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Gunakan transport yang tepat</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">stdio untuk local subprocess (low latency, simple). HTTP/SSE untuk remote server (networked, scalable).</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Rate limiting & timeout</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Implementasikan rate limiting dan timeout di MCP Server untuk mencegah abuse dan memastikan responsivitas.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Logging & monitoring</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Log semua tool calls dengan timestamp, arguments, dan hasil untuk debugging dan audit trail.</td></tr>
+</tbody></table>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">9.8 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>MCP (Model Context Protocol)</strong> adalah protokol terbuka standar untuk menghubungkan AI model dengan tools dan data eksternal melalui arsitektur client-server.</li>
+<li><strong>Komponen utama MCP:</strong> Client (jembatan), Server (penyedia capabilities), Tool (fungsi yang dapat dipanggil), Resource (data read-only), Prompt (template), Sampling (server-triggered LLM inference).</li>
+<li><strong>Komunikasi:</strong> JSON-RPC 2.0 over stdio (local) atau HTTP/SSE (remote).</li>
+<li><strong>MCP & Agent:</strong> MCP menyediakan standardized tool interface yang memungkinkan AI Agent menemukan dan menggunakan tools secara dinamis.</li>
+<li><strong>Best practice:</strong> Tool descriptions yang jelas, input schema ketat, error handling informatif, satu server per domain, transport yang tepat.</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">📝 Quiz</h4><ol class="space-y-3 text-sm"><li><p class="font-medium">1. Apa protokol komunikasi yang digunakan MCP?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. REST API</li><li>B. JSON-RPC 2.0</li><li>C. gRPC</li><li>D. WebSocket</li></ul></li><li><p class="font-medium">2. Apa perbedaan utama antara Tool dan Resource di MCP?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Tidak ada perbedaan</li><li>B. Tool untuk aksi/eksekusi; Resource untuk data read-only</li><li>C. Tool lebih cepat; Resource lebih lambat</li><li>D. Tool menggunakan HTTP; Resource menggunakan stdio</li></ul></li><li><p class="font-medium">3. Apa fungsi Sampling di MCP?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Mengambil sample data dari database</li><li>B. Memungkinkan MCP Server meminta MCP Client melakukan LLM inference</li><li>C. Sampling audio dari microphone</li><li>D. Mengukur performa server</li></ul></li></ol></div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">🏋️ Latihan</h4><ol class="space-y-3 text-sm"><li><strong>Tugas 1:</strong> Buat MCP Server dengan 3 tools (misal: kalkulator, pencari cuaca, pencari waktu) menggunakan Python SDK.</li><li><strong>Tugas 2:</strong> Buat MCP Client yang terhubung ke server Anda dan panggil ketiga tools secara berurutan.</li><li><strong>Tugas 3:</strong> Tambahkan Resources ke MCP Server Anda (misal: daftar kota yang didukung, statistik server).</li></ol></div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-08.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 8</a>
+  <a href="bab-10.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 10 — Agentic AI<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

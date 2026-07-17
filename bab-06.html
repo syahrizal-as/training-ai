@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 6: Embedding — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 6 — Embedding</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 font-medium">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 6: Embedding</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 6</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Embedding</h1><p class="text-lg text-gray-600 dark:text-gray-400">Memahami bagaimana teks dikonversi menjadi vektor, vector space, similarity metrics, dan semantic search menggunakan embedding model.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami apa itu embedding dan bagaimana teks dikonversi menjadi vektor numerik</li><li>Mengetahui konsep vector space dan representasi semantik</li><li>Menguasai similarity metrics: Cosine Similarity, Euclidean Distance, dan Dot Product</li><li>Memahami konsep Semantic Search menggunakan embedding</li><li>Mengetahui berbagai embedding model: text-embedding-3, Voyage, Cohere, dan lainnya</li></ul></div>
+
+<div class="callout callout-info" style="background:#faf5ff;border-left:4px solid #8b5cf6;color:#6b21a8;"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Menjelaskan proses konversi teks ke vektor embedding</li><li>Menghitung similarity antara dua vektor embedding</li><li>Memilih metrik similarity yang tepat berdasarkan use case</li><li>Mengimplementasikan semantic search dengan embedding model</li><li>Membandingkan performa berbagai embedding model</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#definisi" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">6.1 Apa itu Embedding?</a></li><li><a href="#teks-ke-vektor" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">6.2 Konversi Teks ke Vektor</a></li><li><a href="#vector-space" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">6.3 Vector Space</a></li><li><a href="#similarity" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">6.4 Similarity Metrics</a></li><li><a href="#semantic-search" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">6.5 Semantic Search</a></li><li><a href="#model" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">6.6 Embedding Model</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">6.7 Ringkasan</a></li></ul></nav>
+
+<section id="definisi" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">6.1 Apa itu Embedding?</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Definisi</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Embedding</strong> adalah representasi vektor numerik berdimensi tetap (dense vector) dari data — teks, gambar, audio — dalam ruang vektor kontinu. Vektor embedding menangkap <strong>makna semantik</strong> dari data: teks yang secara semantik mirip akan memiliki vektor yang berdekatan dalam vector space, sedangkan teks yang berbeda makna akan berjauhan.</p>
+
+<div class="callout callout-info"><strong>📖 Bedakan dua jenis embedding:</strong>
+<ul class="list-disc pl-5 mt-2 space-y-1 text-sm">
+<li><strong>Token Embedding</strong> (Bab 4): Representasi vektor individual token di dalam LLM, dipelajari selama training sebagai bagian dari model.</li>
+<li><strong>Text Embedding</strong> (Bab ini): Satu vektor untuk seluruh teks/dokumen, dihasilkan oleh embedding model khusus, digunakan untuk search, clustering, dan retrieval.</li>
+</ul></div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Mengapa Embedding Penting?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Komputer tidak memahami teks secara langsung — mereka hanya memahami angka. Embedding menjembatani kesenjangan antara bahasa manusia dan komputasi numerik. Dengan embedding, kita bisa:</p>
+<ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300 mb-4">
+  <li><strong>Mencari berdasarkan makna</strong> (bukan keyword) — Semantic Search</li>
+  <li><strong>Mengelompokkan</strong> dokumen yang mirip secara otomatis — Clustering</li>
+  <li><strong>Mendeteksi duplikat</strong> atau near-duplicate content</li>
+  <li><strong>Memberikan konteks</strong> ke LLM melalui Retrieval-Augmented Generation (RAG)</li>
+  <li><strong>Klasifikasi</strong> teks tanpa training ulang</li>
+</ul>
+</section>
+
+<section id="teks-ke-vektor" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">6.2 Konversi Teks ke Vektor</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Proses Embedding</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Proses mengonversi teks menjadi vektor embedding melibatkan beberapa tahap melalui <strong>embedding model</strong> — model neural network yang dilatih khusus untuk menghasilkan representasi vektor berkualitas tinggi.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TD
+    A["📝 Input Teks:<br/>'Kucing adalah hewan peliharaan yang lucu'"] --> B["🔤 Tokenization"]
+    B --> C["🧠 Embedding Model<br/>(Transformer-based)"]
+    C --> D["🧮 Mean Pooling /<br/>[CLS] Token"]
+    D --> E["📊 Output Vektor<br/>Dimensi = 1536<br/>[0.012, -0.453, 0.789, ..., 0.234]"]
+
+    F["📝 Teks Lain:<br/>'Anjing adalah hewan peliharaan yang setia'"] --> G["🔤 Tokenization"]
+    G --> H["🧠 Embedding Model<br/>(same model)"]
+    H --> I["🧮 Mean Pooling"]
+    I --> J["📊 Output Vektor<br/>[0.018, -0.441, 0.782, ..., 0.229]"]
+
+    E --> K["Vektor berdekatan<br/>(makna mirip!)"]
+    J --> K
+</div>
+
+<pre class="language-python"><code># Contoh: Konversi teks ke embedding menggunakan OpenAI API
+from openai import OpenAI
+client = OpenAI()
+
+def get_embedding(text: str, model: str = "text-embedding-3-small") -> list[float]:
+    """Mengonversi teks menjadi vektor embedding."""
+    text = text.replace("\n", " ")
+    response = client.embeddings.create(
+        input=[text],
+        model=model
+    )
+    return response.data[0].embedding
+
+# Contoh penggunaan
+teks1 = "Kucing adalah hewan peliharaan yang lucu"
+teks2 = "Anjing adalah hewan peliharaan yang setia"
+teks3 = "Harga saham teknologi naik 5% hari ini"
+
+emb1 = get_embedding(teks1)  # 1536 dimensi
+emb2 = get_embedding(teks2)  # 1536 dimensi
+emb3 = get_embedding(teks3)  # 1536 dimensi
+
+# teks1 dan teks2 akan lebih mirip (keduanya tentang hewan peliharaan)
+# teks3 akan jauh berbeda (tentang pasar saham)
+</code></pre>
+
+<div class="callout callout-best"><strong>💡 Pooling Strategy:</strong> Embedding model menghasilkan vektor untuk setiap token. Untuk mendapatkan satu vektor untuk seluruh teks, digunakan pooling: <strong>Mean Pooling</strong> (rata-rata semua token) atau <strong>[CLS] Token</strong> (token klasifikasi khusus). Mean pooling umumnya lebih robust untuk semantic search.</div>
+</section>
+
+<section id="vector-space" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">6.3 Vector Space</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Konsep Vector Space</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Vector Space</strong> adalah ruang multi-dimensi tempat vektor embedding berada. Setiap dimensi merepresentasikan fitur semantik tertentu yang dipelajari model. Dalam vector space, <strong>arah (direction)</strong> vektor lebih penting daripada magnitudenya — dua vektor yang menunjuk ke arah yang sama memiliki makna serupa, terlepas dari panjangnya.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart LR
+    subgraph "Vector Space (disederhanakan ke 2D)"
+        direction TB
+        V1["🐱 'kucing'<br/>[0.8, 0.6]"]
+        V2["🐕 'anjing'<br/>[0.7, 0.5]"]
+        V3["🐹 'hamster'<br/>[0.6, 0.4]"]
+        V4["📊 'saham'<br/>[-0.5, 0.8]"]
+        V5["💰 'investasi'<br/>[-0.4, 0.7]"]
+        V6["🏀 'basket'<br/>[0.2, -0.7]"]
+    end
+
+    V1 -.->|"Dekat (mirip)"| V2
+    V2 -.->|"Dekat (mirip)"| V3
+    V4 -.->|"Dekat (mirip)"| V5
+    V1 -.-|"Jauh (beda)"| V6
+    V4 -.-|"Jauh (beda)"| V1
+</div>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Dalam praktiknya, vector space berdimensi tinggi (768, 1536, atau 3072) — bukan 2D seperti ilustrasi di atas. Dimensi tinggi memungkinkan representasi yang jauh lebih kaya dan nuanced.</p>
+</section>
+
+<section id="similarity" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">6.4 Similarity Metrics</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Cosine Similarity</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Cosine Similarity</strong> mengukur kesamaan arah dua vektor, tanpa memperhatikan magnitudenya. Nilai cosine similarity berkisar dari -1 (berlawanan arah) hingga 1 (arah identik), dengan 0 berarti ortogonal (tidak terkait). Ini adalah metrik <strong>paling umum</strong> untuk embedding karena fokus pada arah semantik, bukan panjang vektor.</p>
+
+<pre class="language-python"><code>import numpy as np
+
+def cosine_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:
+    """
+    Cosine Similarity = (A · B) / (||A|| × ||B||)
+    
+    - Nilai 1: vektor identik (arah sama persis)
+    - Nilai 0: vektor ortogonal (tidak terkait)
+    - Nilai -1: vektor berlawanan arah
+    """
+    dot_product = np.dot(vec1, vec2)
+    norm_a = np.linalg.norm(vec1)
+    norm_b = np.linalg.norm(vec2)
+    return dot_product / (norm_a * norm_b)
+
+# Contoh
+v_cat = np.array([0.8, 0.6])
+v_dog = np.array([0.7, 0.5])
+v_stock = np.array([-0.5, 0.8])
+
+print(f"Cat vs Dog: {cosine_similarity(v_cat, v_dog):.3f}")    # ~0.99 (mirip!)
+print(f"Cat vs Stock: {cosine_similarity(v_cat, v_stock):.3f}") # ~0.02 (tidak terkait)
+</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Euclidean Distance</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Euclidean Distance</strong> mengukur jarak "garis lurus" antara dua titik dalam vector space. Berbeda dengan cosine similarity, Euclidean distance sensitif terhadap magnitude vektor. Dua vektor bisa memiliki arah yang sama tetapi jarak Euclidean yang besar jika panjangnya berbeda.</p>
+
+<pre class="language-python"><code>def euclidean_distance(vec1: np.ndarray, vec2: np.ndarray) -> float:
+    """
+    Euclidean Distance = sqrt(Σ(Ai - Bi)²)
+    
+    - Nilai 0: titik yang sama
+    - Semakin besar: semakin jauh / berbeda
+    """
+    return np.sqrt(np.sum((vec1 - vec2) ** 2))
+
+# Contoh
+print(f"Cat vs Dog: {euclidean_distance(v_cat, v_dog):.3f}")    # ~0.14 (dekat)
+print(f"Cat vs Stock: {euclidean_distance(v_cat, v_stock):.3f}") # ~1.28 (jauh)
+</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Dot Product</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Dot Product</strong> (inner product) mengukur kesamaan dua vektor tanpa normalisasi. Dot product mempertimbangkan baik arah maupun magnitude. Berguna ketika magnitude vektor memiliki makna (misalnya, vektor dengan magnitude lebih besar = konten lebih "informatif").</p>
+
+<pre class="language-python"><code>def dot_product(vec1: np.ndarray, vec2: np.ndarray) -> float:
+    """
+    Dot Product = Σ(Ai × Bi)
+    
+    - Semakin besar positif: semakin mirip
+    - Mendekati 0: tidak terkait
+    - Negatif: berlawanan
+    """
+    return np.dot(vec1, vec2)
+</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Perbandingan Metrik</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Metrik</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Range</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Sensitif Magnitude?</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Use Case</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Cosine Similarity</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">-1 s/d 1</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">❌ Tidak</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Semantic search (default), document similarity</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Euclidean Distance</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">0 s/d ∞</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Ya</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Clustering (K-means), anomaly detection</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Dot Product</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">-∞ s/d ∞</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Ya</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Recommendation systems, scoring</td></tr>
+</tbody></table>
+
+<div class="callout callout-best"><strong>💡 Best Practice:</strong> Gunakan <strong>Cosine Similarity</strong> sebagai default untuk semantic search. Jika embedding sudah dinormalisasi (||v|| = 1), cosine similarity = dot product, dan keduanya bisa digunakan interchangeably.</div>
+</section>
+
+<section id="semantic-search" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">6.5 Semantic Search</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Keyword Search vs Semantic Search</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Semantic Search</strong> mencari berdasarkan <strong>makna</strong>, bukan berdasarkan pencocokan kata kunci (keyword matching). Ini mengatasi keterbatasan fundamental keyword search di mana query dan dokumen menggunakan kata yang berbeda tetapi memiliki arti yang sama.</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Query</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Keyword Search</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Semantic Search</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-mono text-xs">"mobil hemat bensin"</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">❌ Tidak menemukan "kendaraan irit bahan bakar"</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Menemukan karena makna mirip</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-mono text-xs">"cara mengatasi insomnia"</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">❌ Tidak menemukan "tips tidur nyenyak"</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Menemukan karena makna mirip</td></tr>
+</tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Pipeline Semantic Search</h3>
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TD
+    subgraph Indexing["📥 Indexing Phase"]
+        A1["📄 Dokumen 1"] --> B1["Embedding Model"]
+        B1 --> C1["Vektor D1"]
+        A2["📄 Dokumen 2"] --> B2["Embedding Model"]
+        B2 --> C2["Vektor D2"]
+        A3["📄 Dokumen ..."] --> B3["Embedding Model"]
+        B3 --> C3["Vektor D..."]
+        C1 --> DB[("🗄️ Vector<br/>Database")]
+        C2 --> DB
+        C3 --> DB
+    end
+
+    subgraph Search["🔍 Search Phase"]
+        Q["💬 User Query:<br/>'kendaraan hemat energi'"] --> EQ["Embedding Model"]
+        EQ --> VQ["Vektor Query"]
+        VQ --> S["Similarity Search<br/>(Cosine Sim)"]
+        DB --> S
+        S --> R["✅ Top-K Results:<br/>1. mobil hemat bensin (0.95)<br/>2. motor listrik (0.89)<br/>3. tips menghemat BBM (0.82)"]
+    end
+</div>
+
+<pre class="language-python"><code>import numpy as np
+from typing import list, tuple
+
+def semantic_search(
+    query_embedding: np.ndarray,
+    document_embeddings: list[tuple[str, np.ndarray]],
+    top_k: int = 5
+) -> list[tuple[str, float]]:
+    """
+    Mencari dokumen paling relevan menggunakan embedding.
+    """
+    results = []
+    for doc_id, doc_emb in document_embeddings:
+        similarity = cosine_similarity(query_embedding, doc_emb)
+        results.append((doc_id, similarity))
+    
+    # Urutkan berdasarkan similarity tertinggi
+    results.sort(key=lambda x: x[1], reverse=True)
+    return results[:top_k]
+
+# Contoh penggunaan
+query = "kendaraan hemat energi"
+query_emb = get_embedding(query)
+
+documents = [
+    ("doc1", get_embedding("Mobil hybrid paling irit BBM tahun 2026")),
+    ("doc2", get_embedding("Resep kue coklat yang mudah dibuat")),
+    ("doc3", get_embedding("Motor listrik dengan jarak tempuh terjauh")),
+]
+
+results = semantic_search(query_emb, documents, top_k=2)
+for doc_id, score in results:
+    print(f"{doc_id}: {score:.3f}")
+# Output:
+# doc1: 0.891
+# doc3: 0.845
+</code></pre>
+
+<div class="callout callout-info"><strong>📖 Hybrid Search:</strong> Beberapa sistem menggabungkan semantic search (embedding) dengan keyword search (BM25/TF-IDF) untuk hasil terbaik — disebut <strong>hybrid search</strong>. Ini menangkap baik relevansi semantik maupun pencocokan kata kunci eksak (penting untuk query dengan nama produk, kode, atau istilah teknis spesifik).</div>
+</section>
+
+<section id="model" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">6.6 Embedding Model</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Model-Model Terkemuka</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Berbagai penyedia menawarkan embedding model dengan karakteristik berbeda. Pemilihan model bergantung pada kebutuhan: dimensi, bahasa, performa, dan biaya.</p>
+
+<div class="overflow-x-auto">
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Model</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Penyedia</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Dimensi</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Max Tokens</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Multilingual</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Harga (per 1M token)</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">text-embedding-3-small</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">OpenAI</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">512 / 1536</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">8,191</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ 100+ bahasa</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.02</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">text-embedding-3-large</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">OpenAI</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">256 / 1024 / 3072</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">8,191</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ 100+ bahasa</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.13</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">voyage-3</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Voyage AI</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">1024</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">32,000</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Multilingual</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.06</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">voyage-3-lite</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Voyage AI</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">512</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">32,000</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Multilingual</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.02</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">embed-english-v3.0</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Cohere</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">1024</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">512</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">❌ English only</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.10</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">embed-multilingual-v3.0</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Cohere</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">1024</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">512</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ 100+ bahasa</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.10</td></tr>
+</tbody></table>
+</div>
+
+<div class="callout callout-info"><strong>📖 Model Open-Source:</strong> Selain model komersial di atas, tersedia model embedding open-source: <strong>intfloat/e5-mistral-7b-instruct</strong> (Microsoft E5), <strong>BAAI/bge-m3</strong> (BGE M3, multilingual), <strong>sentence-transformers/all-MiniLM-L6-v2</strong> (ringan, 384 dimensi). Model open-source cocok untuk self-hosting dan privacy-sensitive applications.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Kriteria Pemilihan Embedding Model</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Kriteria</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Pertimbangan</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Bahasa</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Butuh multilingual? English-only? Model multilingual umumnya sedikit kurang optimal per bahasa dibanding model spesifik bahasa.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Dimensi</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Dimensi lebih tinggi = lebih ekspresif, tapi storage & compute lebih besar. text-embedding-3 mendukung dimensi variabel (trade-off).</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Max Tokens</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Berapa panjang maksimum teks yang bisa di-embed? Dokumen panjang butuh chunking jika melebihi limit.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Biaya</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Hitung biaya berdasarkan volume data. text-embedding-3-small = $0.02/1M token (termurah).</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Deployment</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Cloud API (mudah, berbayar) vs self-hosted open-source (kompleks, privacy).</td></tr>
+</tbody></table>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">6.7 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>Embedding</strong> adalah representasi vektor numerik dari teks yang menangkap makna semantik — teks mirip memiliki vektor berdekatan.</li>
+<li><strong>Proses embedding:</strong> Teks → Tokenization → Embedding Model → Pooling → Vektor output (dimensi tetap).</li>
+<li><strong>Vector Space</strong> adalah ruang multi-dimensi di mana arah vektor merepresentasikan makna. Dimensi tinggi memungkinkan representasi nuanced.</li>
+<li><strong>Similarity Metrics:</strong> Cosine Similarity (default, fokus arah), Euclidean Distance (jarak absolut), Dot Product (arah + magnitude).</li>
+<li><strong>Semantic Search</strong> mencari berdasarkan makna, bukan kata kunci — mengatasi vocabulary mismatch antara query dan dokumen.</li>
+<li><strong>Embedding Models:</strong> text-embedding-3 (OpenAI) untuk dimensi fleksibel, Voyage (context window besar 32K), Cohere (spesialis bahasa), BGE/E5 (open-source).</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl">
+<h4 class="font-semibold mb-2">📝 Quiz</h4>
+<ol class="space-y-4 text-sm">
+<li><p class="font-medium">1. Apa perbedaan utama antara keyword search dan semantic search?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Keyword search lebih cepat</li><li>B. Semantic search mencari berdasarkan makna, keyword search mencocokkan kata eksak</li><li>C. Tidak ada perbedaan</li><li>D. Keyword search hanya untuk dokumen pendek</li></ul></li>
+<li><p class="font-medium">2. Metrik similarity mana yang paling umum digunakan untuk semantic search?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Euclidean Distance</li><li>B. Cosine Similarity</li><li>C. Manhattan Distance</li><li>D. Jaccard Similarity</li></ul></li>
+<li><p class="font-medium">3. Apa kelebihan text-embedding-3 dibanding model embedding lain?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Paling murah</li><li>B. Mendukung dimensi variabel (trade-off storage vs performa)</li><li>C. Paling cepat</li><li>D. Open source</li></ul></li>
+<li><p class="font-medium">4. Kapan sebaiknya menggunakan Dot Product daripada Cosine Similarity?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Selalu</li><li>B. Ketika magnitude vektor memiliki makna (misalnya, confidence score)</li><li>C. Ketika dokumen pendek</li><li>D. Tidak pernah</li></ul></li>
+</ol>
+</div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl">
+<h4 class="font-semibold mb-3">🏋️ Latihan</h4>
+<ol class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+<li><strong>Dasar Embedding:</strong> Gunakan OpenAI API untuk meng-embed 10 kalimat berbeda (5 tentang teknologi, 5 tentang kuliner). Hitung cosine similarity antar semua pasangan. Visualisasikan hasil dalam heatmap. Apakah kalimat dalam topik yang sama memiliki similarity lebih tinggi?</li>
+<li><strong>Semantic Search:</strong> Siapkan 20 dokumen teks pendek. Buat sistem semantic search sederhana: embed semua dokumen → terima query → cari top-3 dokumen paling relevan. Uji dengan query yang menggunakan kata berbeda dari dokumen.</li>
+<li><strong>Perbandingan Model:</strong> Embed 10 kalimat yang sama menggunakan text-embedding-3-small, text-embedding-3-large, dan voyage-3. Bandingkan pairwise similarity antar model. Apakah model yang berbeda memberikan hasil similarity yang konsisten?</li>
+<li><strong>Dimensi vs Performa:</strong> Gunakan text-embedding-3-large dengan dimensi 256, 1024, dan 3072. Bandingkan akurasi semantic search dengan ground truth yang sama. Plot trade-off antara dimensi, akurasi, dan storage.</li>
+</ol>
+</div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-05.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 5 — Prompt Engineering</a>
+  <a href="bab-07.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 7 — Vector Database<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

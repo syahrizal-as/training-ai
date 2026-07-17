@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 8: Retrieval Augmented Generation (RAG) — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 8 — Retrieval Augmented Generation (RAG)</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-medium transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 8: Retrieval Augmented Generation (RAG)</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 8</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Retrieval Augmented Generation (RAG)</h1><p class="text-lg text-gray-600 dark:text-gray-400">Memahami arsitektur RAG — teknik yang menggabungkan information retrieval dengan LLM untuk menghasilkan respons yang akurat dan berbasis data.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami definisi dan motivasi di balik RAG (halusinasi, knowledge cutoff, domain-specific)</li><li>Menguasai arsitektur RAG: indexing pipeline, retrieval pipeline, dan generation</li><li>Mampu menerapkan berbagai chunking strategies: fixed-size, semantic, dan recursive</li><li>Memahami alur embedding → vector store → retriever → generator</li><li>Menerapkan best practice chunking untuk optimal retrieval</li></ul></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Mampu menjelaskan bagaimana RAG mengatasi limitasi LLM</li><li>Mampu merancang indexing pipeline dengan chunking strategy yang tepat</li><li>Mampu memilih dan mengkonfigurasi retriever (similarity search, MMR, threshold)</li><li>Mampu membangun prompt template yang mengintegrasikan retrieved context</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#definisi-rag" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">8.1 Definisi & Mengapa RAG Diperlukan</a></li><li><a href="#arsitektur-rag" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">8.2 Arsitektur RAG</a></li><li><a href="#indexing-pipeline" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">8.3 Indexing Pipeline</a></li><li><a href="#retrieval-pipeline" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">8.4 Retrieval Pipeline</a></li><li><a href="#generation" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">8.5 Generation</a></li><li><a href="#best-practice-chunking" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">8.6 Best Practice Chunking</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">8.7 Ringkasan</a></li></ul></nav>
+
+<section id="definisi-rag" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">8.1 Definisi & Mengapa RAG Diperlukan</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Definisi RAG</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Retrieval Augmented Generation (RAG)</strong> adalah teknik yang menggabungkan <strong>information retrieval</strong> (pencarian informasi) dengan <strong>text generation</strong> LLM. Alih-alih hanya mengandalkan pengetahuan internal model (parameter memory), RAG mengambil dokumen-dokumen relevan dari knowledge base eksternal dan menyuntikkannya ke dalam prompt LLM sebagai konteks tambahan. Hasilnya: respons yang lebih akurat, faktual, dan dapat diverifikasi sumbernya.</p>
+
+<div class="callout callout-info"><strong>📖 Analogi:</strong> RAG seperti "open-book exam" untuk LLM. Model tidak perlu menghafal semua pengetahuan dalam parameternya; cukup mencari di "buku referensi" (vector database) saat dibutuhkan.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Mengapa RAG Diperlukan?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Tiga masalah utama LLM yang diatasi oleh RAG:</p>
+
+<div class="space-y-3 mb-4">
+  <div class="p-4 border border-red-200 dark:border-red-900 rounded-xl bg-red-50 dark:bg-red-950/20">
+    <h4 class="font-semibold text-red-800 dark:text-red-400">🔴 Halusinasi (Hallucination)</h4>
+    <p class="text-sm text-red-700 dark:text-red-300">LLM sering menghasilkan informasi yang terdengar meyakinkan tetapi faktanya salah. RAG menyediakan ground-truth dari dokumen sumber, secara drastis mengurangi halusinasi.</p>
+  </div>
+  <div class="p-4 border border-orange-200 dark:border-orange-900 rounded-xl bg-orange-50 dark:bg-orange-950/20">
+    <h4 class="font-semibold text-orange-800 dark:text-orange-400">🟠 Knowledge Cutoff</h4>
+    <p class="text-sm text-orange-700 dark:text-orange-300">LLM hanya mengetahui informasi sampai tanggal training cutoff-nya. RAG memungkinkan akses ke informasi real-time atau terbaru melalui knowledge base yang selalu diperbarui.</p>
+  </div>
+  <div class="p-4 border border-blue-200 dark:border-blue-900 rounded-xl bg-blue-50 dark:bg-blue-950/20">
+    <h4 class="font-semibold text-blue-800 dark:text-blue-400">🔵 Domain-Specific Knowledge</h4>
+    <p class="text-sm text-blue-700 dark:text-blue-300">LLM general-purpose tidak memiliki pengetahuan mendalam tentang domain spesifik (hukum, medis, internal perusahaan). RAG memungkinkan injeksi pengetahuan domain-spesifik ke dalam prompt.</p>
+  </div>
+</div>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Tanpa RAG</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Dengan RAG</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Hanya mengandalkan parameter model</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Mencari dokumen relevan dari knowledge base</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Rentan halusinasi</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Jawaban berbasis sumber yang dapat diverifikasi</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Terbatas pada knowledge cutoff</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Selalu up-to-date dengan data terbaru</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tidak transparan</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Dapat mencantumkan sumber (source attribution)</td></tr>
+</tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Use Cases RAG</h3>
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>📚 Document Q&A</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Tanya-jawab dengan dokumen internal perusahaan</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🤖 Customer Support Bot</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Chatbot yang menjawab berdasarkan knowledge base produk</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🏥 Medical Q&A</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Asisten medis berbasis jurnal dan pedoman klinis</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>⚖️ Legal Research</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Pencarian preseden hukum dari database kasus</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>💻 Code Assistant</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Mencari codebase untuk menjawab pertanyaan developer</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>📊 Business Intelligence</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Query data bisnis dengan natural language</p></div>
+</div>
+</section>
+
+<section id="arsitektur-rag" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">8.2 Arsitektur RAG</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Arsitektur RAG terdiri dari <strong>tiga pipeline utama</strong> yang bekerja bersama: Indexing Pipeline (offline), Retrieval Pipeline (online), dan Generation.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TB
+    subgraph OFFLINE["🔧 Indexing Pipeline (Offline)"]
+        A["📄 Dokumen"] --> B["✂️ Chunking"]
+        B --> C["🧮 Embedding"]
+        C --> D["🗄️ Vector Store"]
+    end
+
+    subgraph ONLINE["⚡ Retrieval Pipeline (Online)"]
+        E["❓ User Query"] --> F["🧮 Query Embedding"]
+        F --> G["🔍 Similarity Search"]
+        D --> G
+        G --> H["📋 Retrieved Contexts"]
+    end
+
+    subgraph GEN["🤖 Generation"]
+        H --> I["📝 Prompt Template + Context"]
+        E --> I
+        I --> J["🧠 LLM"]
+        J --> K["✅ Response + Sources"]
+    end
+
+    style OFFLINE fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
+    style ONLINE fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+    style GEN fill:#fffbeb,stroke:#f59e0b,stroke-width:2px
+</div>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Indexing Pipeline</strong> diproses secara offline (batch): dokumen di-chunk, di-embedding, dan disimpan ke vector store. <strong>Retrieval Pipeline</strong> berjalan real-time: query user di-embedding, kemudian dilakukan similarity search ke vector store untuk mengambil top-K chunk paling relevan. <strong>Generation</strong>: chunk yang ter-retrieve disusun bersama query user ke dalam prompt template, lalu dikirim ke LLM untuk menghasilkan respons final.</p>
+</section>
+
+<section id="indexing-pipeline" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">8.3 Indexing Pipeline</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Indexing Pipeline adalah proses mempersiapkan dokumen agar dapat di-retrieve secara efisien. Terdiri dari tiga tahap utama: <strong>Chunking → Embedding → Vector Store</strong>.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">8.3.1 Chunking Strategies</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Chunking adalah proses memecah dokumen panjang menjadi potongan-potongan kecil (chunks) yang dapat diproses oleh embedding model dan di-retrieve secara presisi.</p>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">a) Fixed-Size Chunking</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Memecah dokumen berdasarkan <strong>jumlah karakter atau token tetap</strong> (misal: 512 token per chunk). Sederhana dan cepat, tetapi dapat memotong kalimat atau paragraf di tengah.</p>
+<pre class="language-python"><code># Fixed-size chunking dengan overlap
+def fixed_size_chunk(text, chunk_size=512, overlap=50):
+    chunks = []
+    start = 0
+    while start < len(text):
+        end = start + chunk_size
+        chunk = text[start:end]
+        chunks.append(chunk)
+        start = end - overlap  # overlap untuk menjaga konteks
+    return chunks
+
+# Contoh penggunaan
+text = "Dokumen panjang tentang AI..."
+chunks = fixed_size_chunk(text, chunk_size=512, overlap=50)
+print(f"Jumlah chunks: {len(chunks)}")</code></pre>
+
+<div class="callout callout-info"><strong>📌 Overlap:</strong> Overlap (tumpang tindih) antar chunk memastikan tidak ada informasi yang hilang di batas pemotongan. Overlap 10-20% dari chunk size adalah rekomendasi umum.</div>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">b) Semantic Chunking</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Memecah dokumen berdasarkan <strong>batas semantik alami</strong> seperti paragraf, section header, atau perubahan topik. Menggunakan embedding similarity untuk mendeteksi "breakpoint" semantik.</p>
+<pre class="language-python"><code># Semantic chunking berdasarkan embedding similarity
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+def semantic_chunk(sentences, embeddings, threshold=0.5):
+    chunks = []
+    current_chunk = [sentences[0]]
+    
+    for i in range(1, len(sentences)):
+        similarity = cosine_similarity(
+            [embeddings[i-1]], [embeddings[i]]
+        )[0][0]
+        
+        if similarity < threshold:  # topik berubah
+            chunks.append(" ".join(current_chunk))
+            current_chunk = [sentences[i]]
+        else:
+            current_chunk.append(sentences[i])
+    
+    if current_chunk:
+        chunks.append(" ".join(current_chunk))
+    return chunks</code></pre>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">c) Recursive Chunking</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Menggunakan <strong>separator hierarkis</strong> untuk memecah teks. Mulai dari separator terbesar (misal: "\n\n" untuk paragraf), jika masih terlalu besar, lanjut ke separator lebih kecil ("\n", ". ", " ").</p>
+<pre class="language-python"><code># Recursive character text splitting (seperti LangChain)
+def recursive_chunk(text, chunk_size=512, chunk_overlap=50,
+                    separators=["\n\n", "\n", ". ", " ", ""]):
+    # Gunakan separator pertama yang cocok
+    for sep in separators:
+        if sep == "":
+            # Fallback: split per karakter
+            chunks = [text[i:i+chunk_size] 
+                      for i in range(0, len(text), chunk_size - chunk_overlap)]
+            return chunks
+        
+        splits = text.split(sep)
+        if len(splits) > 1:
+            # Rekursif: gabungkan split yang < chunk_size
+            result = []
+            current = ""
+            for split in splits:
+                if len(current) + len(split) + len(sep) <= chunk_size:
+                    current = (current + sep + split) if current else split
+                else:
+                    if current:
+                        result.append(current)
+                    current = split
+            if current:
+                result.append(current)
+            return result
+    
+    return [text]</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">8.3.2 Embedding</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Setiap chunk dikonversi menjadi <strong>vector embedding</strong> menggunakan embedding model (seperti yang dibahas di BAB 6). Embedding ini merepresentasikan makna semantik chunk dalam ruang vektor berdimensi tinggi.</p>
+
+<pre class="language-python"><code>from openai import OpenAI
+client = OpenAI()
+
+def embed_chunks(chunks, model="text-embedding-3-small"):
+    embeddings = []
+    for chunk in chunks:
+        response = client.embeddings.create(
+            model=model,
+            input=chunk
+        )
+        embeddings.append(response.data[0].embedding)
+    return embeddings
+
+chunks = ["Chunk 1 tentang AI...", "Chunk 2 tentang ML..."]
+embeddings = embed_chunks(chunks)
+print(f"Dimensi embedding: {len(embeddings[0])}")  # 1536</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">8.3.3 Vector Store</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Embedding disimpan di vector database (Pinecone, Weaviate, Qdrant, Chroma, Milvus, FAISS) bersama metadata dan teks asli chunk. Vector store memungkinkan pencarian berbasis similarity yang cepat.</p>
+
+<pre class="language-python"><code>import chromadb
+
+client = chromadb.Client()
+collection = client.create_collection(name="knowledge_base")
+
+# Simpan chunks + embeddings + metadata ke vector store
+for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+    collection.add(
+        ids=[f"doc_{i}"],
+        embeddings=[embedding],
+        documents=[chunk],
+        metadatas=[{"source": "bab-08.pdf", "page": i+1}]
+    )
+
+print(f"Collection count: {collection.count()}")</code></pre>
+
+<div class="callout callout-best"><strong>💡 Best Practice:</strong> Simpan metadata yang kaya (sumber, halaman, tanggal, judul dokumen) di vector store. Metadata ini sangat berguna untuk filtering dan source attribution saat retrieval.</div>
+</section>
+
+<section id="retrieval-pipeline" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">8.4 Retrieval Pipeline</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Retrieval Pipeline berjalan <strong>real-time</strong> saat user mengirimkan query. Pipeline ini mengambil chunk paling relevan dari vector store untuk digunakan sebagai konteks LLM.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">8.4.1 Query Embedding</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Query user di-embedding menggunakan <strong>model yang sama</strong> dengan yang digunakan saat indexing. Ini penting agar query dan chunk berada di ruang vektor yang sama.</p>
+<pre class="language-python"><code>def embed_query(query, model="text-embedding-3-small"):
+    response = client.embeddings.create(
+        model=model,
+        input=query
+    )
+    return response.data[0].embedding
+
+query_embedding = embed_query("Apa itu RAG?")</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">8.4.2 Retriever Strategies</h3>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">a) Similarity Search</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Mencari top-K chunk dengan <strong>cosine similarity tertinggi</strong> terhadap query embedding. Ini adalah strategi paling dasar dan paling umum digunakan.</p>
+<pre class="language-python"><code>def similarity_search(query_embedding, collection, top_k=5):
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=top_k
+    )
+    return results["documents"][0]
+
+contexts = similarity_search(query_embedding, collection, top_k=5)</code></pre>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">b) Maximal Marginal Relevance (MMR)</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">MMR menyeimbangkan <strong>relevansi</strong> dengan <strong>diversitas</strong>. MMR memilih chunk yang relevan tetapi tidak terlalu mirip satu sama lain, menghindari redundansi informasi.</p>
+<pre class="language-python"><code>def mmr_search(query_embedding, chunk_embeddings, chunks, 
+               top_k=5, lambda_param=0.5):
+    """
+    lambda_param: 1 = pure relevance, 0 = pure diversity
+    """
+    selected = []
+    remaining = list(range(len(chunks)))
+    
+    while len(selected) < top_k and remaining:
+        mmr_scores = []
+        for idx in remaining:
+            # Relevance to query
+            relevance = cosine_similarity(
+                [query_embedding], [chunk_embeddings[idx]]
+            )[0][0]
+            
+            # Max similarity to already selected
+            max_sim = 0
+            if selected:
+                max_sim = max(
+                    cosine_similarity(
+                        [chunk_embeddings[idx]], [chunk_embeddings[s]]
+                    )[0][0]
+                    for s in selected
+                )
+            
+            mmr = lambda_param * relevance - (1 - lambda_param) * max_sim
+            mmr_scores.append(mmr)
+        
+        best_idx = remaining[np.argmax(mmr_scores)]
+        selected.append(best_idx)
+        remaining.remove(best_idx)
+    
+    return [chunks[i] for i in selected]
+
+contexts = mmr_search(query_embedding, embeddings, chunks, top_k=5)</code></pre>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">c) Similarity Score Threshold</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Hanya mengambil chunk dengan similarity score <strong>di atas threshold tertentu</strong>. Ini mencegah LLM menerima konteks yang tidak relevan.</p>
+<pre class="language-python"><code>def threshold_search(query_embedding, collection, 
+                     similarity_threshold=0.7, max_k=10):
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=max_k,
+        include=["distances"]
+    )
+    
+    # Filter berdasarkan threshold (distance → similarity)
+    filtered = []
+    for doc, distance in zip(results["documents"][0], 
+                              results["distances"][0]):
+        similarity = 1 - distance  # untuk cosine distance
+        if similarity >= similarity_threshold:
+            filtered.append(doc)
+    
+    return filtered
+
+contexts = threshold_search(query_embedding, collection, threshold=0.7)</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">8.4.3 Re-ranking (Optional)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Setelah retrieval, chunk dapat di-<strong>re-rank</strong> menggunakan model cross-encoder yang lebih akurat (tapi lebih lambat). Strategi umum: retrieve banyak kandidat dengan bi-encoder (cepat), lalu re-rank top-N dengan cross-encoder (akurat).</p>
+<pre class="language-python"><code>from sentence_transformers import CrossEncoder
+
+reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+
+def rerank(query, contexts):
+    pairs = [[query, ctx] for ctx in contexts]
+    scores = reranker.predict(pairs)
+    ranked = sorted(zip(contexts, scores), key=lambda x: x[1], reverse=True)
+    return [ctx for ctx, score in ranked]
+
+# Retrieve 20 candidates, re-rank to top 5
+candidates = similarity_search(query_embedding, collection, top_k=20)
+top_contexts = rerank("Apa itu RAG?", candidates)[:5]</code></pre>
+</section>
+
+<section id="generation" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">8.5 Generation</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Tahap terakhir: chunk yang ter-retrieve disusun ke dalam <strong>prompt template</strong> bersama query user, lalu dikirim ke LLM untuk menghasilkan respons final.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">8.5.1 Prompt Template dengan Context</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Prompt harus di-desain dengan hati-hati agar LLM:</p>
+<ul class="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300 mb-4">
+  <li>Hanya menggunakan informasi dari konteks yang diberikan</li>
+  <li>Mengakui jika konteks tidak cukup untuk menjawab</li>
+  <li>Menyertakan sitasi atau sumber</li>
+</ul>
+
+<pre class="language-python"><code>RAG_PROMPT_TEMPLATE = """Anda adalah asisten AI yang menjawab berdasarkan 
+konteks yang diberikan. Gunakan HANYA informasi dari konteks di bawah ini.
+Jika konteks tidak mengandung jawaban, katakan "Saya tidak menemukan 
+informasi yang cukup untuk menjawab pertanyaan ini."
+
+Konteks:
+{context}
+
+Pertanyaan: {question}
+
+Jawaban (sertakan sumber dari konteks jika relevan):"""
+
+def generate_rag_response(query, contexts, llm_model="gpt-4o"):
+    context_text = "\n\n---\n\n".join(contexts)
+    prompt = RAG_PROMPT_TEMPLATE.format(
+        context=context_text,
+        question=query
+    )
+    
+    response = client.chat.completions.create(
+        model=llm_model,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.3  # lebih deterministik untuk factual Q&A
+    )
+    
+    return response.choices[0].message.content
+
+answer = generate_rag_response("Apa itu RAG?", contexts)
+print(answer)</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">8.5.2 Source Attribution</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Untuk transparansi, sertakan metadata sumber dalam prompt dan minta LLM untuk men-sitasi sumbernya.</p>
+
+<pre class="language-python"><code>RAG_PROMPT_WITH_SOURCES = """Anda adalah asisten AI yang menjawab berdasarkan 
+konteks. Setiap pernyataan faktual HARUS menyertakan nomor sumber dalam 
+kurung siku [1], [2], dst.
+
+Konteks:
+[1] {source_1_title}: {source_1_content}
+[2] {source_2_title}: {source_2_content}
+...
+
+Pertanyaan: {question}
+
+Jawaban (dengan sitasi sumber):"""
+
+def generate_with_citations(query, contexts_with_metadata):
+    # Bangun konteks dengan penomoran sumber
+    context_parts = []
+    for i, ctx in enumerate(contexts_with_metadata, 1):
+        source = ctx["metadata"].get("source", f"Dokumen {i}")
+        context_parts.append(f"[{i}] {source}: {ctx['content']}")
+    
+    prompt = RAG_PROMPT_WITH_SOURCES.format(
+        context="\n\n".join(context_parts),
+        question=query
+    )
+    # ... call LLM as usual</code></pre>
+
+<div class="callout callout-best"><strong>💡 Best Practice:</strong> Gunakan temperature rendah (0.0–0.3) untuk RAG generation. Ini mengurangi kreativitas LLM dan membuatnya lebih patuh pada konteks yang diberikan, mengurangi risiko halusinasi.</div>
+</section>
+
+<section id="best-practice-chunking" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">8.6 Best Practice Chunking</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Chunking adalah salah satu aspek paling kritis dalam RAG. Chunk yang terlalu kecil kehilangan konteks; chunk yang terlalu besar menurunkan presisi retrieval.</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Best Practice</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Penjelasan</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Gunakan chunk size 256–1024 token</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Sesuaikan dengan max context embedding model. text-embedding-3-small: max 8191 token, tapi 512–1024 token memberikan keseimbangan presisi dan konteks optimal.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Overlap 10–20%</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Overlap menjaga kontinuitas informasi di batas chunk. Terlalu besar: redundansi. Terlalu kecil: informasi hilang.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Hormati batas semantik</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Jangan potong kalimat/paragraf di tengah. Gunakan recursive splitting dengan separator "\n\n", "\n", ". ".</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Pertahankan metadata</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Simpan judul dokumen, section header, nomor halaman sebagai metadata setiap chunk.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Pertimbangkan chunk hierarchy</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Simpan parent chunk (lebih besar) bersama child chunk. Saat retrieval, ambil parent untuk konteks lebih luas.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Eksperimen & evaluasi</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tidak ada satu ukuran untuk semua. Uji berbagai chunk size dan strategy pada dataset Anda sendiri.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Preprocessing dokumen</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Bersihkan teks: hapus header/footer berulang, normalisasi whitespace, ekstrak teks dari PDF dengan benar.</td></tr>
+</tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Rekomendasi Chunk Size Berdasarkan Use Case</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Use Case</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Rekomendasi Chunk Size</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Alasan</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">FAQ / Short Q&A</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">128–256 token</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Pertanyaan pendek, butuh jawaban presisi</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Dokumentasi Teknis</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">512–1024 token</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Butuh konteks section lengkap</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Legal / Kontrak</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">1024–2048 token</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Klausal perlu konteks luas</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Research Paper</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">512–1024 token</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Paragraf akademik biasanya ~200 kata</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Code Repository</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Fungsi/Kelas penuh</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Chunk per fungsi, bukan per baris</td></tr>
+</tbody></table>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">8.7 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>RAG</strong> menggabungkan retrieval dengan generation untuk mengatasi halusinasi, knowledge cutoff, dan kebutuhan domain-specific knowledge.</li>
+<li><strong>Arsitektur RAG</strong> terdiri dari tiga pipeline: Indexing (chunking → embedding → vector store), Retrieval (query embedding → similarity search → context), dan Generation (prompt template + context → LLM).</li>
+<li><strong>Chunking strategies</strong>: Fixed-size (sederhana), Semantic (berbasis makna), Recursive (hierarkis). Pilih berdasarkan jenis dokumen dan use case.</li>
+<li><strong>Retriever</strong>: Similarity search (dasar), MMR (diversitas), Similarity threshold (filter relevansi). Re-ranking dengan cross-encoder meningkatkan akurasi.</li>
+<li><strong>Best practice chunking</strong>: 256–1024 token, overlap 10-20%, hormati batas semantik, simpan metadata kaya, lakukan evaluasi iteratif.</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">📝 Quiz</h4><ol class="space-y-3 text-sm"><li><p class="font-medium">1. Apa tiga masalah utama LLM yang diatasi oleh RAG?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Kecepatan, biaya, skalabilitas</li><li>B. Halusinasi, knowledge cutoff, domain-specific knowledge</li><li>C. Keamanan, privasi, compliance</li><li>D. Akurasi embedding, dimensi vektor, similarity metric</li></ul></li><li><p class="font-medium">2. Apa perbedaan utama antara MMR dan similarity search biasa?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. MMR lebih cepat</li><li>B. MMR menyeimbangkan relevansi dengan diversitas, menghindari redundansi</li><li>C. MMR hanya menggunakan metadata</li><li>D. Tidak ada perbedaan signifikan</li></ul></li><li><p class="font-medium">3. Mengapa overlap penting dalam chunking?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Meningkatkan kecepatan embedding</li><li>B. Menjaga kontinuitas informasi di batas antar chunk</li><li>C. Mengurangi ukuran vector store</li><li>D. Mempermudah metadata indexing</li></ul></li></ol></div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">🏋️ Latihan</h4><ol class="space-y-3 text-sm"><li><strong>Tugas 1:</strong> Buatlah RAG pipeline sederhana menggunakan Python + ChromaDB + OpenAI API. Uji dengan 5 dokumen teks tentang topik pilihan Anda.</li><li><strong>Tugas 2:</strong> Bandingkan hasil retrieval antara chunk size 256, 512, dan 1024 token pada dataset yang sama. Dokumentasikan perbedaan presisi jawaban.</li><li><strong>Tugas 3:</strong> Implementasikan MMR retrieval dan bandingkan kualitas respons dengan similarity search biasa.</li></ol></div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-07.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 7</a>
+  <a href="bab-09.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 9 — MCP<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

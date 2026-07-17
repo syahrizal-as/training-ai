@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 2: Jenis-Jenis AI — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 2 — Jenis-Jenis AI</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 2: Jenis-Jenis AI</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 2</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Jenis-Jenis Artificial Intelligence</h1><p class="text-lg text-gray-600 dark:text-gray-400">Memahami klasifikasi AI berdasarkan kapabilitas: Narrow AI, Artificial General Intelligence (AGI), dan Artificial Super Intelligence (ASI).</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Membedakan tiga jenis AI berdasarkan tingkat kapabilitas</li><li>Memahami karakteristik Narrow AI beserta kelebihan dan kekurangannya</li><li>Mengetahui konsep AGI dan status perkembangannya saat ini</li><li>Memahami konsep ASI beserta implikasi etisnya</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#narrow-ai" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">2.1 Narrow AI (ANI)</a></li><li><a href="#agi" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">2.2 Artificial General Intelligence (AGI)</a></li><li><a href="#asi" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">2.3 Artificial Super Intelligence (ASI)</a></li><li><a href="#perbandingan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">2.4 Perbandingan ANI vs AGI vs ASI</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">2.5 Ringkasan</a></li></ul></nav>
+
+<section id="narrow-ai" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">2.1 Narrow AI (Artificial Narrow Intelligence / ANI)</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Definisi</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Narrow AI</strong> (juga disebut <strong>Weak AI</strong> atau <strong>Artificial Narrow Intelligence / ANI</strong>) adalah jenis AI yang dirancang dan dilatih untuk melakukan <strong>satu tugas spesifik</strong> dengan sangat baik. ANI tidak memiliki kesadaran, pemahaman umum, atau kemampuan untuk mentransfer pengetahuan antar domain yang berbeda. Semua AI yang ada saat ini (hingga 2026) adalah Narrow AI.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Cara Kerja</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Narrow AI bekerja dengan mempelajari pola dari <strong>dataset spesifik</strong> menggunakan algoritma Machine Learning atau Deep Learning. Model dilatih pada data yang relevan dengan tugas tertentu, kemudian menggunakan pola yang dipelajari tersebut untuk membuat prediksi atau menghasilkan output pada data baru.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart LR
+    A[Data Spesifik] --> B[Training Model]
+    B --> C[Model Terlatih]
+    C --> D[Input Baru]
+    D --> E[Output / Prediksi]
+    E --> F[Tugas Spesifik Selesai]
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Karakteristik</h3>
+<ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300 mb-4">
+  <li><strong>Spesialisasi sempit:</strong> Hanya unggul pada satu domain atau tugas</li>
+  <li><strong>Data-driven:</strong> Performa bergantung pada kualitas dan kuantitas data training</li>
+  <li><strong>Tidak memiliki kesadaran:</strong> Tidak memahami arti sebenarnya dari output yang dihasilkan</li>
+  <li><strong>Tidak dapat mentransfer pengetahuan:</strong> Model pengenalan gambar tidak bisa tiba-tiba menerjemahkan bahasa</li>
+  <li><strong>Reaktif:</strong> Merespons input, tidak memiliki inisiatif sendiri</li>
+</ul>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Kelebihan</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Kekurangan</th></tr></thead>
+<tbody><tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Akurasi sangat tinggi pada tugas spesifik</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tidak fleksibel — tidak bisa menangani tugas di luar domainnya</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Cepat dan efisien</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Membutuhkan data training yang besar dan berkualitas</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Dapat beroperasi 24/7</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Rentan terhadap bias dalam data training</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Biaya operasional rendah setelah deployment</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tidak memiliki pemahaman konteks di luar data training</td></tr></tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Contoh Narrow AI</h3>
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🔍 Google Search</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Mencari dan meranking halaman web</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🎵 Spotify Recommendations</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Merekomendasikan musik berdasarkan preferensi</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🚗 Tesla Autopilot</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Mengemudi kendaraan di jalan raya</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>💬 ChatGPT</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Generasi dan pemahaman teks percakapan</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🏥 AI Diagnosa Medis</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Mendeteksi kanker dari scan radiologi</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🎨 DALL-E / Midjourney</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Menghasilkan gambar dari deskripsi teks</p></div>
+</div>
+
+<div class="callout callout-best"><strong>💡 Best Practice:</strong> Narrow AI paling efektif ketika diterapkan pada masalah yang terdefinisi dengan jelas dan memiliki data training yang memadai. Jangan mencoba menggunakan Narrow AI untuk tugas di luar domain spesifiknya.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Studi Kasus: ChatGPT sebagai Narrow AI</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Meskipun ChatGPT tampak sangat cerdas dan dapat melakukan banyak hal (menulis kode, menerjemahkan, menganalisis), ia tetaplah Narrow AI karena:</p>
+<ul class="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300 mb-4">
+  <li>Tidak memiliki kesadaran atau pemahaman sejati tentang dunia</li>
+  <li>Tidak dapat belajar dari interaksinya sendiri (setiap sesi dimulai dari awal)</li>
+  <li>Terbatas pada menghasilkan teks berdasarkan pola statistik</li>
+  <li>Tidak dapat melakukan aksi di dunia nyata tanpa bantuan tools eksternal</li>
+</ul>
+</section>
+
+<section id="agi" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">2.2 Artificial General Intelligence (AGI)</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Definisi</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Artificial General Intelligence (AGI)</strong> adalah jenis AI hipotetis yang memiliki kemampuan kognitif setara dengan manusia di <strong>seluruh domain intelektual</strong>. AGI dapat memahami, belajar, dan menerapkan pengetahuan pada berbagai masalah yang berbeda — seperti yang dilakukan manusia. AGI dapat mentransfer pengetahuan dari satu domain ke domain lain tanpa pelatihan ulang.</p>
+
+<div class="callout callout-info"><strong>📖 Metafora:</strong> Jika Narrow AI adalah "kalkulator super" yang hanya bisa menghitung, maka AGI adalah "manusia digital" yang bisa belajar apa saja — dari memasak hingga fisika kuantum — seperti manusia belajar.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Karakteristik AGI</h3>
+<ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300 mb-4">
+  <li><strong>Transfer learning:</strong> Kemampuan menerapkan pengetahuan dari satu domain ke domain lain</li>
+  <li><strong>Reasoning & problem-solving:</strong> Penalaran logis di berbagai konteks</li>
+  <li><strong>Kreativitas:</strong> Menghasilkan ide-ide baru dan orisinal</li>
+  <li><strong>Pemahaman konteks:</strong> Memahami nuansa, ironi, metafora, dan konteks sosial</li>
+  <li><strong>Self-improvement:</strong> Kemampuan meningkatkan diri sendiri (<em>recursive self-improvement</em>)</li>
+  <li><strong>Common sense:</strong> Penalaran akal sehat yang dimiliki manusia</li>
+</ul>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Status Perkembangan (2026)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Hingga tahun 2026, <strong>belum ada AGI sejati yang berhasil diciptakan</strong>. Namun, beberapa tanda awal (<em>sparks of AGI</em>) telah terlihat pada model-model frontier:</p>
+<ul class="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300 mb-4">
+  <li><strong>GPT-4 / GPT-4o:</strong> Menunjukkan kemampuan reasoning yang mengesankan di berbagai domain</li>
+  <li><strong>DeepSeek-R1:</strong> Model reasoning dengan chain-of-thought yang eksplisit</li>
+  <li><strong>Claude 3.5 Sonnet:</strong> Kemampuan analisis dan coding yang sangat kuat</li>
+  <li><strong>Agentic AI (2026):</strong> AI Agent dengan perencanaan dan tool use multi-langkah mendekati beberapa aspek AGI</li>
+</ul>
+
+<div class="callout callout-warning"><strong>⚠️ Perdebatan:</strong> Komunitas AI terbagi tentang kapan AGI akan tercapai. Sam Altman (OpenAI) memperkirakan AGI dalam 5-10 tahun. Yann LeCun (Meta) berpendapat kita masih jauh dari AGI sejati. Geoffrey Hinton memperingatkan risiko eksistensial AGI.</div>
+</section>
+
+<section id="asi" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">2.3 Artificial Super Intelligence (ASI)</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Definisi</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Artificial Super Intelligence (ASI)</strong> adalah konsep AI hipotetis yang kecerdasannya <strong>jauh melampaui</strong> manusia paling cerdas di <strong>semua</strong> domain — termasuk kreativitas, kebijaksanaan, dan keterampilan sosial. Nick Bostrom mendefinisikan ASI sebagai "intelek yang jauh lebih pintar daripada manusia terbaik di hampir setiap bidang, termasuk kreativitas ilmiah, kebijaksanaan umum, dan keterampilan sosial."</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Karakteristik</h3>
+<ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300 mb-4">
+  <li>Kemampuan kognitif yang melampaui seluruh umat manusia secara kolektif</li>
+  <li>Dapat memecahkan masalah yang saat ini tidak terpecahkan (energi fusi, penyembuhan kanker, perjalanan antariksa)</li>
+  <li>Mampu melakukan <em>recursive self-improvement</em> tanpa batas</li>
+</ul>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Tantangan, Risiko & Etika</h3>
+<div class="space-y-3 mb-4">
+  <div class="p-4 border border-red-200 dark:border-red-900 rounded-xl bg-red-50 dark:bg-red-950/20">
+    <h4 class="font-semibold text-red-800 dark:text-red-400">🔴 Alignment Problem</h4>
+    <p class="text-sm text-red-700 dark:text-red-300">Bagaimana memastikan ASI memiliki tujuan yang selaras dengan nilai-nilai kemanusiaan? ASI yang tidak ter-align dapat menyebabkan bencana eksistensial.</p>
+  </div>
+  <div class="p-4 border border-orange-200 dark:border-orange-900 rounded-xl bg-orange-50 dark:bg-orange-950/20">
+    <h4 class="font-semibold text-orange-800 dark:text-orange-400">🟠 Control Problem</h4>
+    <p class="text-sm text-orange-700 dark:text-orange-300">Bagaimana manusia dapat mengontrol entitas yang jauh lebih cerdas? Bisakah kita membuat "tombol off" yang tidak bisa diakali ASI?</p>
+  </div>
+  <div class="p-4 border border-yellow-200 dark:border-yellow-900 rounded-xl bg-yellow-50 dark:bg-yellow-950/20">
+    <h4 class="font-semibold text-yellow-800 dark:text-yellow-400">🟡 Senjata Otonom</h4>
+    <p class="text-sm text-yellow-700 dark:text-yellow-300">Penggunaan AI super cerdas dalam sistem persenjataan dapat memicu perlombaan senjata yang tidak terkendali.</p>
+  </div>
+  <div class="p-4 border border-purple-200 dark:border-purple-900 rounded-xl bg-purple-50 dark:bg-purple-950/20">
+    <h4 class="font-semibold text-purple-800 dark:text-purple-400">🟣 Dampak Sosial-Ekonomi</h4>
+    <p class="text-sm text-purple-700 dark:text-purple-300">ASI berpotensi menggantikan hampir seluruh pekerjaan manusia, menciptakan ketimpangan ekonomi yang ekstrem.</p>
+  </div>
+</div>
+</section>
+
+<section id="perbandingan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">2.4 Perbandingan ANI vs AGI vs ASI</h2>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Aspek</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Narrow AI (ANI)</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">General AI (AGI)</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Super AI (ASI)</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Status</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2"><span class="text-green-600 font-semibold">✅ Sudah ada</span></td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2"><span class="text-yellow-600 font-semibold">🟡 Belum tercapai</span></td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2"><span class="text-red-600 font-semibold">🔴 Hipotetis</span></td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Ruang Lingkup</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Satu tugas spesifik</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Semua domain intelektual manusia</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Melampaui semua kapasitas manusia</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Transfer Learning</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">❌ Tidak bisa</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Bisa</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">✅ Superior</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Contoh</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">ChatGPT, AlphaGo, Siri</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">(Belum ada)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">(Fiksi ilmiah)</td></tr>
+</tbody></table>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">2.5 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm"><li>Semua AI yang ada saat ini adalah <strong>Narrow AI</strong> — sangat baik pada tugas spesifik tetapi tidak memiliki kecerdasan umum.</li><li><strong>AGI</strong> adalah AI dengan kemampuan kognitif setara manusia di semua domain — belum tercapai namun menunjukkan tanda-tanda awal.</li><li><strong>ASI</strong> adalah konsep AI yang melampaui kecerdasan manusia — masih sepenuhnya hipotetis.</li><li>Tantangan terbesar: <strong>AI Alignment</strong> — memastikan tujuan AI selaras dengan nilai kemanusiaan.</li></ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">📝 Quiz</h4><ol class="space-y-3 text-sm"><li><p class="font-medium">1. Apa perbedaan utama Narrow AI dengan AGI?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Narrow AI lebih mahal</li><li>B. Narrow AI terbatas pada tugas spesifik, AGI dapat menangani berbagai domain</li><li>C. Narrow AI lebih cepat</li><li>D. Tidak ada perbedaan</li></ul></li><li><p class="font-medium">2. Apakah ChatGPT termasuk AGI?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Ya, karena bisa melakukan banyak hal</li><li>B. Tidak, karena masih Narrow AI yang khusus menghasilkan teks</li><li>C. Sudah mendekati ASI</li><li>D. Tergantung versinya</li></ul></li></ol></div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-01.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 1</a>
+  <a href="bab-03.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 3 — Generative AI<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

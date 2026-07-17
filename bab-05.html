@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 5: Prompt Engineering — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-xml.min.js" data-manual></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 5 — Prompt Engineering</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 font-medium">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 5: Prompt Engineering</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 5</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Prompt Engineering</h1><p class="text-lg text-gray-600 dark:text-gray-400">Menguasai seni dan ilmu merancang prompt yang efektif: dari Zero-shot hingga Chain-of-Thought, Role Prompting, dan Structured Output.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami apa itu Prompt Engineering dan mengapa penting</li><li>Menguasai teknik prompting: Zero-shot, One-shot, Few-shot</li><li>Menerapkan teknik reasoning: Chain-of-Thought (CoT) dan Tree-of-Thought (ToT)</li><li>Menggunakan Role Prompting untuk output yang lebih terarah</li><li>Memahami dan menerapkan Structured Output (JSON, XML)</li><li>Mampu membedakan prompt baik vs buruk untuk setiap teknik</li></ul></div>
+
+<div class="callout callout-info" style="background:#faf5ff;border-left:4px solid #8b5cf6;color:#6b21a8;"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Menganalisis kualitas prompt dan mengidentifikasi area perbaikan</li><li>Memilih teknik prompting yang tepat berdasarkan kompleksitas tugas</li><li>Mendesain prompt sistematis dengan format output terstruktur</li><li>Mengevaluasi efektivitas prompt melalui iterasi dan perbaikan</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#pengantar" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">5.1 Pengantar Prompt Engineering</a></li><li><a href="#zero-one-few" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">5.2 Zero-shot, One-shot, Few-shot</a></li><li><a href="#cot-tot" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">5.3 Chain-of-Thought & Tree-of-Thought</a></li><li><a href="#role" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">5.4 Role Prompting</a></li><li><a href="#structured" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">5.5 Structured Output (JSON, XML)</a></li><li><a href="#best-practice" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">5.6 Best Practice Prompt Engineering</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">5.7 Ringkasan</a></li></ul></nav>
+
+<section id="pengantar" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">5.1 Pengantar Prompt Engineering</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Apa itu Prompt Engineering?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Prompt Engineering</strong> adalah praktik merancang dan mengoptimalkan input (prompt) yang diberikan ke model generative AI untuk mendapatkan output yang diinginkan secara konsisten dan akurat. Prompt engineering mencakup pemilihan kata, struktur prompt, penyediaan contoh, penetapan format output, dan teknik-teknik khusus untuk meningkatkan kualitas respons model.</p>
+
+<div class="callout callout-info"><strong>📖 Analogi:</strong> Prompt Engineering seperti menulis brief untuk seorang ahli. Semakin jelas, spesifik, dan terstruktur brief Anda, semakin baik hasil yang akan diberikan. Brief yang buruk ("buat sesuatu yang keren") menghasilkan output acak; brief yang baik menghasilkan output berkualitas tinggi.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Mengapa Prompt Engineering Penting?</h3>
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🎯 Akurasi</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Prompt yang baik mengurangi halusinasi dan meningkatkan faktualitas output</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>⚡ Efisiensi</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Mengurangi iterasi dan token yang terbuang karena prompt buruk</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🔄 Konsistensi</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Output yang dapat diprediksi dan konsisten antar percobaan</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🏗️ Integrasi</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Memungkinkan integrasi AI ke dalam sistem produksi yang membutuhkan output terstruktur</p></div>
+</div>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart LR
+    A["🧑‍💻 Prompt Engineering<br/>Merancang input optimal"] --> B["📝 Prompt Efektif"]
+    B --> C["🤖 LLM Processing"]
+    C --> D["✅ Output Berkualitas"]
+
+    E["❌ Prompt Asal"] --> F["🤖 LLM Processing"]
+    F --> G["🗑️ Output Buruk / Tidak Konsisten"]
+
+    style A fill:#22c55e,color:#fff
+    style D fill:#22c55e,color:#fff
+    style E fill:#ef4444,color:#fff
+    style G fill:#ef4444,color:#fff
+</div>
+</section>
+
+<section id="zero-one-few" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">5.2 Zero-shot, One-shot, Few-shot Prompting</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Zero-shot Prompting</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Zero-shot prompting</strong> adalah memberikan instruksi langsung ke model tanpa contoh apapun. Model harus mengandalkan pengetahuannya sendiri untuk menyelesaikan tugas. Cocok untuk tugas sederhana dan umum.</p>
+
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-red-200 dark:border-red-900 rounded-xl bg-red-50 dark:bg-red-950/20">
+    <h4 class="font-semibold text-red-800 dark:text-red-400">❌ Prompt Buruk</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-red-700 dark:text-red-300 mt-1"><code>Analisis sentimen.</code></pre>
+    <p class="text-xs text-red-600 dark:text-red-400 mt-1">Tidak ada teks yang diberikan, terlalu ambigu.</p>
+  </div>
+  <div class="p-4 border border-green-200 dark:border-green-900 rounded-xl bg-green-50 dark:bg-green-950/20">
+    <h4 class="font-semibold text-green-800 dark:text-green-400">✅ Prompt Baik</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-green-700 dark:text-green-300 mt-1"><code>Analisis sentimen dari teks berikut. Kategorikan sebagai: Positif, Negatif, atau Netral.
+
+Teks: "Produk ini luar biasa! Pengiriman cepat dan kualitas melebihi ekspektasi."</code></pre>
+    <p class="text-xs text-green-600 dark:text-green-400 mt-1">Instruksi jelas, kategori didefinisikan, teks disediakan.</p>
+  </div>
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">One-shot Prompting</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>One-shot prompting</strong> memberikan <strong>satu contoh</strong> sebelum meminta model menyelesaikan tugas. Contoh membantu model memahami format dan pola yang diharapkan.</p>
+
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-red-200 dark:border-red-900 rounded-xl bg-red-50 dark:bg-red-950/20">
+    <h4 class="font-semibold text-red-800 dark:text-red-400">❌ Prompt Buruk</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-red-700 dark:text-red-300 mt-1"><code>Terjemahkan ke bahasa Inggris.
+
+Bahasa Indonesia: "Selamat pagi"
+Bahasa Inggris: "Good morning"
+
+Bahasa Indonesia: "Apa kabar?"</code></pre>
+    <p class="text-xs text-red-600 dark:text-red-400 mt-1">Contoh terlalu sederhana, tidak menangkap variasi.</p>
+  </div>
+  <div class="p-4 border border-green-200 dark:border-green-900 rounded-xl bg-green-50 dark:bg-green-950/20">
+    <h4 class="font-semibold text-green-800 dark:text-green-400">✅ Prompt Baik</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-green-700 dark:text-green-300 mt-1"><code>Terjemahkan dari Bahasa Indonesia ke Bahasa Inggris formal.
+
+Contoh:
+ID: "Berdasarkan laporan keuangan kuartal ketiga, perusahaan mencatatkan pertumbuhan laba bersih sebesar 23%."
+EN: "Based on the third quarter financial report, the company recorded a net profit growth of 23%."
+
+Sekarang terjemahkan:
+ID: "Rapat umum pemegang saham akan diselenggarakan pada tanggal 15 Desember 2026 di Hotel Mulia, Jakarta."</code></pre>
+    <p class="text-xs text-green-600 dark:text-green-400 mt-1">Contoh spesifik menunjukkan format dan tone yang diharapkan.</p>
+  </div>
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Few-shot Prompting</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Few-shot prompting</strong> memberikan <strong>beberapa contoh (2-5)</strong> sebelum tugas aktual. Teknik ini sangat efektif untuk tugas yang memerlukan pola spesifik, format konsisten, atau domain knowledge khusus. Semakin banyak dan beragam contoh, semakin baik model memahami pola.</p>
+
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-red-200 dark:border-red-900 rounded-xl bg-red-50 dark:bg-red-950/20">
+    <h4 class="font-semibold text-red-800 dark:text-red-400">❌ Prompt Buruk</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-red-700 dark:text-red-300 mt-1"><code>Buat nama startup.
+
+Contoh:
+1. Gojek - Transportasi
+
+Nama startup untuk aplikasi kesehatan?</code></pre>
+    <p class="text-xs text-red-600 dark:text-red-400 mt-1">Contoh terlalu sedikit, tidak menunjukkan variasi.</p>
+  </div>
+  <div class="p-4 border border-green-200 dark:border-green-900 rounded-xl bg-green-50 dark:bg-green-950/20">
+    <h4 class="font-semibold text-green-800 dark:text-green-400">✅ Prompt Baik</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-green-700 dark:text-green-300 mt-1"><code>Buat nama startup beserta tagline singkat (maks 5 kata) berdasarkan kategori.
+
+Contoh 1:
+Kategori: Transportasi & Logistik
+Nama: GoSend
+Tagline: Kirim apapun, kapanpun, dimanapun.
+
+Contoh 2:
+Kategori: Edukasi Online
+Nama: Pintaria
+Tagline: Belajar tanpa batas untuk semua.
+
+Contoh 3:
+Kategori: Fintech & Pembayaran
+Nama: OyeePay
+Tagline: Transaksi mudah, hidup lebih ringan.
+
+Sekarang:
+Kategori: Aplikasi Kesehatan Mental</code></pre>
+    <p class="text-xs text-green-600 dark:text-green-400 mt-1">Contoh bervariasi menunjukkan format, tone, dan kreativitas yang konsisten.</p>
+  </div>
+</div>
+</section>
+
+<section id="cot-tot" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">5.3 Chain-of-Thought & Tree-of-Thought</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Chain-of-Thought (CoT)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Chain-of-Thought (CoT)</strong> adalah teknik prompting yang meminta model untuk <strong>menunjukkan langkah-langkah penalarannya</strong> sebelum memberikan jawaban final. CoT sangat efektif untuk tugas yang memerlukan reasoning multi-langkah: matematika, logika, coding, dan analisis kompleks. Dengan "berpikir keras", model menghasilkan jawaban yang lebih akurat.</p>
+
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-red-200 dark:border-red-900 rounded-xl bg-red-50 dark:bg-red-950/20">
+    <h4 class="font-semibold text-red-800 dark:text-red-400">❌ Tanpa CoT (Buruk)</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-red-700 dark:text-red-300 mt-1"><code>Sebuah toko memiliki 120 apel. Sepertiganya dijual di pagi hari, seperempat sisanya dijual di siang hari. Berapa apel yang tersisa?</code></pre>
+    <p class="text-xs text-red-600 dark:text-red-400 mt-1">Model bisa langsung menebak tanpa reasoning → sering salah.</p>
+  </div>
+  <div class="p-4 border border-green-200 dark:border-green-900 rounded-xl bg-green-50 dark:bg-green-950/20">
+    <h4 class="font-semibold text-green-800 dark:text-green-400">✅ Dengan CoT (Baik)</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-green-700 dark:text-green-300 mt-1"><code>Sebuah toko memiliki 120 apel. Sepertiganya dijual di pagi hari, seperempat sisanya dijual di siang hari. Berapa apel yang tersisa?
+
+Selesaikan langkah demi langkah:
+1. Hitung jumlah apel yang dijual pagi hari
+2. Hitung sisa apel setelah penjualan pagi
+3. Hitung jumlah apel yang dijual siang hari
+4. Hitung apel yang tersisa</code></pre>
+    <p class="text-xs text-green-600 dark:text-green-400 mt-1">Model dipaksa menunjukkan reasoning → akurasi jauh lebih tinggi.</p>
+  </div>
+</div>
+
+<div class="callout callout-best"><strong>💡 Zero-shot CoT:</strong> Cukup tambahkan "Let's think step by step" atau "Mari kita pikirkan langkah demi langkah" di akhir prompt. Teknik sederhana ini meningkatkan akurasi reasoning secara signifikan tanpa perlu contoh.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Tree-of-Thought (ToT)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Tree-of-Thought (ToT)</strong> adalah evolusi dari CoT di mana model mengeksplorasi <strong>beberapa jalur penalaran secara paralel</strong>, mengevaluasi masing-masing, dan memilih yang terbaik — mirip dengan decision tree. ToT cocok untuk masalah yang memerlukan eksplorasi kreatif atau perencanaan multi-langkah.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TD
+    P["🎯 Problem:<br/>Rencanakan acara company outing"] --> B1["Branch 1:<br/>Outbound di Puncak"]
+    P --> B2["Branch 2:<br/>Beach party di Ancol"]
+    P --> B3["Branch 3:<br/>Staycation di Bandung"]
+
+    B1 --> E1["Evaluasi:<br/>Budget: 50jt ✅<br/>Logistik: Susah ⚠️<br/>Skor: 7/10"]
+    B2 --> E2["Evaluasi:<br/>Budget: 35jt ✅<br/>Logistik: Mudah ✅<br/>Skor: 9/10 ⭐"]
+    B3 --> E3["Evaluasi:<br/>Budget: 60jt ❌<br/>Logistik: Mudah ✅<br/>Skor: 6/10"]
+
+    E2 --> F["✅ Pilih Branch 2:<br/>Beach party di Ancol"]
+</div>
+
+<pre class="language-python"><code># Prompt ToT (Tree-of-Thought)
+# Untuk problem solving, minta model mengeksplorasi 3 solusi berbeda
+
+prompt = """
+Problem: Rencanakan company outing untuk 50 karyawan dengan budget Rp 50 juta.
+
+Untuk setiap solusi potensial, berikan:
+1. Nama/deskripsi solusi
+2. Estimasi biaya detail
+3. Kelebihan dan kekurangan
+4. Skor 1-10
+
+Setelah mengeksplorasi, pilih solusi terbaik dan jelaskan alasannya.
+
+Eksplorasi 3 solusi berbeda.
+"""
+</code></pre>
+
+<div class="callout callout-info"><strong>📖 CoT vs ToT:</strong> CoT = berpikir linear (satu jalur, langkah demi langkah). ToT = berpikir branching (beberapa jalur paralel, evaluasi, pilih terbaik). Gunakan CoT untuk reasoning terstruktur (matematika, logika). Gunakan ToT untuk eksplorasi kreatif (brainstorming, planning, strategi).</div>
+</section>
+
+<section id="role" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">5.4 Role Prompting</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Apa itu Role Prompting?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Role Prompting</strong> (juga disebut <strong>Persona Prompting</strong>) adalah teknik memberikan model sebuah peran atau persona spesifik untuk menghasilkan respons dengan perspektif, tone, dan keahlian yang sesuai. Dengan menetapkan peran di awal prompt, model akan "berpura-pura" menjadi expert di bidang tersebut.</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Role</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Contoh Prompt</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Efek pada Output</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">🧑‍⚖️ Pengacara</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-xs font-mono">Anda adalah pengacara senior dengan 20 tahun pengalaman di hukum kontrak...</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Bahasa legal formal, referensi pasal, analisis risiko hukum</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">👨‍💻 Software Engineer</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-xs font-mono">Anda adalah senior backend engineer dengan keahlian di Go dan PostgreSQL...</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Kode produksi, best practice, error handling, testing</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">🧑‍🏫 Guru</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-xs font-mono">Anda adalah guru matematika SMP yang sabar dan komunikatif...</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Penjelasan sederhana, analogi, contoh bertahap</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">📊 Data Scientist</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-xs font-mono">Anda adalah data scientist dengan spesialisasi NLP dan Python...</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Kode analisis, visualisasi, insight berbasis data</td></tr>
+</tbody></table>
+
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-red-200 dark:border-red-900 rounded-xl bg-red-50 dark:bg-red-950/20">
+    <h4 class="font-semibold text-red-800 dark:text-red-400">❌ Tanpa Role</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-red-700 dark:text-red-300 mt-1"><code>Jelaskan bagaimana cara mengatasi error "connection refused" di PostgreSQL.</code></pre>
+    <p class="text-xs text-red-600 dark:text-red-400 mt-1">Output generik, tidak ada konteks keahlian.</p>
+  </div>
+  <div class="p-4 border border-green-200 dark:border-green-900 rounded-xl bg-green-50 dark:bg-green-950/20">
+    <h4 class="font-semibold text-green-800 dark:text-green-400">✅ Dengan Role</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-green-700 dark:text-green-300 mt-1"><code>Anda adalah Database Administrator (DBA) senior dengan 15 tahun pengalaman mengelola PostgreSQL di production.
+
+Seorang junior engineer mengalami error "connection refused" saat mencoba menghubungkan aplikasi Go ke PostgreSQL yang berjalan di Docker. 
+
+Jelaskan langkah troubleshooting sistematis, mulai dari yang paling umum hingga kasus yang jarang terjadi. Sertakan perintah terminal yang relevan.</code></pre>
+    <p class="text-xs text-green-600 dark:text-green-400 mt-1">Role menetapkan level keahlian dan format troubleshooting yang diharapkan.</p>
+  </div>
+</div>
+
+<div class="callout callout-best"><strong>💡 Tips Role Prompting:</strong> Semakin spesifik role yang diberikan (pengalaman, spesialisasi, industri, karakter personal), semakin baik output-nya. Sertakan: (1) Posisi/jabatan, (2) Tahun pengalaman, (3) Spesialisasi, (4) Konteks situasi, (5) Target audiens.</div>
+</section>
+
+<section id="structured" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">5.5 Structured Output (JSON, XML)</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Mengapa Structured Output?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Ketika mengintegrasikan LLM ke dalam aplikasi, output harus <strong>terstruktur dan dapat di-parse</strong> secara programatis. Structured Output meminta model menghasilkan respons dalam format tertentu (JSON, XML, YAML) sehingga bisa langsung diproses oleh kode tanpa parsing manual yang rentan error.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">JSON Output</h3>
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-red-200 dark:border-red-900 rounded-xl bg-red-50 dark:bg-red-950/20">
+    <h4 class="font-semibold text-red-800 dark:text-red-400">❌ Prompt Buruk</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-red-700 dark:text-red-300 mt-1"><code>Ekstrak informasi dari CV ini:
+[Nama: Budi, Umur: 28, Skill: Python, SQL, React]</code></pre>
+    <p class="text-xs text-red-600 dark:text-red-400 mt-1">Tidak ada format output → parsing sulit.</p>
+  </div>
+  <div class="p-4 border border-green-200 dark:border-green-900 rounded-xl bg-green-50 dark:bg-green-950/20">
+    <h4 class="font-semibold text-green-800 dark:text-green-400">✅ Prompt Baik</h4>
+    <pre class="text-sm overflow-x-auto whitespace-pre-wrap break-words text-green-700 dark:text-green-300 mt-1"><code>Ekstrak informasi berikut dari CV dan output dalam format JSON.
+
+Schema yang diharapkan:
+{
+  "nama": string,
+  "umur": number,
+  "skills": string[],
+  "pengalaman": [
+    {
+      "posisi": string,
+      "perusahaan": string,
+      "tahun": number
+    }
+  ]
+}
+
+CV:
+Nama: Budi Santoso
+Umur: 28 tahun
+Skills: Python, SQL, React, Docker
+Pengalaman:
+- Backend Engineer di Tokopedia (2021-2024)
+- Junior Developer di Startup XYZ (2019-2021)</code></pre>
+    <p class="text-xs text-green-600 dark:text-green-400 mt-1">Schema JSON jelas → output siap diproses kode.</p>
+  </div>
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">XML Output</h3>
+<pre class="language-xml"><code><!-- Prompt untuk XML Output -->
+Anda adalah asisten AI yang menganalisis dokumen kontrak.
+Ekstrak klausul-klausul penting dari kontrak berikut dalam format XML.
+
+Gunakan struktur:
+<contract_analysis>
+  <parties>
+    <party role="pihak_pertama">Nama</party>
+    <party role="pihak_kedua">Nama</party>
+  </parties>
+  <key_clauses>
+    <clause type="termination">...</clause>
+    <clause type="payment">...</clause>
+  </key_clauses>
+</contract_analysis></code></pre>
+
+<div class="callout callout-warning"><strong>⚠️ Catatan Penting:</strong> Model tidak selalu menghasilkan JSON yang valid 100%. Selalu validasi output dengan JSON.parse() atau library schema validation. Beberapa provider (OpenAI) menyediakan <strong>Structured Outputs / JSON Mode</strong> yang menjamin valid JSON. Gunakan fitur ini jika tersedia untuk production.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Perbandingan Format Output</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Format</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Kelebihan</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Kekurangan</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Use Case</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">JSON</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Parsing native di semua bahasa, compact</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Kurang readable untuk teks panjang, tidak ada comments</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">API response, data extraction, structured data</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">XML</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Attributes, mixed content, self-documenting</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Verbos, parsing lebih berat</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Document analysis, markup content, legacy systems</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">YAML</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Super readable, comments allowed</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Indentation-sensitive, parsing lebih lambat</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Config generation, dokumentasi</td></tr>
+</tbody></table>
+</section>
+
+<section id="best-practice" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">5.6 Best Practice Prompt Engineering</h2>
+
+<div class="space-y-4">
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+    <h4 class="font-semibold mb-2">1️⃣ Be Specific & Clear</h4>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Jangan ambigu. Tentukan dengan jelas apa yang Anda inginkan: format output, tone, panjang, audiens target, dan batasan.</p>
+    <div class="mt-2 grid grid-cols-2 gap-2 text-xs"><span class="text-red-600 dark:text-red-400">❌ "Jelaskan tentang machine learning"</span><span class="text-green-600 dark:text-green-400">✅ "Jelaskan supervised learning untuk audiens bisnis non-teknis dalam 3 paragraf. Gunakan analogi sederhana dan hindari jargon matematika."</span></div>
+  </div>
+
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+    <h4 class="font-semibold mb-2">2️⃣ Provide Context</h4>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Berikan konteks yang cukup: siapa Anda, apa tujuan Anda, mengapa Anda butuh informasi ini, dan bagaimana output akan digunakan.</p>
+  </div>
+
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+    <h4 class="font-semibold mb-2">3️⃣ Use Delimiters</h4>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Pisahkan instruksi, konteks, dan data input dengan delimiter yang jelas (###, ```, <tag>). Ini mencegah prompt injection dan membantu model memahami struktur.</p>
+    <pre class="text-xs mt-1"><code>### Instruksi ###
+Terjemahkan teks berikut ke Bahasa Inggris.
+
+### Konteks ###
+Dokumen ini adalah laporan keuangan formal.
+
+### Teks ###
+Pendapatan perusahaan meningkat 15%...</code></pre>
+  </div>
+
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+    <h4 class="font-semibold mb-2">4️⃣ Iterate & Refine</h4>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Prompt jarang sempurna pada percobaan pertama. Lakukan iterasi: evaluasi output, identifikasi masalah, perbaiki prompt, dan uji ulang. Catat versi prompt yang berhasil.</p>
+  </div>
+
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+    <h4 class="font-semibold mb-2">5️⃣ Control Output Length & Format</h4>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Tentukan panjang output secara eksplisit: "dalam 100 kata", "3 paragraf", "5 bullet points". Tentukan format: "dalam tabel markdown", "dalam JSON", "dalam kode Python".</p>
+  </div>
+
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+    <h4 class="font-semibold mb-2">6️⃣ Chain Complex Tasks</h4>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Untuk tugas kompleks, pecah menjadi langkah-langkah yang lebih kecil. Minta model menyelesaikan langkah 1 dulu, baru langkah 2. Ini meningkatkan akurasi untuk tugas multi-tahap.</p>
+  </div>
+
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+    <h4 class="font-semibold mb-2">7️⃣ Give the Model an "Out"</h4>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Berikan instruksi untuk situasi di mana model tidak yakin: "Jika informasi tidak cukup, jawab 'Saya tidak tahu' daripada menebak." Ini mengurangi halusinasi.</p>
+  </div>
+</div>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">5.7 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>Prompt Engineering</strong> adalah keterampilan fundamental era AI — kualitas input menentukan kualitas output.</li>
+<li><strong>Zero-shot / One-shot / Few-shot</strong>: dari tanpa contoh → satu contoh → beberapa contoh. Semakin kompleks tugas, semakin banyak contoh yang dibutuhkan.</li>
+<li><strong>Chain-of-Thought (CoT)</strong> meminta model "berpikir keras" langkah demi langkah → dramatis meningkatkan akurasi pada reasoning.</li>
+<li><strong>Tree-of-Thought (ToT)</strong> mengeksplorasi beberapa jalur reasoning paralel dan memilih terbaik → cocok untuk brainstorming dan planning.</li>
+<li><strong>Role Prompting</strong> menetapkan persona spesifik → output lebih terarah, sesuai keahlian, tone, dan konteks.</li>
+<li><strong>Structured Output</strong> (JSON/XML) wajib untuk integrasi programatis → pastikan validasi output.</li>
+<li>7 prinsip best practice: spesifik, beri konteks, gunakan delimiter, iterasi, kontrol format, chain tasks, beri "jalan keluar".</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl">
+<h4 class="font-semibold mb-2">📝 Quiz</h4>
+<ol class="space-y-4 text-sm">
+<li><p class="font-medium">1. Apa perbedaan utama Few-shot dan Zero-shot prompting?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Few-shot lebih cepat</li><li>B. Few-shot memberikan beberapa contoh, Zero-shot tidak memberikan contoh</li><li>C. Zero-shot lebih akurat</li><li>D. Tidak ada perbedaan</li></ul></li>
+<li><p class="font-medium">2. Teknik mana yang paling efektif untuk masalah matematika kompleks?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Zero-shot</li><li>B. Role Prompting</li><li>C. Chain-of-Thought (CoT)</li><li>D. XML Output</li></ul></li>
+<li><p class="font-medium">3. Kapan sebaiknya menggunakan JSON Structured Output?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Saat menulis puisi</li><li>B. Saat output akan diproses oleh kode/aplikasi</li><li>C. Saat brainstorming</li><li>D. Selalu</li></ul></li>
+<li><p class="font-medium">4. Apa tujuan utama memberikan role/persona dalam prompt?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Mempercepat response time</li><li>B. Mengarahkan tone, perspektif, dan keahlian spesifik dalam respons</li><li>C. Mengurangi jumlah token</li><li>D. Memenuhi syarat API</li></ul></li>
+</ol>
+</div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl">
+<h4 class="font-semibold mb-3">🏋️ Latihan</h4>
+<ol class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+<li><strong>Zero-shot vs Few-shot:</strong> Buat prompt untuk mengklasifikasikan email customer service ke dalam 5 kategori. Coba zero-shot dulu, lalu tambahkan 3 contoh (few-shot). Bandingkan akurasi dan konsistensi output.</li>
+<li><strong>CoT Challenge:</strong> Ambil 5 soal matematika SD/SMP. Minta model menjawab tanpa CoT, lalu dengan CoT ("Let's think step by step"). Bandingkan akurasi.</li>
+<li><strong>Role Prompting:</strong> Pilih satu pertanyaan teknis. Tanyakan 3 kali dengan role berbeda: (a) tanpa role, (b) sebagai profesor universitas, (c) sebagai praktisi industri. Bandingkan tone, kedalaman, dan pendekatan jawaban.</li>
+<li><strong>Structured Output:</strong> Buat prompt untuk mengekstrak informasi dari 5 artikel berita ke dalam JSON dengan schema: {title, date, summary, entities: [{name, type}]}. Validasi JSON output dengan JSON.parse().</li>
+<li><strong>Iterasi Prompt:</strong> Mulai dengan prompt sederhana untuk tugas kompleks (misal: menulis proposal proyek). Iterasi 5 kali, catat perubahan di setiap versi, evaluasi peningkatan kualitas output.</li>
+</ol>
+</div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-04.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 4 — LLM</a>
+  <a href="bab-06.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 6 — Embedding<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

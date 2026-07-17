@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 13: Maintenance AI — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 13 — Maintenance AI</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-medium transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 13: Maintenance AI</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 13</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Maintenance AI</h1><p class="text-lg text-gray-600 dark:text-gray-400">Praktik terbaik untuk memelihara aplikasi AI dalam jangka panjang: monitoring, cost tracking, error handling, prompt versioning, A/B testing, dan logging.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami metrik kunci monitoring AI: latency, throughput, token usage, cost</li><li>Mampu mengimplementasikan cost tracking dan token usage monitoring</li><li>Menerapkan retry strategy dengan exponential backoff untuk API calls</li><li>Memahami prompt versioning dengan Git-based workflow</li><li>Mengimplementasikan A/B testing untuk membandingkan performa prompt</li></ul></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Mampu setup monitoring dashboard untuk metrik AI kritis</li><li>Mampu menghitung dan melacak biaya API AI secara real-time</li><li>Mampu mengelola prompt sebagai code dengan Git versioning</li><li>Mampu menjalankan A/B test untuk optimasi prompt</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#monitoring-metrics" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">13.1 Monitoring: Metrics, Latency & Throughput</a></li><li><a href="#cost-monitoring" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">13.2 Cost Monitoring</a></li><li><a href="#retry-strategy" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">13.3 Retry Strategy & Error Handling</a></li><li><a href="#prompt-versioning" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">13.4 Prompt Versioning</a></li><li><a href="#ab-testing" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">13.5 A/B Testing Prompts</a></li><li><a href="#logging" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">13.6 Logging Best Practices</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">13.7 Ringkasan</a></li></ul></nav>
+
+<section id="monitoring-metrics" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">13.1 Monitoring: Metrics, Latency & Throughput</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Monitoring aplikasi AI berbeda dari aplikasi tradisional. Selain metrik standar (CPU, memory, request rate), aplikasi AI memerlukan monitoring spesifik: token usage, model latency, cost, dan kualitas output.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Key Metrics untuk AI Application</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Deskripsi</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Target</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">P50/P95/P99 Latency</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Waktu respons pada persentil tertentu</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">P95 < 10s untuk chat; < 2s untuk embedding</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Throughput (RPS)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Requests per second yang dapat ditangani</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Sesuai kapasitas GPU/API rate limit</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Time to First Token (TTFT)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Waktu dari request sampai token pertama muncul (streaming)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">< 1 detik untuk UX yang baik</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Tokens Per Second (TPS)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Kecepatan generasi token</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">> 20 TPS untuk streaming UX lancar</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Error Rate</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Persentase request yang gagal</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">< 1% untuk production</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Token Usage</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Jumlah token prompt + completion</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Monitor per request, per user, per hari</td></tr>
+</tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Implementasi Monitoring dengan Python</h3>
+<pre class="language-python"><code># ai_monitor.py — Comprehensive AI monitoring utilities
+import time
+import functools
+from dataclasses import dataclass, field
+from typing import Optional
+from collections import defaultdict
+import statistics
+import threading
+
+@dataclass
+class AIMetrics:
+    """Track per-request AI metrics."""
+    provider: str
+    model: str
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    latency_ms: float = 0.0
+    ttft_ms: float = 0.0  # Time to First Token
+    cost_usd: float = 0.0
+    status: str = "success"
+    error: Optional[str] = None
+
+class AIMetricsCollector:
+    """Collect and aggregate AI metrics."""
+    
+    def __init__(self):
+        self._lock = threading.Lock()
+        self.requests: list[AIMetrics] = []
+        self.daily_tokens: dict[str, int] = defaultdict(int)
+        self.daily_cost: dict[str, float] = defaultdict(float)
+    
+    def record(self, metrics: AIMetrics):
+        with self._lock:
+            self.requests.append(metrics)
+            date_key = time.strftime("%Y-%m-%d")
+            self.daily_tokens[date_key] += (
+                metrics.prompt_tokens + metrics.completion_tokens
+            )
+            self.daily_cost[date_key] += metrics.cost_usd
+    
+    def get_latency_percentiles(self) -> dict:
+        """Calculate P50, P95, P99 latency."""
+        if not self.requests:
+            return {}
+        latencies = sorted([r.latency_ms for r in self.requests])
+        return {
+            "p50": statistics.median(latencies),
+            "p95": latencies[int(len(latencies) * 0.95)],
+            "p99": latencies[int(len(latencies) * 0.99)],
+            "avg": statistics.mean(latencies),
+            "max": max(latencies),
+        }
+    
+    def get_error_rate(self) -> float:
+        """Calculate error rate as percentage."""
+        if not self.requests:
+            return 0.0
+        errors = sum(1 for r in self.requests if r.status == "error")
+        return (errors / len(self.requests)) * 100
+    
+    def get_throughput(self, window_seconds: int = 60) -> float:
+        """Calculate requests per second in the given window."""
+        now = time.time()
+        recent = [
+            r for r in self.requests 
+            if (now - r.latency_ms / 1000) < window_seconds
+        ]
+        return len(recent) / window_seconds if recent else 0.0
+    
+    def get_summary(self) -> dict:
+        """Get comprehensive monitoring summary."""
+        return {
+            "total_requests": len(self.requests),
+            "latency": self.get_latency_percentiles(),
+            "error_rate_pct": self.get_error_rate(),
+            "throughput_rps": self.get_throughput(),
+            "daily_tokens": dict(self.daily_tokens),
+            "daily_cost_usd": dict(self.daily_cost),
+        }
+
+# Global collector instance
+metrics_collector = AIMetricsCollector()
+
+def track_ai_metrics(func):
+    """Decorator to automatically track AI call metrics."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        try:
+            result = func(*args, **kwargs)
+            latency = (time.time() - start_time) * 1000
+            
+            # Extract token info from result (implementation-dependent)
+            metrics = AIMetrics(
+                provider=kwargs.get("provider", "unknown"),
+                model=kwargs.get("model", "unknown"),
+                prompt_tokens=getattr(result, "prompt_tokens", 0),
+                completion_tokens=getattr(result, "completion_tokens", 0),
+                latency_ms=latency,
+                cost_usd=calculate_cost(
+                    kwargs.get("model", ""),
+                    getattr(result, "prompt_tokens", 0),
+                    getattr(result, "completion_tokens", 0)
+                ),
+                status="success"
+            )
+            metrics_collector.record(metrics)
+            return result
+        except Exception as e:
+            latency = (time.time() - start_time) * 1000
+            metrics = AIMetrics(
+                provider=kwargs.get("provider", "unknown"),
+                model=kwargs.get("model", "unknown"),
+                latency_ms=latency,
+                status="error",
+                error=str(e)
+            )
+            metrics_collector.record(metrics)
+            raise
+    
+    return wrapper</code></pre>
+</section>
+
+<section id="cost-monitoring" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">13.2 Cost Monitoring</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Cost monitoring adalah aspek kritis maintenance AI. Biaya API AI dihitung per token, dan tanpa monitoring yang baik, biaya dapat membengkak tanpa disadari.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Token Pricing Reference (2026)</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Model</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Input (per 1M tokens)</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Output (per 1M tokens)</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">GPT-4o</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$2.50</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$10.00</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">GPT-4o-mini</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.15</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.60</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Claude 3.5 Sonnet</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$3.00</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$15.00</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">DeepSeek-V3</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.27</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$1.10</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gemini 2.0 Flash</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.10</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">$0.40</td></tr>
+</tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Cost Tracking Implementation</h3>
+<pre class="language-python"><code># cost_tracker.py — Track and alert on AI API costs
+
+# Pricing table (USD per 1M tokens)
+MODEL_PRICING = {
+    "gpt-4o": {"input": 2.50, "output": 10.00},
+    "gpt-4o-mini": {"input": 0.15, "output": 0.60},
+    "gpt-4-turbo": {"input": 10.00, "output": 30.00},
+    "claude-3.5-sonnet": {"input": 3.00, "output": 15.00},
+    "deepseek-chat": {"input": 0.27, "output": 1.10},
+    "gemini-2.0-flash": {"input": 0.10, "output": 0.40},
+}
+
+def calculate_cost(model: str, prompt_tokens: int, 
+                   completion_tokens: int) -> float:
+    """Calculate cost in USD for an API call."""
+    pricing = MODEL_PRICING.get(model, {"input": 0, "output": 0})
+    input_cost = (prompt_tokens / 1_000_000) * pricing["input"]
+    output_cost = (completion_tokens / 1_000_000) * pricing["output"]
+    return round(input_cost + output_cost, 6)
+
+class CostTracker:
+    """Track AI costs with budget alerts."""
+    
+    def __init__(self, daily_budget_usd: float = 50.0,
+                 monthly_budget_usd: float = 1000.0):
+        self.daily_budget = daily_budget_usd
+        self.monthly_budget = monthly_budget_usd
+        self._daily_costs: dict[str, float] = defaultdict(float)
+        self._monthly_costs: dict[str, float] = defaultdict(float)
+        self._cost_by_model: dict[str, float] = defaultdict(float)
+        self._cost_by_user: dict[str, float] = defaultdict(float)
+    
+    def track(self, model: str, prompt_tokens: int, 
+              completion_tokens: int, user_id: str = "anonymous"):
+        """Track a single API call cost."""
+        cost = calculate_cost(model, prompt_tokens, completion_tokens)
+        
+        today = time.strftime("%Y-%m-%d")
+        month = time.strftime("%Y-%m")
+        
+        self._daily_costs[today] += cost
+        self._monthly_costs[month] += cost
+        self._cost_by_model[model] += cost
+        self._cost_by_user[user_id] += cost
+        
+        # Check budget alerts
+        if self._daily_costs[today] > self.daily_budget * 0.8:
+            self._send_alert(
+                f"⚠️ Daily AI cost at 80%: ${self._daily_costs[today]:.2f}"
+            )
+        
+        if self._daily_costs[today] > self.daily_budget:
+            self._send_alert(
+                f"🚨 Daily AI budget exceeded: ${self._daily_costs[today]:.2f}"
+            )
+    
+    def get_cost_report(self) -> dict:
+        """Generate cost report."""
+        today = time.strftime("%Y-%m-%d")
+        month = time.strftime("%Y-%m")
+        
+        return {
+            "today": {
+                "cost_usd": round(self._daily_costs[today], 4),
+                "budget_remaining": round(
+                    self.daily_budget - self._daily_costs[today], 4
+                ),
+                "budget_pct": round(
+                    self._daily_costs[today] / self.daily_budget * 100, 1
+                )
+            },
+            "this_month": {
+                "cost_usd": round(self._monthly_costs[month], 4),
+                "budget_remaining": round(
+                    self.monthly_budget - self._monthly_costs[month], 4
+                ),
+            },
+            "by_model": {
+                model: round(cost, 4) 
+                for model, cost in self._cost_by_model.items()
+            },
+            "by_user": {
+                user: round(cost, 4) 
+                for user, cost in self._cost_by_user.items()
+            }
+        }
+    
+    def _send_alert(self, message: str):
+        """Send alert (Slack, email, PagerDuty, etc.)."""
+        # Implementation depends on your alerting infrastructure
+        print(f"[COST ALERT] {message}")
+        # slack.send(message)
+        # email.send(to="admin@company.com", body=message)</code></pre>
+</section>
+
+<section id="retry-strategy" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">13.3 Retry Strategy & Error Handling</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Exponential Backoff Retry</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Retry strategy yang tepat adalah kunci reliability aplikasi AI. Gunakan <strong>exponential backoff dengan jitter</strong> untuk menghindari thundering herd problem.</p>
+
+<pre class="language-python"><code># retry.py — Exponential backoff with jitter
+import time
+import random
+import functools
+from typing import Type, Tuple
+
+class RetryExhausted(Exception):
+    """Raised when all retries are exhausted."""
+    pass
+
+def retry_with_backoff(
+    max_retries: int = 3,
+    base_delay_seconds: float = 1.0,
+    max_delay_seconds: float = 60.0,
+    backoff_factor: float = 2.0,
+    jitter: bool = True,
+    retryable_exceptions: Tuple[Type[Exception], ...] = (
+        ConnectionError, TimeoutError
+    ),
+    retryable_status_codes: Tuple[int, ...] = (429, 500, 502, 503, 504)
+):
+    """
+    Decorator: retry function with exponential backoff.
+    
+    Only retries on retryable_exceptions and HTTP status codes
+    that indicate transient failures (rate limits, server errors).
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            last_exception = None
+            
+            for attempt in range(max_retries + 1):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    last_exception = e
+                    
+                    # Don't retry if not retryable
+                    if not isinstance(e, retryable_exceptions):
+                        # Check if it's an HTTP error with retryable status
+                        if hasattr(e, 'status_code'):
+                            if e.status_code not in retryable_status_codes:
+                                raise
+                        else:
+                            raise
+                    
+                    if attempt == max_retries:
+                        raise RetryExhausted(
+                            f"Failed after {max_retries} retries. "
+                            f"Last error: {last_exception}"
+                        )
+                    
+                    # Calculate delay with exponential backoff
+                    delay = min(
+                        base_delay_seconds * (backoff_factor ** attempt),
+                        max_delay_seconds
+                    )
+                    
+                    # Add jitter (+/- 25%) to avoid thundering herd
+                    if jitter:
+                        delay = delay * (0.75 + random.random() * 0.5)
+                    
+                    print(
+                        f"Retry {attempt + 1}/{max_retries} "
+                        f"after {delay:.2f}s — {e}"
+                    )
+                    time.sleep(delay)
+            
+            raise last_exception
+        
+        return wrapper
+    return decorator
+
+# Usage example
+@retry_with_backoff(
+    max_retries=3,
+    base_delay_seconds=1.0,
+    jitter=True
+)
+def call_openai_api(messages, model="gpt-4o"):
+    response = client.chat.completions.create(
+        model=model,
+        messages=messages
+    )
+    return response</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Error Handling Patterns</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Pattern</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Deskripsi</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Contoh</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Circuit Breaker</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Stop calling failing service temporarily</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Jika error rate > 50% dalam 1 menit, circuit open selama 30 detik</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Graceful Degradation</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Fallback ke alternatif yang lebih rendah</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Jika GPT-4o error, fallback ke GPT-4o-mini</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Timeout</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Batasi waktu tunggu maksimum</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Timeout 30 detik untuk chat, 120 detik untuk streaming</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Rate Limit Awareness</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Hormati Retry-After header</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gunakan Retry-After header value sebagai delay minimal</td></tr>
+</tbody></table>
+
+<pre class="language-python"><code># Error handler with circuit breaker + graceful degradation
+from datetime import datetime, timedelta
+
+class CircuitBreaker:
+    def __init__(self, failure_threshold=5, recovery_timeout=30):
+        self.failure_count = 0
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.last_failure_time = None
+        self.state = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
+    
+    def call(self, func, *args, **kwargs):
+        if self.state == "OPEN":
+            if (datetime.now() - self.last_failure_time).seconds > self.recovery_timeout:
+                self.state = "HALF_OPEN"
+            else:
+                raise Exception("Circuit breaker is OPEN")
+        
+        try:
+            result = func(*args, **kwargs)
+            if self.state == "HALF_OPEN":
+                self.state = "CLOSED"
+                self.failure_count = 0
+            return result
+        except Exception as e:
+            self.failure_count += 1
+            self.last_failure_time = datetime.now()
+            
+            if self.failure_count >= self.failure_threshold:
+                self.state = "OPEN"
+            
+            raise e
+
+# Combined: retry + circuit breaker + graceful degradation
+class ResilientAIService:
+    def __init__(self):
+        self.circuit_breaker = CircuitBreaker()
+        self.model_fallback = {
+            "gpt-4o": "gpt-4o-mini",
+            "claude-3.5-sonnet": "claude-3-haiku",
+        }
+    
+    @retry_with_backoff(max_retries=2)
+    def call_with_resilience(self, model: str, messages: list):
+        try:
+            return self.circuit_breaker.call(
+                self._call_model, model, messages
+            )
+        except Exception as e:
+            # Graceful degradation: try fallback model
+            fallback = self.model_fallback.get(model)
+            if fallback:
+                print(f"Falling back from {model} to {fallback}")
+                return self._call_model(fallback, messages)
+            raise e
+    
+    def _call_model(self, model, messages):
+        # Actual API call implementation
+        pass</code></pre>
+</section>
+
+<section id="prompt-versioning" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">13.4 Prompt Versioning</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Prompt Versioning</strong> adalah praktik mengelola prompt sebagai code (code-like artifacts) menggunakan Git. Ini memungkinkan tracking perubahan, rollback, code review, dan kolaborasi pada prompt.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Git-based Prompt Management</h3>
+<pre class="language-yaml"><code># prompts/chat/system_prompt_v3.yaml
+# Prompt versioning using YAML files in Git
+
+version: "3.0.0"
+name: "customer_support_agent"
+description: "System prompt for AI customer support agent"
+created: "2026-06-15"
+updated: "2026-07-10"
+author: "ai-team"
+model: "gpt-4o"
+temperature: 0.7
+
+# The actual prompt template
+prompt: |
+  Anda adalah customer support agent profesional untuk {company_name}.
+  
+  Pedoman:
+  1. Gunakan bahasa Indonesia yang sopan dan profesional
+  2. Jika Anda tidak tahu jawabannya, arahkan ke tim support manusia
+  3. Jangan membuat janji di luar kebijakan perusahaan
+  4. Selalu konfirmasi pemahaman sebelum memberikan solusi
+  
+  Kebijakan perusahaan:
+  - Jam operasional: Senin-Jumat, 08:00-17:00 WIB
+  - Response time SLA: 1 jam untuk critical, 4 jam untuk normal
+  - Kebijakan refund: dalam 7 hari setelah pembelian
+  
+  Riwayat percakapan:
+  {conversation_history}
+  
+  Pertanyaan customer: {user_query}
+
+# Variables required by this prompt
+variables:
+  - company_name
+  - conversation_history
+  - user_query
+
+# Metadata for A/B testing
+ab_test:
+  experiment_id: "exp-003"
+  variant: "polite_tone"
+  traffic_pct: 50</code></pre>
+
+<pre class="language-python"><code># prompt_manager.py — Load versioned prompts from Git
+import yaml
+import os
+from pathlib import Path
+from typing import Any
+
+class PromptManager:
+    """Manage versioned prompts stored as YAML files in Git."""
+    
+    def __init__(self, prompts_dir: str = "prompts"):
+        self.prompts_dir = Path(prompts_dir)
+        self._cache: dict[str, dict] = {}
+    
+    def load_prompt(self, prompt_name: str, version: str = None) -> dict:
+        """
+        Load a prompt by name. If version specified, load from 
+        Git history, otherwise load current version.
+        """
+        cache_key = f"{prompt_name}:{version or 'latest'}"
+        
+        if cache_key in self._cache:
+            return self._cache[cache_key]
+        
+        filepath = self.prompts_dir / f"{prompt_name}.yaml"
+        
+        if version:
+            # Load specific version from Git
+            content = self._git_show(filepath, version)
+            prompt = yaml.safe_load(content)
+        else:
+            # Load current version from disk
+            with open(filepath, 'r') as f:
+                prompt = yaml.safe_load(f)
+        
+        self._cache[cache_key] = prompt
+        return prompt
+    
+    def render_prompt(self, prompt_name: str, 
+                      variables: dict[str, Any],
+                      version: str = None) -> str:
+        """Load and render a prompt with variables."""
+        prompt = self.load_prompt(prompt_name, version)
+        template = prompt["prompt"]
+        
+        # Validate required variables
+        required = prompt.get("variables", [])
+        missing = [v for v in required if v not in variables]
+        if missing:
+            raise ValueError(
+                f"Missing required variables for '{prompt_name}': {missing}"
+            )
+        
+        return template.format(**variables)
+    
+    def list_versions(self, prompt_name: str) -> list[str]:
+        """List all Git versions of a prompt file."""
+        filepath = self.prompts_dir / f"{prompt_name}.yaml"
+        # git log --follow --format=%H -- prompts/chat/system_prompt.yaml
+        result = os.popen(
+            f'git log --follow --format="%H %ai %s" -- {filepath}'
+        ).read()
+        
+        versions = []
+        for line in result.strip().split('\n'):
+            if line:
+                parts = line.split(' ', 3)
+                versions.append({
+                    "commit": parts[0],
+                    "date": f"{parts[1]} {parts[2]}",
+                    "message": parts[3] if len(parts) > 3 else ""
+                })
+        return versions
+    
+    def _git_show(self, filepath: Path, version: str) -> str:
+        """Retrieve file content at a specific Git commit."""
+        return os.popen(
+            f'git show {version}:{filepath}'
+        ).read()
+
+# Usage
+pm = PromptManager("prompts")
+prompt_text = pm.render_prompt(
+    "chat/system_prompt_v3",
+    variables={
+        "company_name": "TechCorp Indonesia",
+        "conversation_history": "...",
+        "user_query": "Bagaimana cara refund?"
+    }
+)
+
+# Check version history
+versions = pm.list_versions("chat/system_prompt_v3")
+for v in versions[:5]:
+    print(f"  {v['commit'][:7]} - {v['date']} - {v['message']}")</code></pre>
+</section>
+
+<section id="ab-testing" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">13.5 A/B Testing Prompts</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">A/B testing memungkinkan Anda membandingkan dua versi prompt untuk menentukan mana yang menghasilkan output lebih baik — baik dari segi kualitas, engagement, maupun conversion.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">A/B Testing Implementation</h3>
+<pre class="language-python"><code># ab_testing.py — A/B testing framework for AI prompts
+import hashlib
+import random
+from dataclasses import dataclass, field
+from typing import Optional
+
+@dataclass
+class ABExperiment:
+    """Define an A/B test experiment."""
+    id: str
+    name: str
+    variants: list[str]  # List of prompt version names
+    traffic_split: list[float]  # e.g., [0.5, 0.5] for 50/50
+    metrics: list[str] = field(default_factory=lambda: [
+        "user_satisfaction", "response_length", "latency", "cost"
+    ])
+    min_sample_size: int = 100
+
+class ABTestingEngine:
+    """A/B testing engine for AI prompts."""
+    
+    def __init__(self):
+        self.experiments: dict[str, ABExperiment] = {}
+        self.results: dict[str, dict] = {}
+    
+    def create_experiment(self, experiment: ABExperiment):
+        """Register a new A/B test experiment."""
+        assert abs(sum(experiment.traffic_split) - 1.0) < 0.001, \
+            "Traffic split must sum to 1.0"
+        assert len(experiment.variants) == len(experiment.traffic_split), \
+            "Variants and traffic_split must have same length"
+        
+        self.experiments[experiment.id] = experiment
+        self.results[experiment.id] = {
+            variant: {metric: [] for metric in experiment.metrics}
+            for variant in experiment.variants
+        }
+    
+    def assign_variant(self, experiment_id: str, 
+                       user_id: str) -> str:
+        """
+        Deterministically assign a user to a variant.
+        Uses hash for consistent assignment (same user → same variant).
+        """
+        experiment = self.experiments[experiment_id]
+        
+        # Deterministic assignment using hash
+        hash_val = int(
+            hashlib.md5(f"{experiment_id}:{user_id}".encode()).hexdigest(), 16
+        )
+        bucket = (hash_val % 10000) / 10000.0
+        
+        cumulative = 0
+        for variant, split in zip(
+            experiment.variants, experiment.traffic_split
+        ):
+            cumulative += split
+            if bucket <= cumulative:
+                return variant
+        
+        return experiment.variants[-1]
+    
+    def record_result(self, experiment_id: str, variant: str,
+                      metrics: dict):
+        """Record metrics for a single AI call."""
+        if experiment_id not in self.results:
+            return
+        
+        for metric, value in metrics.items():
+            if metric in self.results[experiment_id][variant]:
+                self.results[experiment_id][variant][metric].append(value)
+    
+    def get_experiment_results(self, experiment_id: str) -> dict:
+        """Calculate aggregated results for an experiment."""
+        import statistics
+        
+        experiment = self.experiments[experiment_id]
+        raw = self.results[experiment_id]
+        
+        results = {}
+        for variant in experiment.variants:
+            variant_stats = {}
+            for metric in experiment.metrics:
+                values = raw[variant][metric]
+                if values:
+                    variant_stats[metric] = {
+                        "mean": statistics.mean(values),
+                        "stdev": statistics.stdev(values) if len(values) > 1 else 0,
+                        "count": len(values),
+                        "p50": statistics.median(values),
+                    }
+            results[variant] = variant_stats
+        
+        return results
+    
+    def is_significant(self, experiment_id: str, 
+                       metric: str) -> bool:
+        """Check if results are statistically significant."""
+        results = self.get_experiment_results(experiment_id)
+        experiment = self.experiments[experiment_id]
+        
+        for variant in experiment.variants:
+            if results[variant][metric]["count"] < experiment.min_sample_size:
+                return False
+        
+        return True
+
+# Usage example
+engine = ABTestingEngine()
+
+# Create experiment
+experiment = ABExperiment(
+    id="prompt-tone-001",
+    name="Customer Support Tone Test",
+    variants=["formal_tone_v1", "friendly_tone_v2"],
+    traffic_split=[0.5, 0.5],
+    metrics=["user_rating", "resolution_rate", "response_length", "cost"]
+)
+engine.create_experiment(experiment)
+
+# In your AI service
+def chat_with_ab_test(user_id: str, query: str):
+    variant = engine.assign_variant("prompt-tone-001", user_id)
+    
+    # Load the assigned prompt variant
+    prompt = prompt_manager.render_prompt(
+        f"support/{variant}",
+        variables={"query": query}
+    )
+    
+    start = time.time()
+    response = call_llm(prompt)
+    latency = time.time() - start
+    
+    # Record metrics
+    engine.record_result("prompt-tone-001", variant, {
+        "response_length": len(response),
+        "cost": calculate_cost("gpt-4o", len(prompt)//4, len(response)//4),
+        "latency": latency,
+    })
+    
+    return response</code></pre>
+
+<div class="callout callout-best"><strong>💡 A/B Testing Best Practice:</strong> <ul class="list-disc pl-5 space-y-1 mt-2 text-sm"><li>Gunakan deterministic assignment (hash-based) agar user selalu mendapat variant yang sama</li><li>Tentukan metrik sukses sebelum memulai eksperimen</li><li>Tunggu sample size minimum sebelum mengambil kesimpulan</li><li>Dokumentasikan hasil dan pelajaran di Git bersama prompt</li></ul></div>
+</section>
+
+<section id="logging" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">13.6 Logging Best Practices</h2>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Best Practice</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Penjelasan</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Structured Logging (JSON)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Log dalam format JSON untuk memudahkan parsing dan query di sistem log aggregator (ELK, Loki, Datadog).</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Log Request/Response (sanitized)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Log prompt dan response untuk debugging, tapi sanitasi PII (email, nama, nomor telepon).</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Correlation ID</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Setiap request harus memiliki unique correlation ID untuk tracing end-to-end.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Separate AI Log Channel</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gunakan dedicated log stream/topic untuk AI-related logs agar tidak bercampur dengan application logs.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Log Levels yang Tepat</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">INFO: request/response normal; WARN: retry, fallback, near rate limit; ERROR: failure after all retries.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Retention Policy</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Simpan detail log 7-30 hari untuk debugging; aggregate metrics lebih lama untuk trend analysis.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Cost-Aware Logging</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Log token counts dan estimated cost di setiap request untuk cost analysis.</td></tr>
+</tbody></table>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">13.7 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>Monitoring:</strong> Fokus pada metrik AI-spesifik: P50/P95/P99 latency, TTFT (Time to First Token), TPS (Tokens Per Second), error rate, throughput. Gunakan Prometheus + Grafana.</li>
+<li><strong>Cost Monitoring:</strong> Track cost per model, per user, per hari. Setup daily/monthly budget alerts. Gunakan pricing table untuk kalkulasi real-time.</li>
+<li><strong>Retry Strategy:</strong> Exponential backoff dengan jitter untuk transient errors (5xx, 429). Circuit breaker untuk failure cascade. Graceful degradation dengan model fallback.</li>
+<li><strong>Prompt Versioning:</strong> Kelola prompt sebagai YAML di Git. Track history perubahan, author, dan rationale. Render prompt dengan variable substitution.</li>
+<li><strong>A/B Testing:</strong> Deterministic user assignment (hash-based). Metrik sukses yang jelas. Tunggu sample size minimum sebelum concluding.</li>
+<li><strong>Logging:</strong> Structured JSON logging, correlation ID, sanitasi PII, dedicated AI log channel, cost-aware logging.</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">📝 Quiz</h4><ol class="space-y-3 text-sm"><li><p class="font-medium">1. Apa metrik yang paling penting untuk UX streaming AI chat?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. CPU usage</li><li>B. Time to First Token (TTFT) — user melihat respons segera</li><li>C. Disk I/O</li><li>D. Memory usage</li></ul></li><li><p class="font-medium">2. Mengapa jitter penting dalam exponential backoff retry?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Meningkatkan kecepatan retry</li><li>B. Menghindari thundering herd — mencegah semua retry terjadi bersamaan</li><li>C. Mengurangi biaya</li><li>D. Jitter tidak diperlukan</li></ul></li><li><p class="font-medium">3. Apa keuntungan prompt versioning dengan Git?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Prompt menjadi lebih panjang</li><li>B. Tracking perubahan, rollback, code review, kolaborasi tim pada prompt</li><li>C. Meningkatkan kecepatan model</li><li>D. Menghilangkan kebutuhan testing</li></ul></li></ol></div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">🏋️ Latihan</h4><ol class="space-y-3 text-sm"><li><strong>Tugas 1:</strong> Implementasikan CostTracker class yang menghitung biaya real-time untuk 3 provider AI berbeda. Tambahkan daily budget alert.</li><li><strong>Tugas 2:</strong> Buat PromptManager yang membaca prompt dari YAML files dan mendukung Git-based versioning. Uji dengan 3 versi prompt berbeda.</li><li><strong>Tugas 3:</strong> Setup A/B testing engine untuk membandingkan 2 versi prompt. Tentukan metrik sukses, assign user, dan analisis hasil.</li></ol></div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-12.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 12</a>
+  <a href="bab-14.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 14 — Studi Kasus<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

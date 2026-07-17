@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 12: Deployment AI — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-docker.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 12 — Deployment AI</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-medium transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 12: Deployment AI</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 12</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Deployment AI</h1><p class="text-lg text-gray-600 dark:text-gray-400">Strategi dan praktik terbaik untuk men-deploy aplikasi AI ke production: cloud, Docker, local LLM, VPS, monitoring, dan observability.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami opsi deployment AI: cloud (AWS, GCP, Azure), VPS, dan local (Ollama)</li><li>Mampu membuat Dockerfile dan docker-compose.yml untuk aplikasi AI</li><li>Memahami GPU vs CPU inference dan kapan menggunakan masing-masing</li><li>Menerapkan Nginx reverse proxy untuk production deployment</li><li>Mengimplementasikan monitoring dengan Prometheus + Grafana dan logging terstruktur</li></ul></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Mampu memilih strategi deployment berdasarkan kebutuhan (cloud vs on-premise vs local)</li><li>Mampu melakukan containerization aplikasi AI dengan Docker</li><li>Mampu mengkonfigurasi Nginx reverse proxy + SSL</li><li>Mampu setup monitoring stack untuk aplikasi AI production</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#cloud-deployment" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">12.1 Cloud Deployment</a></li><li><a href="#docker" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">12.2 Docker Containerization</a></li><li><a href="#ollama" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">12.3 Ollama — Local LLM Deployment</a></li><li><a href="#vps" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">12.4 VPS Deployment & Nginx Reverse Proxy</a></li><li><a href="#gpu-vs-cpu" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">12.5 GPU vs CPU Inference</a></li><li><a href="#monitoring" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">12.6 Monitoring & Logging</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">12.7 Ringkasan</a></li></ul></nav>
+
+<section id="cloud-deployment" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">12.1 Cloud Deployment</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Tiga cloud provider utama menawarkan layanan khusus untuk AI/ML deployment. Masing-masing memiliki keunggulan dan ekosistem sendiri.</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Provider</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Layanan AI</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Kelebihan</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Cocok Untuk</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">AWS</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">SageMaker, Bedrock, ECS/EKS, Lambda</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">GPU instances (P4d, G5), managed ML, broadest services</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Enterprise, scalable training & inference</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">GCP</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Vertex AI, Cloud Run, GKE, TPUs</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">TPU for training, Gemini integration, generous free tier</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gemini ecosystem, TPU workloads</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Azure</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Azure AI Studio, AKS, Container Apps</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">OpenAI integration, enterprise compliance, hybrid cloud</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Enterprise with Microsoft ecosystem, OpenAI-first</td></tr>
+</tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Cloud AI Deployment Architecture</h3>
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TB
+    USER["👤 Users"] --> CDN["🌐 CDN / CloudFront"]
+    CDN --> LB["⚖️ Load Balancer"]
+    
+    subgraph COMPUTE["☁️ Cloud Compute"]
+        API["🔧 API Server (ECS/Fargate/GKE)"]
+        WORKER["⚙️ AI Worker (GPU Instance)"]
+        MODEL["🧠 Model Serving\n(vLLM / TGI / Triton)"]
+    end
+    
+    subgraph STORAGE["🗄️ Storage"]
+        DB["🗄️ Database (RDS/Cloud SQL)"]
+        VDB["🔍 Vector DB (Pinecone/ pgvector)"]
+        OBJ["📦 Object Storage (S3/GCS)"]
+    end
+    
+    subgraph MON["📊 Monitoring"]
+        PROM["Prometheus"]
+        GRAF["Grafana"]
+        LOGS["CloudWatch / Cloud Logging"]
+    end
+    
+    LB --> API
+    API --> WORKER
+    WORKER --> MODEL
+    API --> DB
+    API --> VDB
+    WORKER --> OBJ
+    
+    API --> PROM
+    WORKER --> PROM
+    PROM --> GRAF
+    API --> LOGS
+
+    style COMPUTE fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
+    style STORAGE fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+    style MON fill:#fffbeb,stroke:#f59e0b,stroke-width:2px
+</div>
+</section>
+
+<section id="docker" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">12.2 Docker Containerization</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Docker memungkinkan packaging aplikasi AI beserta dependensinya ke dalam container yang konsisten dan portable.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Contoh Dockerfile</h3>
+<pre class="language-docker"><code># Dockerfile — Python FastAPI AI Service
+FROM python:3.12-slim AS base
+
+# Prevent Python from writing .pyc files and buffering stdout
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Create non-root user for security
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+EXPOSE 8000
+
+# Use multiple workers for production
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Contoh docker-compose.yml</h3>
+<pre class="language-yaml"><code># docker-compose.yml — Full AI Stack
+version: '3.8'
+
+services:
+  # AI API Service
+  api:
+    build: .
+    container_name: ai-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_URL=postgresql://aiuser:aipass@postgres:5432/aidb
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - ./models:/app/models:ro
+    networks:
+      - ai-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # PostgreSQL with pgvector extension for vector search
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ai-postgres
+    environment:
+      POSTGRES_USER: aiuser
+      POSTGRES_PASSWORD: aipass
+      POSTGRES_DB: aidb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aiuser -d aidb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-network
+
+  # Redis for caching and rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: ai-redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-network
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: ai-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./static:/app/static:ro
+    depends_on:
+      - api
+    networks:
+      - ai-network
+
+  # Prometheus for metrics
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ai-prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=15d'
+    ports:
+      - "9090:9090"
+    networks:
+      - ai-network
+
+  # Grafana for dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ai-grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - ai-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  ai-network:
+    driver: bridge</code></pre>
+
+<div class="callout callout-best"><strong>💡 Best Practice:</strong> Gunakan multi-stage build untuk mengurangi image size. Gunakan non-root user. Selalu sertakan HEALTHCHECK. Gunakan .dockerignore untuk mengecualikan .git, __pycache__, .env, dan model weights dari build context.</div>
+</section>
+
+<section id="ollama" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">12.3 Ollama — Local LLM Deployment</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Ollama</strong> adalah platform open-source untuk menjalankan LLM secara lokal di laptop atau server tanpa ketergantungan cloud. Ollama menangani download model, quantization, dan serving dengan API OpenAI-compatible.</p>
+
+<pre class="language-bash"><code># Install Ollama (macOS/Linux)
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Download dan jalankan model
+ollama pull llama3.1:8b        # 8B parameter model (~4.7GB)
+ollama pull deepseek-r1:7b     # DeepSeek reasoning model
+ollama pull nomic-embed-text   # Embedding model for RAG
+
+# Jalankan sebagai server API (OpenAI-compatible)
+ollama serve
+# API berjalan di http://localhost:11434/v1
+
+# Test API
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3.1:8b",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Integrasi Ollama dengan Python</h3>
+<pre class="language-python"><code># Gunakan OpenAI client — Ollama kompatibel dengan OpenAI API
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama"  # Ollama tidak butuh real API key
+)
+
+response = client.chat.completions.create(
+    model="llama3.1:8b",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Explain quantum computing briefly."}
+    ],
+    temperature=0.7,
+    max_tokens=500
+)
+
+print(response.choices[0].message.content)
+
+# Embedding
+embed_response = client.embeddings.create(
+    model="nomic-embed-text",
+    input="What is retrieval augmented generation?"
+)
+print(f"Embedding dimension: {len(embed_response.data[0].embedding)}")</code></pre>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Kelebihan Ollama</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Keterbatasan Ollama</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gratis, open-source</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Performa terbatas hardware lokal</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Privacy — data tidak keluar dari mesin</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Model lokal lebih kecil (7B-70B) vs cloud (GPT-4)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">OpenAI API-compatible (easy migration)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tidak cocok untuk high-throughput production</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Quantization otomatis (Q4, Q5, Q8)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Scaling horizontal lebih kompleks</td></tr>
+</tbody></table>
+</section>
+
+<section id="vps" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">12.4 VPS Deployment & Nginx Reverse Proxy</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Untuk deployment skala kecil-menengah, VPS (Virtual Private Server) dengan GPU atau high-CPU bisa menjadi pilihan cost-effective. Nginx berperan sebagai reverse proxy, SSL termination, dan load balancer.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Nginx Reverse Proxy Configuration</h3>
+<pre class="language-nginx"><code># /etc/nginx/sites-available/ai-api
+upstream ai_backend {
+    server 127.0.0.1:8000;
+    server 127.0.0.1:8001;  # multiple workers
+    keepalive 32;
+}
+
+# Rate limiting zone
+limit_req_zone $binary_remote_addr zone=ai_limit:10m rate=30r/m;
+limit_req_zone $binary_remote_addr zone=stream_limit:10m rate=10r/m;
+
+server {
+    listen 80;
+    server_name ai.example.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name ai.example.com;
+
+    # SSL (Let's Encrypt)
+    ssl_certificate /etc/letsencrypt/live/ai.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ai.example.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    # Max request body size (for file uploads)
+    client_max_body_size 50M;
+
+    # Gzip compression
+    gzip on;
+    gzip_types application/json text/plain application/javascript;
+
+    # Main API endpoint
+    location /api/ {
+        limit_req zone=ai_limit burst=20 nodelay;
+        proxy_pass http://ai_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Timeouts — AI responses can be slow
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_connect_timeout 60s;
+
+        # Buffering off untuk streaming SSE
+        proxy_buffering off;
+        proxy_cache off;
+    }
+
+    # Streaming endpoint (no rate limit buffer)
+    location /api/chat/stream {
+        limit_req zone=stream_limit burst=5 nodelay;
+        proxy_pass http://ai_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 600s;
+        
+        # Disable proxy buffering for SSE
+        chunked_transfer_encoding on;
+    }
+
+    # Health check
+    location /health {
+        proxy_pass http://ai_backend/health;
+        access_log off;
+    }
+
+    # Static files
+    location /static/ {
+        alias /var/www/ai-app/static/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+}</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Systemd Service untuk Auto-start</h3>
+<pre class="language-bash"><code># /etc/systemd/system/ai-api.service
+[Unit]
+Description=AI API Service
+After=network.target postgresql.service redis.service
+
+[Service]
+Type=simple
+User=aiuser
+Group=aiuser
+WorkingDirectory=/opt/ai-app
+Environment="PATH=/opt/ai-app/venv/bin"
+ExecStart=/opt/ai-app/venv/bin/uvicorn app.main:app \
+    --host 127.0.0.1 --port 8000 --workers 4
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Resource limits
+LimitNOFILE=65536
+MemoryMax=8G
+CPUQuota=400%
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+</section>
+
+<section id="gpu-vs-cpu" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">12.5 GPU vs CPU Inference</h2>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Aspek</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">GPU Inference</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">CPU Inference</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Kecepatan</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">10-100x lebih cepat untuk LLM</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Lambat untuk model >1B parameter</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Biaya</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Mahal — $2-30/jam (cloud GPU)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Murah — standard instance pricing</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Batch Processing</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Ideal — paralel tinggi</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Terbatas — core count dependent</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Model Size</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">7B-405B parameter (dengan quantization)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Ideal untuk <3B parameter</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Use Case</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Production LLM serving, training</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Embedding generation, small models, dev/test</td></tr>
+</tbody></table>
+
+<div class="callout callout-info"><strong>📊 Rule of Thumb:</strong> Untuk production LLM serving dengan model 7B+, GPU adalah keharusan. Untuk embedding generation, reranking, atau model <1B parameter, CPU dengan optimasi (ONNX Runtime, quantization) sudah cukup.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">GPU Options Comparison</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">GPU</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">VRAM</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Model Size (INT4)</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Cloud Price</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">NVIDIA T4</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">16 GB</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Up to 13B</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">~$0.35/hr (AWS)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">NVIDIA A10G</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">24 GB</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Up to 34B</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">~$0.75/hr (AWS)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">NVIDIA A100</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">40/80 GB</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Up to 70B / 405B (w/ 8x)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">~$1.50-3/hr</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">NVIDIA H100</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">80 GB</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">405B+ (w/ 8x)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">~$3-5/hr</td></tr>
+</tbody></table>
+</section>
+
+<section id="monitoring" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">12.6 Monitoring & Logging</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">12.6.1 Prometheus Metrics</h3>
+<pre class="language-python"><code># monitoring.py — Prometheus metrics untuk AI service
+from prometheus_client import Counter, Histogram, Gauge, generate_latest
+from fastapi import FastAPI, Response
+import time
+
+app = FastAPI()
+
+# Metrics definitions
+ai_requests_total = Counter(
+    'ai_requests_total',
+    'Total AI API requests',
+    ['provider', 'model', 'status']
+)
+
+ai_request_duration_seconds = Histogram(
+    'ai_request_duration_seconds',
+    'AI request latency in seconds',
+    ['provider', 'model'],
+    buckets=[0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 30.0, 60.0, 120.0]
+)
+
+ai_tokens_used_total = Counter(
+    'ai_tokens_used_total',
+    'Total tokens consumed',
+    ['provider', 'model', 'type']  # type: prompt, completion
+)
+
+ai_cost_usd_total = Counter(
+    'ai_cost_usd_total',
+    'Total cost in USD',
+    ['provider', 'model']
+)
+
+ai_active_requests = Gauge(
+    'ai_active_requests',
+    'Number of requests currently being processed'
+)
+
+@app.middleware("http")
+async def metrics_middleware(request, call_next):
+    """Record metrics for every AI request."""
+    ai_active_requests.inc()
+    start_time = time.time()
+
+    response = await call_next(request)
+
+    duration = time.time() - start_time
+    ai_active_requests.dec()
+
+    # Record duration for AI endpoints
+    if request.url.path.startswith("/api/ai/"):
+        provider = getattr(request.state, 'provider', 'unknown')
+        model = getattr(request.state, 'model', 'unknown')
+        status = 'success' if response.status_code < 400 else 'error'
+
+        ai_requests_total.labels(
+            provider=provider, model=model, status=status
+        ).inc()
+        ai_request_duration_seconds.labels(
+            provider=provider, model=model
+        ).observe(duration)
+
+    return response
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus scrape endpoint."""
+    return Response(
+        content=generate_latest(),
+        media_type="text/plain"
+    )</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">12.6.2 Prometheus Configuration</h3>
+<pre class="language-yaml"><code># prometheus/prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - 'alerts.yml'
+
+scrape_configs:
+  - job_name: 'ai-api'
+    static_configs:
+      - targets: ['api:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:9113']
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">12.6.3 Structured Logging (Python)</h3>
+<pre class="language-python"><code># logging_config.py — Structured logging with JSON format
+import logging
+import json
+import time
+from datetime import datetime, timezone
+
+class StructuredFormatter(logging.Formatter):
+    """JSON structured logging formatter."""
+    
+    def format(self, record):
+        log_entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "level": record.levelname,
+            "logger": record.name,
+            "message": record.getMessage(),
+            "module": record.module,
+            "function": record.funcName,
+            "line": record.lineno,
+        }
+        
+        # Include extra fields
+        for key in ['request_id', 'user_id', 'provider', 
+                     'model', 'tokens', 'latency_ms', 'cost_usd']:
+            if hasattr(record, key):
+                log_entry[key] = getattr(record, key)
+        
+        # Include exception info if present
+        if record.exc_info and record.exc_info[0]:
+            log_entry["exception"] = {
+                "type": record.exc_info[0].__name__,
+                "message": str(record.exc_info[1])
+            }
+        
+        return json.dumps(log_entry, default=str)
+
+# Usage in AI service
+logger = logging.getLogger("ai.service")
+
+def log_ai_call(provider, model, prompt_tokens, completion_tokens, 
+                latency_ms, cost_usd, status="success"):
+    """Log AI API call with structured metadata."""
+    logger.info(
+        f"AI call: {provider}/{model}",
+        extra={
+            "provider": provider,
+            "model": model,
+            "tokens": prompt_tokens + completion_tokens,
+            "latency_ms": latency_ms,
+            "cost_usd": cost_usd
+        }
+    )
+
+# Example log output (JSON):
+# {
+#   "timestamp": "2026-07-14T10:30:45.123Z",
+#   "level": "INFO",
+#   "message": "AI call: openai/gpt-4o", 
+#   "provider": "openai",
+#   "model": "gpt-4o",
+#   "tokens": 1250,
+#   "latency_ms": 2340,
+#   "cost_usd": 0.015
+# }</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">12.6.4 Monitoring Checklist</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Type</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Alert Threshold</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Request latency (p95)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Histogram</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">> 5 detik → warning; > 30 detik → critical</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Error rate</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Counter</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">> 5% → warning; > 10% → critical</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Token usage per hour</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Counter</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">> 80% daily budget → warning</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">API cost per day</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Counter</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">> $50/day → warning; > $100/day → critical</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">GPU utilization</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gauge</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">< 20% → underutilized; > 95% → bottleneck</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Active requests</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gauge</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">> 50 concurrent → warning</td></tr>
+</tbody></table>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">12.7 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>Cloud Deployment:</strong> AWS (SageMaker, Bedrock), GCP (Vertex AI), Azure (AI Studio). Pilih berdasarkan ekosistem, kebutuhan GPU/TPU, dan compliance.</li>
+<li><strong>Docker Containerization:</strong> Dockerfile multi-stage + docker-compose untuk full stack (API + DB + Redis + Nginx + Monitoring). Gunakan non-root user, HEALTHCHECK, dan resource limits.</li>
+<li><strong>Ollama:</strong> Local LLM deployment yang mudah dengan API OpenAI-compatible. Ideal untuk development, testing, dan use case privacy-sensitive.</li>
+<li><strong>VPS + Nginx:</strong> Nginx sebagai reverse proxy dengan SSL termination, rate limiting, SSE streaming support, dan caching.</li>
+<li><strong>GPU vs CPU:</strong> GPU untuk production LLM 7B+; CPU cukup untuk embedding, reranking, dan model kecil (<3B).</li>
+<li><strong>Monitoring:</strong> Prometheus metrics (latency, error rate, token usage, cost) + Grafana dashboards + structured JSON logging.</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">📝 Quiz</h4><ol class="space-y-3 text-sm"><li><p class="font-medium">1. Apa keuntungan utama menggunakan Docker untuk deployment AI?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Membuat aplikasi lebih cepat</li><li>B. Konsistensi environment, portability, isolasi dependensi</li><li>C. Menggantikan GPU</li><li>D. Menghilangkan bug</li></ul></li><li><p class="font-medium">2. Kapan sebaiknya menggunakan Ollama dibanding cloud API?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Saat butuh performa tertinggi</li><li>B. Saat privacy penting, development/testing, atau budget terbatas</li><li>C. Untuk production high-throughput</li><li>D. Ollama selalu lebih baik</li></ul></li><li><p class="font-medium">3. Mengapa Nginx buffering harus dimatikan untuk streaming endpoint?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Untuk menghemat bandwidth</li><li>B. Agar token dikirim real-time (SSE) tanpa delay buffering Nginx</li><li>C. Untuk meningkatkan keamanan</li><li>D. Buffering tidak mempengaruhi streaming</li></ul></li></ol></div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">🏋️ Latihan</h4><ol class="space-y-3 text-sm"><li><strong>Tugas 1:</strong> Buat Dockerfile dan docker-compose.yml untuk aplikasi AI (API + PostgreSQL pgvector + Redis + Nginx).</li><li><strong>Tugas 2:</strong> Install Ollama, download model llama3.1:8b, dan integrasikan dengan Python menggunakan OpenAI client library.</li><li><strong>Tugas 3:</strong> Setup monitoring stack: tambahkan Prometheus metrics ke API dan buat Grafana dashboard dengan panel latency, error rate, dan token usage.</li></ol></div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-11.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 11</a>
+  <a href="bab-13.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 13 — Maintenance AI<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

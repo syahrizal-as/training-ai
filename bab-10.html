@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 10: Agentic AI — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 10 — Agentic AI</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-medium transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 10: Agentic AI</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 10</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Agentic AI</h1><p class="text-lg text-gray-600 dark:text-gray-400">Memahami AI Agent — sistem AI otonom yang mampu merencanakan, menggunakan tools, dan menyelesaikan tugas kompleks secara mandiri.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami definisi Agentic AI dan perbedaannya dengan Chatbot tradisional</li><li>Menguasai komponen inti AI Agent: Planner, Memory, Tool Calling, Reflection, Multi-Agent</li><li>Memahami workflow Agent: Plan → Execute → Observe → Reflect</li><li>Mengenal framework populer: OpenAI Agents SDK, LangGraph, CrewAI, AutoGen, Semantic Kernel, Google ADK</li><li>Memahami konsep Autonomous Task vs Human-in-the-Loop</li></ul></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Mampu membedakan Chatbot, AI Copilot, dan AI Agent</li><li>Mampu merancang Agent dengan Planner + Memory + Tools</li><li>Mampu memilih framework Agent berdasarkan kebutuhan proyek</li><li>Memahami kapan menggunakan autonomous agent vs human-in-the-loop</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#definisi-agentic" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10.1 Definisi & Mengapa Agentic AI Muncul</a></li><li><a href="#chatbot-vs-agent" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10.2 Chatbot vs AI Agent</a></li><li><a href="#komponen-agent" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10.3 Komponen AI Agent</a></li><li><a href="#workflow-agent" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10.4 Agent Workflow</a></li><li><a href="#autonomous-vs-hitl" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10.5 Autonomous Task vs Human-in-the-Loop</a></li><li><a href="#framework-agent" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10.6 Framework AI Agent</a></li><li><a href="#arsitektur-agent" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10.7 Arsitektur Agent</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10.8 Ringkasan</a></li></ul></nav>
+
+<section id="definisi-agentic" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">10.1 Definisi & Mengapa Agentic AI Muncul</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Definisi Agentic AI</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Agentic AI</strong> (atau <strong>AI Agent</strong>) adalah sistem AI yang memiliki kemampuan untuk <strong>bertindak secara otonom</strong> — merencanakan langkah-langkah, menggunakan tools, mengingat konteks, dan beradaptasi berdasarkan hasil — untuk menyelesaikan tugas kompleks yang membutuhkan multiple steps. Berbeda dengan LLM tradisional yang hanya merespons prompt, AI Agent secara proaktif mengambil inisiatif dan membuat keputusan.</p>
+
+<div class="callout callout-info"><strong>📖 Analogi:</strong> Jika Chatbot adalah "asisten yang menjawab pertanyaan Anda," AI Agent adalah "karyawan yang Anda beri tugas dan dia mencari tahu sendiri cara menyelesaikannya."</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Mengapa Agentic AI Muncul?</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Faktor Pendorong</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Penjelasan</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">LLM semakin capable</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Model seperti GPT-4o, Claude 3.5, DeepSeek-R1 memiliki reasoning dan tool-calling yang semakin baik</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Kebutuhan otomatisasi kompleks</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tugas bisnis seringkali multi-step dan butuh decision-making, bukan sekadar text generation</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Tool ecosystem matang</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">MCP, function calling, dan API ecosystem memungkinkan AI berinteraksi dengan dunia nyata</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Multimodal capabilities</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">AI dapat memproses teks, gambar, kode, dan data terstruktur dalam satu workflow</td></tr>
+</tbody></table>
+</section>
+
+<section id="chatbot-vs-agent" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">10.2 Chatbot vs AI Agent</h2>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Aspek</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Chatbot</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">AI Copilot</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">AI Agent</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Inisiatif</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Reaktif — merespons user</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Asistif — menyarankan</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Proaktif — bertindak sendiri</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Output</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Teks</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Saran + Aksi opsional</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Aksi nyata (kirim email, query DB, deploy)</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Tools</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tidak ada / minimal</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Limited tools</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Banyak tools, dynamic discovery</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Memory</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Session only</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Session + context</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Short-term + Long-term + Working</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Planning</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tidak ada</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Saran langkah</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Plan → Execute → Observe → Reflect</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Contoh</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">ChatGPT free, customer service bot</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">GitHub Copilot, Cursor AI</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Devin, AutoGPT, CrewAI agents</td></tr>
+</tbody></table>
+</section>
+
+<section id="komponen-agent" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">10.3 Komponen AI Agent</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">10.3.1 Planner</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Planner</strong> adalah komponen yang bertanggung jawab untuk memecah tujuan besar menjadi <strong>langkah-langkah kecil yang dapat dieksekusi</strong>. Planner menggunakan LLM reasoning (Chain-of-Thought, Tree-of-Thought) untuk menghasilkan rencana aksi.</p>
+<pre class="language-python"><code># Contoh Planner sederhana
+def plan_task(objective: str) -> list[dict]:
+    """Planner: pecah objective menjadi action steps"""
+    prompt = f"""You are a task planner. Break down this objective 
+into actionable steps. For each step, specify the tool needed.
+
+Objective: {objective}
+
+Respond in JSON format:
+[{{"step": 1, "action": "...", "tool": "...", "args": {{}}}}]"""
+    
+    response = llm.generate(prompt)
+    plan = json.loads(response)
+    return plan
+
+plan = plan_task("Analyze Q3 sales and send email summary to CEO")
+# Output:
+# [
+#   {"step": 1, "action": "Query Q3 sales data", "tool": "sql_query", "args": {...}},
+#   {"step": 2, "action": "Generate chart", "tool": "create_chart", "args": {...}},
+#   {"step": 3, "action": "Summarize findings", "tool": "llm_summarize", "args": {...}},
+#   {"step": 4, "action": "Send email to CEO", "tool": "send_email", "args": {...}}
+# ]</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">10.3.2 Memory</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">AI Agent memiliki <strong>tiga jenis memory</strong> yang bekerja bersama:</p>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Jenis Memory</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Fungsi</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Implementasi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Short-term Memory</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Konteks percakapan saat ini, hasil tool calls terbaru</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">LLM context window, conversation history</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Long-term Memory</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Pengetahuan yang bertahan antar sesi: fakta, preferensi user, lesson learned</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Vector database + RAG, knowledge graph</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Working Memory</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">State sementara untuk tracking progres task, intermediate results</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Scratchpad, task state object, database</td></tr>
+</tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">10.3.3 Tool Calling</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Tool Calling</strong> adalah kemampuan Agent untuk menggunakan alat eksternal: API, database query, code execution, file operations, web search, dll. Tools memberi Agent kemampuan untuk <strong>bertindak di dunia nyata</strong>, bukan hanya menghasilkan teks.</p>
+<pre class="language-python"><code># Agent dengan tool calling
+from openai import OpenAI
+
+tools = [{
+    "type": "function",
+    "function": {
+        "name": "search_knowledge_base",
+        "description": "Search internal knowledge base for information",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string"},
+                "top_k": {"type": "integer", "default": 5}
+            },
+            "required": ["query"]
+        }
+    }
+}, {
+    "type": "function",
+    "function": {
+        "name": "send_email",
+        "description": "Send an email to a recipient",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "to": {"type": "string"},
+                "subject": {"type": "string"},
+                "body": {"type": "string"}
+            },
+            "required": ["to", "subject", "body"]
+        }
+    }
+}]
+
+def agent_loop(user_request):
+    messages = [{"role": "user", "content": user_request}]
+    
+    while True:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages,
+            tools=tools
+        )
+        
+        msg = response.choices[0].message
+        
+        if msg.tool_calls:
+            # Agent memutuskan untuk menggunakan tools
+            for tool_call in msg.tool_calls:
+                result = execute_tool(tool_call)
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "content": result
+                })
+        else:
+            # Agent selesai, return final answer
+            return msg.content</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">10.3.4 Reflection</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Reflection</strong> adalah kemampuan Agent untuk <strong>mengevaluasi hasil tindakannya sendiri</strong> dan memperbaiki kesalahan. Setelah melakukan aksi, Agent memeriksa apakah hasilnya sesuai ekspektasi. Jika tidak, Agent merevisi rencana dan mencoba lagi.</p>
+<pre class="language-python"><code>def reflect_and_retry(action_result, expected_outcome):
+    """Reflection: evaluasi hasil dan retry jika perlu"""
+    prompt = f"""Evaluate the action result against expected outcome.
+    
+Expected: {expected_outcome}
+Actual Result: {action_result}
+
+Is the result satisfactory? If not, what went wrong and how to fix it?
+Respond in JSON: {{"success": bool, "analysis": str, "next_action": str}}"""
+    
+    reflection = llm.generate(prompt)
+    result = json.loads(reflection)
+    
+    if not result["success"]:
+        # Agent belajar dari kesalahan dan mencoba lagi
+        return result["next_action"]
+    return None  # Success</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">10.3.5 Multi-Agent</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Multi-Agent</strong> adalah arsitektur di mana beberapa Agent spesialis bekerja bersama untuk menyelesaikan tugas kompleks. Setiap Agent memiliki peran spesifik (researcher, writer, reviewer, coder) dan berkomunikasi satu sama lain.</p>
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TB
+    USER["👤 User Request"] --> ORCH["🎯 Orchestrator Agent"]
+    ORCH --> R["🔍 Researcher Agent"]
+    ORCH --> W["✍️ Writer Agent"]
+    ORCH --> C["💻 Coder Agent"]
+    ORCH --> RV["✅ Reviewer Agent"]
+    
+    R -->|"Findings"| W
+    W -->|"Draft"| RV
+    C -->|"Code"| RV
+    RV -->|"Feedback"| W
+    RV -->|"Feedback"| C
+    RV -->|"Final Output"| USER
+
+    style ORCH fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
+</div>
+</section>
+
+<section id="workflow-agent" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">10.4 Agent Workflow: Plan → Execute → Observe → Reflect</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">AI Agent beroperasi dalam <strong>loop berkelanjutan</strong> yang terdiri dari empat fase. Loop ini berulang sampai task selesai atau batas maksimum tercapai.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart LR
+    P["📋 Plan\nBreak down task\ninto steps"] --> E["⚡ Execute\nRun tool calls\nperform actions"]
+    E --> O["👁️ Observe\nCollect results\ncheck outputs"]
+    O --> D{"✅ Done?"}
+    D -->|"No"| R["🪞 Reflect\nAnalyze what went\nwrong, learn"]
+    R --> P
+    D -->|"Yes"| F["🏁 Final Output"]
+
+    style P fill:#eff6ff,stroke:#3b82f6
+    style E fill:#f0fdf4,stroke:#22c55e
+    style O fill:#fffbeb,stroke:#f59e0b
+    style R fill:#fef3c7,stroke:#f59e0b
+    style F fill:#dcfce7,stroke:#22c55e
+</div>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">Fase 1: Plan</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Agent menganalisis task dan memecahnya menjadi langkah-langkah yang dapat dieksekusi. Planner menggunakan LLM reasoning seperti Chain-of-Thought atau ReAct (Reasoning + Acting).</p>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">Fase 2: Execute</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Agent mengeksekusi langkah demi langkah, memanggil tools yang diperlukan (API, database, code execution). Setiap eksekusi menghasilkan output yang dicatat.</p>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">Fase 3: Observe</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Agent mengamati hasil eksekusi. Apakah output sesuai ekspektasi? Apakah ada error? Apakah task sudah selesai? Hasil observasi disimpan di working memory.</p>
+
+<h4 class="text-lg font-semibold mt-4 mb-2">Fase 4: Reflect</h4>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Jika hasil tidak sesuai, Agent melakukan refleksi: menganalisis penyebab kegagalan, belajar dari kesalahan, dan merevisi rencana. Jika berhasil, Agent melanjutkan ke langkah berikutnya atau menyelesaikan task.</p>
+</section>
+
+<section id="autonomous-vs-hitl" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">10.5 Autonomous Task vs Human-in-the-Loop</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Autonomous Task</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Agent menjalankan seluruh task <strong>tanpa intervensi manusia</strong>. Cocok untuk task yang terdefinisi jelas, repetitif, dan memiliki risiko rendah jika terjadi kesalahan.</p>
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>📊 Data Processing</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">ETL pipeline otomatis</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>📧 Email Sorting</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Klasifikasi dan routing email otomatis</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🔍 Monitoring</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">System monitoring dan alerting otomatis</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>📝 Report Generation</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Generate laporan periodik otomatis</p></div>
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Human-in-the-Loop (HITL)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Agent meminta <strong>persetujuan atau input manusia</strong> pada titik-titik kritis sebelum melanjutkan. Cocok untuk task dengan risiko tinggi, keputusan yang memerlukan judgment manusia, atau compliance requirements.</p>
+<div class="grid sm:grid-cols-2 gap-3 mb-4">
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>💰 Financial Decisions</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Approve transaksi di atas threshold tertentu</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>⚖️ Legal Documents</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Review kontrak sebelum dikirim ke client</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🏥 Medical Diagnosis</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Verifikasi hasil diagnosa oleh dokter</p></div>
+  <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl"><strong>🚀 Production Deploy</strong><p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Approve deployment ke production</p></div>
+</div>
+
+<div class="callout callout-warning"><strong>⚠️ Kapan memilih HITL?</strong> Jika kesalahan Agent dapat menyebabkan kerugian finansial, masalah hukum, atau risiko keselamatan — selalu gunakan Human-in-the-Loop. Jangan biarkan Agent fully autonomous untuk keputusan kritis.</div>
+</section>
+
+<section id="framework-agent" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">10.6 Framework AI Agent</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Berikut adalah framework populer untuk membangun AI Agent (per 2026):</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Framework</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Bahasa</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Kelebihan</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Cocok Untuk</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">OpenAI Agents SDK</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Python, TS</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Simple API, built-in guardrails, handoffs, tracing</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Single/multi-agent dengan OpenAI models</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">LangGraph</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Python, JS</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Graph-based workflows, checkpointing, human-in-the-loop</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Complex stateful agent workflows</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">CrewAI</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Python</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Role-based agents, easy multi-agent, task delegation</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Multi-agent collaboration dengan peran spesifik</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">AutoGen</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Python</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Conversational agents, code generation & execution</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Multi-agent conversation & code generation</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Semantic Kernel</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">C#, Python, Java</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Enterprise-grade, Azure integration, plugins</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Enterprise .NET/Azure ecosystem</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Google ADK</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Python</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gemini-native, Google Cloud integration, streaming</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Google Cloud / Gemini ecosystem</td></tr>
+</tbody></table>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Contoh: OpenAI Agents SDK</h3>
+<pre class="language-python"><code>from agents import Agent, Runner, function_tool
+
+@function_tool
+def search_kb(query: str) -> str:
+    """Search internal knowledge base"""
+    # Implementasi search
+    return f"Results for: {query}"
+
+@function_tool  
+def send_email(to: str, subject: str, body: str) -> str:
+    """Send an email"""
+    # Implementasi email
+    return f"Email sent to {to}"
+
+# Definisikan Agent spesialis
+researcher = Agent(
+    name="Researcher",
+    instructions="Search and gather information. Be thorough.",
+    tools=[search_kb]
+)
+
+writer = Agent(
+    name="Writer", 
+    instructions="Write clear, concise summaries based on research.",
+)
+
+reviewer = Agent(
+    name="Reviewer",
+    instructions="Review content for accuracy and clarity.",
+)
+
+# Orchestrator dengan handoffs
+orchestrator = Agent(
+    name="Orchestrator",
+    instructions="""Coordinate research → writing → review workflow.
+    Hand off to researcher first, then writer, then reviewer.""",
+    handoffs=[researcher, writer, reviewer]
+)
+
+# Run agent
+result = Runner.run_sync(
+    orchestrator, 
+    "Create a summary of our Q3 performance"
+)
+print(result.final_output)</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Contoh: LangGraph</h3>
+<pre class="language-python"><code>from langgraph.graph import StateGraph, END
+from typing import TypedDict, Annotated
+import operator
+
+class AgentState(TypedDict):
+    messages: Annotated[list, operator.add]
+    plan: list
+    current_step: int
+    final_output: str
+
+def planner(state: AgentState) -> AgentState:
+    """Plan the next action"""
+    # LLM-based planning logic
+    return state
+
+def executor(state: AgentState) -> AgentState:
+    """Execute the planned action"""
+    # Tool execution logic
+    return state
+
+def observer(state: AgentState) -> AgentState:
+    """Observe and evaluate results"""
+    return state
+
+def should_continue(state: AgentState) -> str:
+    """Decide whether to continue or finish"""
+    if state["current_step"] >= len(state["plan"]):
+        return "end"
+    return "execute"
+
+# Build graph
+graph = StateGraph(AgentState)
+graph.add_node("plan", planner)
+graph.add_node("execute", executor) 
+graph.add_node("observe", observer)
+
+graph.set_entry_point("plan")
+graph.add_edge("plan", "execute")
+graph.add_edge("execute", "observe")
+graph.add_conditional_edges("observe", should_continue, {
+    "execute": "execute",
+    "end": END
+})
+
+app = graph.compile()
+result = app.invoke({"messages": [], "plan": [], "current_step": 0})</code></pre>
+</section>
+
+<section id="arsitektur-agent" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">10.7 Arsitektur Agent</h2>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TB
+    subgraph INPUT["📥 Input Layer"]
+        U["👤 User Request"]
+        C["📋 Context / History"]
+    end
+
+    subgraph CORE["🧠 Agent Core"]
+        direction TB
+        P["📋 Planner\n(LLM Reasoning)"]
+        M["🧠 Memory\n(Short / Long / Working)"]
+        TC["🔧 Tool Calling\n(Function calls)"]
+        R["🪞 Reflection\n(Self-evaluation)"]
+    end
+
+    subgraph TOOLS["🔌 Tools Layer"]
+        API["🌐 APIs"]
+        DB["🗄️ Database"]
+        FS["📁 File System"]
+        CODE["💻 Code Exec"]
+    end
+
+    subgraph OUTPUT["📤 Output Layer"]
+        ACT["⚡ Actions"]
+        RESP["💬 Response"]
+        LOG["📊 Logs & Trace"]
+    end
+
+    U --> P
+    C --> P
+    P --> TC
+    M <--> P
+    TC --> API
+    TC --> DB
+    TC --> FS
+    TC --> CODE
+    API --> R
+    DB --> R
+    FS --> R
+    CODE --> R
+    R -->|"feedback"| P
+    R --> ACT
+    R --> RESP
+    R --> LOG
+
+    style CORE fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
+    style TOOLS fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+</div>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">10.8 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>Agentic AI</strong> adalah sistem AI otonom yang merencanakan, menggunakan tools, dan beradaptasi — melampaui Chatbot yang hanya merespons teks.</li>
+<li><strong>Komponen inti:</strong> Planner (pemecahan tugas), Memory (short/long/working), Tool Calling (aksi nyata), Reflection (evaluasi diri), Multi-Agent (kolaborasi spesialis).</li>
+<li><strong>Workflow:</strong> Plan → Execute → Observe → Reflect dalam loop berkelanjutan hingga task selesai.</li>
+<li><strong>Autonomous vs HITL:</strong> Gunakan autonomous untuk task rendah risiko; Human-in-the-Loop untuk keputusan kritis (finansial, legal, medis).</li>
+<li><strong>Framework:</strong> OpenAI Agents SDK (simple), LangGraph (stateful workflows), CrewAI (multi-agent roles), AutoGen (conversational), Semantic Kernel (enterprise .NET), Google ADK (Gemini-native).</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">📝 Quiz</h4><ol class="space-y-3 text-sm"><li><p class="font-medium">1. Apa perbedaan utama antara Chatbot dan AI Agent?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Tidak ada perbedaan</li><li>B. Chatbot hanya merespons; Agent merencanakan dan bertindak otonom</li><li>C. Agent lebih murah</li><li>D. Chatbot menggunakan lebih banyak memory</li></ul></li><li><p class="font-medium">2. Tiga jenis memory pada AI Agent adalah?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. RAM, ROM, Cache</li><li>B. Short-term, Long-term, Working</li><li>C. Input, Output, Processing</li><li>D. Training, Validation, Testing</li></ul></li><li><p class="font-medium">3. Kapan sebaiknya menggunakan Human-in-the-Loop?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Untuk semua task</li><li>B. Untuk task dengan risiko tinggi: finansial, legal, medis</li><li>C. Tidak pernah, Agent harus fully autonomous</li><li>D. Hanya untuk debugging</li></ul></li></ol></div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">🏋️ Latihan</h4><ol class="space-y-3 text-sm"><li><strong>Tugas 1:</strong> Buat AI Agent sederhana menggunakan OpenAI Agents SDK dengan 3 tools berbeda. Uji dengan task multi-step.</li><li><strong>Tugas 2:</strong> Implementasikan Multi-Agent system dengan CrewAI: Researcher → Writer → Reviewer workflow.</li><li><strong>Tugas 3:</strong> Buat Agent dengan Human-in-the-Loop menggunakan LangGraph, di mana Agent meminta persetujuan user sebelum mengeksekusi aksi.</li></ol></div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-09.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 9</a>
+  <a href="bab-11.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 11 — Integrasi AI<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

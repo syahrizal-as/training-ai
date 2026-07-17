@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 4: Large Language Models (LLM) — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 4 — LLM</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 font-medium">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 4: Large Language Models (LLM)</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 4</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Large Language Models (LLM)</h1><p class="text-lg text-gray-600 dark:text-gray-400">Memahami fondasi teknis LLM: tokenisasi, embedding, arsitektur Transformer, dan pipeline training & inference.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami definisi LLM dan bagaimana model bahasa skala besar bekerja</li><li>Mengetahui teknik tokenisasi: BPE (Byte-Pair Encoding) dan WordPiece</li><li>Memahami konsep embedding dan bagaimana teks dikonversi menjadi vektor</li><li>Menguasai arsitektur Transformer: encoder-decoder, self-attention, multi-head attention, positional encoding</li><li>Memahami pipeline training: pre-training, fine-tuning, RLHF, dan DPO</li><li>Mengetahui cara kerja inference pada LLM</li></ul></div>
+
+<div class="callout callout-info" style="background:#faf5ff;border-left:4px solid #8b5cf6;color:#6b21a8;"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Menjelaskan peran tokenisasi dalam pipeline LLM</li><li>Mendeskripsikan mekanisme self-attention dalam Transformer</li><li>Membedakan tahapan training: pre-training vs fine-tuning vs alignment</li><li>Menganalisis trade-off berbagai arsitektur Transformer (encoder-only, decoder-only, encoder-decoder)</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#definisi-llm" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">4.1 Definisi LLM</a></li><li><a href="#tokenisasi" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">4.2 Tokenisasi: BPE & WordPiece</a></li><li><a href="#embedding" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">4.3 Embedding</a></li><li><a href="#transformer" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">4.4 Arsitektur Transformer</a></li><li><a href="#training" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">4.5 Training LLM</a></li><li><a href="#inference" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">4.6 Inference LLM</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">4.7 Ringkasan</a></li></ul></nav>
+
+<section id="definisi-llm" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">4.1 Definisi LLM</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Apa itu Large Language Model?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Large Language Model (LLM)</strong> adalah model AI berbasis <strong>arsitektur Transformer</strong> yang dilatih pada dataset teks berskala sangat besar (triliunan token) untuk memahami dan menghasilkan bahasa manusia. Kata "Large" merujuk pada jumlah parameter model — mulai dari miliaran (1B) hingga triliunan — yang menentukan kapasitas model dalam menangkap pola bahasa yang kompleks.</p>
+
+<div class="callout callout-info"><strong>📖 Definisi Teknis:</strong> LLM adalah model autoregressive yang memodelkan distribusi probabilitas token berikutnya dalam sebuah sekuens: <strong>P(token<sub>t</sub> | token<sub>1</sub>, token<sub>2</sub>, ..., token<sub>t-1</sub>)</strong>. Model belajar memprediksi kata berikutnya berdasarkan konteks sebelumnya, dan kemampuan ini — ketika diskalakan — menghasilkan <em>emergent abilities</em> seperti reasoning, coding, dan translation.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Evolusi LLM</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Tahun</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Model</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Parameter</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Signifikansi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">2017</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Transformer Paper</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">—</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">"Attention Is All You Need" — fondasi semua LLM modern</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">2018</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">BERT</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">340M</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Encoder-only, bidirectional understanding</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">2019</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">GPT-2</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">1.5B</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Decoder-only, text generation yang koheren</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">2020</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">GPT-3</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">175B</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Few-shot learning, scaling laws terbukti</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">2022</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">ChatGPT</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">175B (GPT-3.5)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">RLHF, instruksi following, adopsi massal</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">2023</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">GPT-4</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">~1.8T (MoE)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Multi-modal, reasoning tingkat lanjut</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">2024</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Llama 3 (405B)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">405B</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Open-weight terbesar dengan performa frontier</td></tr>
+</tbody></table>
+</div>
+</section>
+
+<section id="tokenisasi" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">4.2 Tokenisasi: BPE & WordPiece</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Apa itu Tokenisasi?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Tokenisasi</strong> adalah proses mengonversi teks mentah menjadi urutan token yang dapat diproses oleh model. Token adalah unit dasar yang menjadi input dan output LLM. Tokenisasi yang baik harus menangani kosakata terbuka (termasuk kata yang belum pernah dilihat), efisien dalam representasi, dan dapat memproses berbagai bahasa.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart LR
+    A["Teks: 'Saya belajar AI'"] --> B["Tokenizer<br/>(BPE / WordPiece)"]
+    B --> C["Token IDs: [2437, 4821, 312]"]
+    C --> D["Embedding Lookup"]
+    D --> E["Vector Embeddings"]
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Byte-Pair Encoding (BPE)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Byte-Pair Encoding (BPE)</strong> adalah algoritma tokenisasi sub-kata yang digunakan oleh GPT-series (GPT-2, GPT-3, GPT-4) dan Llama. BPE bekerja dengan:</p>
+<ol class="list-decimal pl-5 space-y-2 text-gray-700 dark:text-gray-300 mb-4">
+  <li>Mulai dari karakter individual sebagai kosakata awal</li>
+  <li>Hitung frekuensi setiap pasangan token yang berdekatan</li>
+  <li>Gabungkan pasangan paling sering menjadi token baru</li>
+  <li>Ulangi langkah 2-3 sampai jumlah merge yang diinginkan tercapai</li>
+</ol>
+
+<pre class="language-python"><code># Ilustrasi konseptual BPE
+# Teks: "low low low low lower"
+# Iterasi 1: Pasangan "l"+"o" paling sering → token "lo"
+# Iterasi 2: Pasangan "lo"+"w" paling sering → token "low"
+# Hasil: kosakata memiliki token "low" untuk efisiensi
+
+# GPT-4 menggunakan tokenizer berbasis BPE dengan ~100K token
+# Kata "mempertanggungjawabkan" → ["mem","pert","anggung","jawab","kan"]
+</code></pre>
+
+<div class="callout callout-best"><strong>💡 Kelebihan BPE:</strong> Menangani kata di luar kosakata (OOV) dengan memecahnya menjadi sub-kata yang dikenal. Kata baru seperti "ChatGPT" akan dipecah menjadi ["Chat", "G", "PT"] — semua sub-kata yang sudah ada di kosakata.</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">WordPiece</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>WordPiece</strong> adalah algoritma tokenisasi yang dikembangkan oleh Google, digunakan dalam BERT dan keluarga model Google. Berbeda dengan BPE yang memilih pasangan berdasarkan frekuensi murni, WordPiece memilih pasangan yang <strong>memaksimalkan likelihood data training</strong>.</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Aspek</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">BPE</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">WordPiece</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Kriteria Merge</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Frekuensi pasangan tertinggi</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Likelihood maksimum (co-occurrence score)</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Notasi Sub-kata</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tidak ada prefix khusus</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Prefix "##" untuk token lanjutan</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Pengguna</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">GPT series, Llama, Mistral</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">BERT, T5, Gemma</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Contoh</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-mono text-xs">"belajar" → ["bel", "ajar"]</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-mono text-xs">"belajar" → ["belajar"] atau ["bel", "##ajar"]</td></tr>
+</tbody></table>
+</section>
+
+<section id="embedding" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">4.3 Embedding</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Apa itu Embedding?</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Embedding</strong> adalah representasi vektor numerik (berdimensi tetap) dari token, kata, atau teks dalam ruang vektor kontinu. Di dalam LLM, setiap token ID yang dihasilkan oleh tokenizer dipetakan ke vektor embedding melalui <strong>embedding matrix</strong> (lookup table) yang dipelajari selama training. Vektor-vektor ini menangkap makna semantik — token yang semantik mirip akan memiliki vektor yang berdekatan dalam ruang embedding.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TD
+    subgraph "Token to Embedding"
+        T1["Token ID: 2437<br/>'saya'"]
+        T2["Token ID: 4821<br/>'belajar'"]
+        T3["Token ID: 312<br/>'AI'"]
+    end
+    subgraph "Embedding Matrix<br/>(V × D)"
+        E1["[0.12, -0.45, 0.78, ..., 0.33]<br/>(Dimensi = 768)"]
+        E2["[-0.23, 0.67, -0.11, ..., 0.52]<br/>(Dimensi = 768)"]
+        E3["[0.89, -0.34, 0.21, ..., -0.15]<br/>(Dimensi = 768)"]
+    end
+    T1 --> E1
+    T2 --> E2
+    T3 --> E3
+</div>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Dimensi embedding bervariasi antar model:</p>
+<ul class="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300 mb-4">
+  <li>GPT-3: dimensi 12,288</li>
+  <li>Llama 3 (70B): dimensi 8,192</li>
+  <li>BERT-base: dimensi 768</li>
+</ul>
+
+<div class="callout callout-info"><strong>📖 Catatan:</strong> Embedding di LLM berbeda dari <strong>text embedding model</strong> (seperti text-embedding-3, voyage, cohere) yang menghasilkan satu vektor untuk seluruh teks — topik yang akan dibahas lebih mendalam di Bab 6 (Embedding).</div>
+</section>
+
+<section id="transformer" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">4.4 Arsitektur Transformer</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Gambaran Umum</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Arsitektur <strong>Transformer</strong> diperkenalkan dalam paper "Attention Is All You Need" (Vaswani et al., 2017) dan menjadi fondasi seluruh LLM modern. Transformer sepenuhnya meninggalkan recurrence (RNN/LSTM) dan hanya menggunakan mekanisme <strong>attention</strong> — memungkinkan pemrosesan paralel yang masif dan menangkap dependensi jarak jauh dalam teks.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TB
+    subgraph Input["Input Layer"]
+        I1["Input Tokens"]
+        I2["Token Embeddings"]
+        I3["Positional Encoding"]
+        I1 --> I2
+        I2 --> I3
+    end
+
+    subgraph Encoder["Encoder Stack (×N)"]
+        direction TB
+        E1["Multi-Head Self-Attention"]
+        E2["Add & Norm (Residual)"]
+        E3["Feed-Forward Network (FFN)"]
+        E4["Add & Norm (Residual)"]
+        E5["Output ke Decoder"]
+        E1 --> E2 --> E3 --> E4
+        E4 --> E5
+    end
+
+    subgraph Decoder["Decoder Stack (×N)"]
+        direction TB
+        D1["Masked Multi-Head Self-Attention"]
+        D2["Add & Norm"]
+        D3["Cross-Attention (Encoder Output)"]
+        D4["Add & Norm"]
+        D5["Feed-Forward Network"]
+        D6["Add & Norm"]
+        D1 --> D2 --> D3 --> D4 --> D5 --> D6
+    end
+
+    subgraph Output["Output Layer"]
+        O1["Linear Projection"]
+        O2["Softmax"]
+        O3["Token Probabilities"]
+        O1 --> O2 --> O3
+    end
+
+    I3 --> Encoder
+    I3 --> Decoder
+    Encoder --> Decoder
+    Decoder --> Output
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Self-Attention</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Self-Attention</strong> adalah mekanisme inti Transformer yang memungkinkan setiap token "memperhatikan" semua token lain dalam sekuens untuk menghitung representasi kontekstual. Setiap token menghasilkan tiga vektor:</p>
+<ul class="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300 mb-4">
+  <li><strong>Query (Q):</strong> "Apa yang saya cari?" — vektor yang merepresentasikan token saat ini sebagai pencari informasi</li>
+  <li><strong>Key (K):</strong> "Apa yang saya tawarkan?" — vektor yang merepresentasikan token sebagai penyedia informasi</li>
+  <li><strong>Value (V):</strong> "Informasi aktual" — vektor yang berisi konten informasi dari token</li>
+</ul>
+
+<pre class="language-python"><code># Rumus Self-Attention (scaled dot-product attention)
+# Attention(Q, K, V) = softmax(QK^T / √d_k) × V
+
+# d_k = dimensi key (scaling factor)
+# QK^T = matriks similarity antar semua pasangan token
+# softmax = normalisasi menjadi distribusi probabilitas
+# × V = weighted sum dari value vectors
+
+import numpy as np
+
+def self_attention(Q, K, V, mask=None):
+    d_k = Q.shape[-1]  # Dimensi key
+    # Hitung attention scores
+    scores = np.dot(Q, K.T) / np.sqrt(d_k)
+    # Masking (untuk decoder: cegah melihat token masa depan)
+    if mask is not None:
+        scores = scores + mask
+    # Softmax untuk mendapatkan attention weights
+    attention_weights = np.exp(scores) / np.sum(np.exp(scores), axis=-1, keepdims=True)
+    # Weighted sum of values
+    output = np.dot(attention_weights, V)
+    return output, attention_weights
+</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Multi-Head Attention</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Multi-Head Attention</strong> menjalankan beberapa mekanisme self-attention secara paralel dengan matriks Q, K, V yang berbeda di setiap "head". Setiap head dapat fokus pada aspek hubungan yang berbeda — satu head mungkin fokus pada hubungan sintaksis, head lain pada hubungan semantik, dan head lainnya pada dependensi jarak jauh.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart LR
+    A["Input Embedding"] --> H1["Head 1<br/>Q₁K₁V₁"]
+    A --> H2["Head 2<br/>Q₂K₂V₂"]
+    A --> H3["Head ...<br/>QₙKₙVₙ"]
+    A --> H4["Head H<br/>QₕKₕVₕ"]
+    H1 --> C["Concatenate"]
+    H2 --> C
+    H3 --> C
+    H4 --> C
+    C --> L["Linear Projection"]
+    L --> O["Multi-Head Output"]
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Positional Encoding</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Karena Transformer memproses semua token secara paralel (tidak seperti RNN yang sekuensial), model <strong>tidak memiliki informasi urutan bawaan</strong>. <strong>Positional Encoding</strong> menambahkan informasi posisi ke setiap token embedding menggunakan fungsi sinusoidal atau parameter yang dipelajari:</p>
+
+<pre class="language-python"><code># Positional Encoding sinusoidal (original Transformer)
+# PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))
+# PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
+
+# pos = posisi token dalam sekuens
+# i   = indeks dimensi
+# d_model = dimensi embedding
+
+# Alternatif modern: Rotary Position Embedding (RoPE)
+# Digunakan oleh Llama, Mistral, Qwen — lebih baik untuk ekstrapolasi posisi
+</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Varian Arsitektur Transformer</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Arsitektur</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Komponen</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Contoh Model</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Use Case</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Encoder-only</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Hanya encoder stack, bidirectional attention</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">BERT, RoBERTa</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Klasifikasi, NER, embedding, understanding</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Decoder-only</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Hanya decoder stack, masked (causal) attention</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">GPT series, Llama, Mistral</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Text generation, chat, code generation</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Encoder-Decoder</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Encoder + Decoder lengkap, cross-attention</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">T5, BART, Flan-T5</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Translation, summarization, seq2seq tasks</td></tr>
+</tbody></table>
+</section>
+
+<section id="training" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">4.5 Training LLM</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Pipeline Training</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Training LLM modern terdiri dari beberapa tahap yang berurutan, masing-masing dengan tujuan berbeda:</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TD
+    A["📚 Data Koleksi<br/>(Internet, Buku, Kode)"] --> B["🧹 Data Cleaning<br/>(Filter, Dedup, Quality)"]
+    B --> C["🔤 Tokenization"]
+    C --> D["🧠 Pre-Training<br/>(Next-Token Prediction)<br/>Triliunan token, Ribuan GPU"]
+
+    D --> E{"Jenis Model"}
+    E -->|"Base Model"| F["📊 Evaluation<br/>Benchmarks"]
+    E -->|"Chat/Instruct"| G["🎯 Supervised Fine-Tuning<br/>(SFT)<br/>Dataset prompt-response berkualitas"]
+
+    G --> H["👤 Alignment"]
+    H --> H1["RLHF<br/>Reinforcement Learning<br/>from Human Feedback"]
+    H --> H2["DPO<br/>Direct Preference<br/>Optimization"]
+
+    H1 --> I["✅ Model Final"]
+    H2 --> I
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Pre-Training</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Pre-training</strong> adalah tahap paling intensif secara komputasi. Model belajar dari data teks masif (biasanya triliunan token) menggunakan objective <strong>next-token prediction</strong> (causal language modeling). Pada tahap ini, model membangun pemahaman fundamental tentang bahasa: tata bahasa, fakta dunia, pola reasoning, dan kemampuan coding.</p>
+<ul class="list-disc pl-5 space-y-1 text-gray-700 dark:text-gray-300 mb-4">
+  <li><strong>Data:</strong> Web crawl (Common Crawl), Wikipedia, GitHub, buku, artikel ilmiah</li>
+  <li><strong>Objective:</strong> Autoregressive language modeling — prediksi token berikutnya</li>
+  <li><strong>Infrastruktur:</strong> Ribuan GPU selama berminggu-minggu/bulan</li>
+  <li><strong>Hasil:</strong> Base model yang "tahu banyak" tapi tidak bisa mengikuti instruksi dengan baik</li>
+</ul>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Supervised Fine-Tuning (SFT)</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Supervised Fine-Tuning (SFT)</strong> atau Instruction Tuning: model base dilatih lebih lanjut dengan dataset berkualitas tinggi berisi pasangan (instruksi, respons). Tujuannya adalah mengajarkan model untuk <strong>mengikuti instruksi pengguna</strong> dengan format yang tepat.</p>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Alignment: RLHF vs DPO</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Alignment</strong> bertujuan menyelaraskan output model dengan preferensi dan nilai-nilai manusia. Dua pendekatan utama:</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Aspek</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">RLHF</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">DPO</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Komponen</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Reward Model + RL (PPO)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Preference pairs + binary cross-entropy</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Kompleksitas</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Tinggi — 3 model (actor, critic, reward)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Rendah — langsung pada policy model</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Stabilitas</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Sulit di-tune, reward hacking</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Stabil, supervised learning</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Pengguna</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">ChatGPT, Claude, Gemini</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Llama 3, Mixtral, Qwen</td></tr>
+</tbody></table>
+</section>
+
+<section id="inference" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">4.6 Inference LLM</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Proses Inference</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4"><strong>Inference</strong> adalah proses menghasilkan teks dari model yang sudah dilatih. Ini berjalan secara <strong>autoregressive</strong>: model menghasilkan satu token pada satu waktu, dan setiap token baru ditambahkan ke input untuk menghasilkan token berikutnya.</p>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+sequenceDiagram
+    participant User as 👤 User
+    participant Tokenizer as 🔤 Tokenizer
+    participant Model as 🧠 LLM
+    participant Sampler as 🎲 Sampler
+    participant Detokenizer as 📝 Detokenizer
+
+    User->>Tokenizer: "Apa itu AI?"
+    Tokenizer->>Model: Token IDs: [A, pa, itu, AI, ?]
+    Model->>Model: Forward pass semua token sekaligus
+    Model->>Sampler: Logits untuk token berikutnya
+    Sampler->>Sampler: Apply temperature, top-p
+    Sampler->>Detokenizer: Token: "AI"
+    Note over Sampler,Detokenizer: Loop autoregressive
+    Detokenizer->>Model: Append token, forward pass lagi
+    Sampler->>Detokenizer: Token: "adalah"
+    Detokenizer->>Model: Append, forward pass...
+    Sampler->>Detokenizer: Token: "kecerdasan"
+    Sampler->>Detokenizer: Token: "buatan"
+    Sampler->>Detokenizer: Token: <EOS>
+    Detokenizer->>User: "AI adalah kecerdasan buatan"
+</div>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Optimasi Inference</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Teknik</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Deskripsi</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Manfaat</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">KV Cache</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Menyimpan Key-Value pairs dari token sebelumnya agar tidak dihitung ulang</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Latency turun 50-80%</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Quantization (INT8, INT4)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Mengurangi presisi parameter dari FP16/FP32 ke INT8/INT4</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Memory turun 2-4×, throughput naik</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Speculative Decoding</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Model kecil (draft) menghasilkan kandidat, model besar memverifikasi</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Throughput 2-3× lebih cepat</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Flash Attention</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Algoritma attention yang IO-aware, mengurangi akses memori</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Memory turun, speed naik, context window lebih panjang</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Continuous Batching</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Menggabungkan multiple request dalam satu batch dinamis</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Throughput server naik signifikan</td></tr>
+</tbody></table>
+
+<div class="callout callout-best"><strong>💡 Best Practice:</strong> Untuk deployment production, gunakan inference engine seperti <strong>vLLM</strong> (continuous batching + PagedAttention), <strong>TensorRT-LLM</strong> (NVIDIA GPU), atau <strong>llama.cpp</strong> (CPU + Apple Silicon). Framework ini mengimplementasikan optimasi inference terkini.</div>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">4.7 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>LLM</strong> adalah model bahasa berbasis Transformer dengan miliaran parameter, dilatih pada triliunan token untuk memahami dan menghasilkan teks.</li>
+<li><strong>Tokenisasi</strong> (BPE, WordPiece) mengonversi teks menjadi token. BPE banyak digunakan oleh GPT-series dan Llama; WordPiece oleh BERT dan Google models.</li>
+<li><strong>Arsitektur Transformer</strong> menggunakan self-attention, multi-head attention, dan positional encoding. Tiga varian utama: encoder-only (BERT), decoder-only (GPT), dan encoder-decoder (T5).</li>
+<li><strong>Training LLM</strong> terdiri dari pre-training → supervised fine-tuning (SFT) → alignment (RLHF atau DPO).</li>
+<li><strong>Inference</strong> berjalan autoregressive (token demi token). Optimasi: KV Cache, quantization, speculative decoding, Flash Attention.</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl">
+<h4 class="font-semibold mb-2">📝 Quiz</h4>
+<ol class="space-y-4 text-sm">
+<li><p class="font-medium">1. Apa fungsi utama tokenisasi dalam LLM?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Memperindah tampilan teks</li><li>B. Mengonversi teks menjadi urutan token (ID) yang bisa diproses model</li><li>C. Menghitung jumlah kata dalam dokumen</li><li>D. Menerjemahkan teks ke bahasa lain</li></ul></li>
+<li><p class="font-medium">2. Komponen apa yang menjadi inti arsitektur Transformer?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Recurrent Neural Network (RNN)</li><li>B. Convolutional Neural Network (CNN)</li><li>C. Self-Attention Mechanism</li><li>D. Support Vector Machine (SVM)</li></ul></li>
+<li><p class="font-medium">3. Apa perbedaan utama antara RLHF dan DPO?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. RLHF lebih cepat</li><li>B. DPO tidak memerlukan reward model terpisah, langsung optimasi dari preference pairs</li><li>C. RLHF tidak menggunakan data manusia</li><li>D. Tidak ada perbedaan</li></ul></li>
+<li><p class="font-medium">4. Mengapa positional encoding diperlukan dalam Transformer?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Untuk mempercepat training</li><li>B. Karena Transformer memproses semua token paralel, tidak punya informasi urutan bawaan</li><li>C. Untuk mengurangi ukuran model</li><li>D. Untuk menerjemahkan bahasa</li></ul></li>
+</ol>
+</div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl">
+<h4 class="font-semibold mb-3">🏋️ Latihan</h4>
+<ol class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+<li><strong>Eksplorasi Tokenizer:</strong> Gunakan <a href="https://tiktokenizer.vercel.app/" class="text-primary-600 dark:text-primary-400 underline">TikTokenizer</a> untuk memasukkan teks dalam bahasa Indonesia dan bahasa Inggris. Bandingkan jumlah token yang dihasilkan. Amati bagaimana kata majemuk bahasa Indonesia dipecah.</li>
+<li><strong>Visualisasi Attention:</strong> Coba <a href="https://github.com/jessevig/bertviz" class="text-primary-600 dark:text-primary-400 underline">BertViz</a> untuk memvisualisasikan attention heads dalam model BERT. Perhatikan bagaimana head-head berbeda fokus pada aspek yang berbeda (sintaksis, semantik).</li>
+<li><strong>Hitung Parameter:</strong> Hitung jumlah parameter sebuah Transformer layer dengan d_model=4096, d_ff=14336, n_heads=32. (Hint: 4 × d_model² untuk Q,K,V,O projection + 2 × d_model × d_ff untuk FFN).</li>
+<li><strong>Inference dengan Quantization:</strong> Gunakan llama.cpp atau Ollama untuk melakukan inference model Llama 3 8B dengan Q4_K_M quantization. Bandingkan kualitas output dengan versi FP16.</li>
+</ol>
+</div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-03.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 3 — Generative AI</a>
+  <a href="bab-05.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 5 — Prompt Engineering<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

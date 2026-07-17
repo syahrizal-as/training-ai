@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 11: Integrasi AI dengan Laravel — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-php.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 11 — Integrasi AI dengan Laravel</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-medium transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 11: Integrasi AI dengan Laravel</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 11</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Integrasi AI dengan Laravel</h1><p class="text-lg text-gray-600 dark:text-gray-400">Panduan praktis mengintegrasikan API AI (OpenAI, Google Gemini, DeepSeek) ke dalam aplikasi Laravel: Service class, Controller, Route, authentication, rate limiting, error handling, dan streaming.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami arsitektur integrasi AI API dengan aplikasi Laravel</li><li>Mampu membuat Service class untuk OpenAI, Gemini, dan DeepSeek API</li><li>Menerapkan authentication (API Key, Bearer Token) untuk API AI</li><li>Mengimplementasikan best practice: rate limiting, error handling, retry logic, streaming response</li></ul></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">📋 Kompetensi Dasar</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Mampu mengintegrasikan OpenAI API ke Laravel project</li><li>Mampu mengintegrasikan Google Gemini API dan DeepSeek API</li><li>Mampu menangani error dan retry pada API calls</li><li>Mampu mengimplementasikan streaming response di Laravel</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Isi Bab</h3><ul class="space-y-1.5 text-sm"><li><a href="#rest-api" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">11.1 REST API & Authentication</a></li><li><a href="#openai" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">11.2 Integrasi OpenAI API</a></li><li><a href="#gemini" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">11.3 Integrasi Google Gemini API</a></li><li><a href="#deepseek" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">11.4 Integrasi DeepSeek API</a></li><li><a href="#service-class" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">11.5 Service Class, Controller & Route</a></li><li><a href="#best-practice-laravel" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">11.6 Best Practice</a></li><li><a href="#arsitektur-integrasi" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">11.7 Arsitektur Integrasi</a></li><li><a href="#ringkasan" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">11.8 Ringkasan</a></li></ul></nav>
+
+<section id="rest-api" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">11.1 REST API & Authentication</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Authentication Methods</h3>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">Semua AI API menggunakan <strong>API Key</strong> atau <strong>Bearer Token</strong> untuk authentication. Kunci disimpan di environment variable dan dikirim melalui HTTP header.</p>
+
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Provider</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Auth Method</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Header</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Base URL</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">OpenAI</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Bearer Token</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2"><code>Authorization: Bearer sk-...</code></td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">https://api.openai.com/v1</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Google Gemini</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">API Key (query param atau header)</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2"><code>x-goog-api-key: AIza...</code></td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">https://generativelanguage.googleapis.com/v1beta</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">DeepSeek</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Bearer Token</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2"><code>Authorization: Bearer sk-...</code></td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">https://api.deepseek.com/v1</td></tr>
+</tbody></table>
+
+<div class="callout callout-warning"><strong>⚠️ Security:</strong> JANGAN PERNAH hardcode API key di source code! Simpan di <code>.env</code> file dan akses melalui <code>config/services.php</code> atau <code>env()</code> helper.</div>
+</section>
+
+<section id="openai" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">11.2 Integrasi OpenAI API</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Konfigurasi</h3>
+<pre class="language-php"><code>// config/services.php
+return [
+    // ...
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+        'organization' => env('OPENAI_ORGANIZATION', null),
+        'base_url' => env('OPENAI_BASE_URL', 'https://api.openai.com/v1'),
+        'timeout' => env('OPENAI_TIMEOUT', 60),
+    ],
+];
+
+// .env
+OPENAI_API_KEY=sk-your-api-key-here
+OPENAI_ORGANIZATION=org-your-org-id
+OPENAI_TIMEOUT=60</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">Chat Completion</h3>
+<pre class="language-php"><code><?php
+
+namespace App\Services\AI;
+
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+
+class OpenAIService
+{
+    protected string $apiKey;
+    protected string $baseUrl;
+    protected int $timeout;
+
+    public function __construct()
+    {
+        $this->apiKey = config('services.openai.api_key');
+        $this->baseUrl = config('services.openai.base_url');
+        $this->timeout = config('services.openai.timeout', 60);
+    }
+
+    /**
+     * Send a chat completion request to OpenAI.
+     *
+     * @param array $messages Array of message objects with 'role' and 'content'
+     * @param string $model Model name (default: gpt-4o)
+     * @param array $options Additional options (temperature, max_tokens, etc.)
+     * @return array Response from OpenAI
+     */
+    public function chatCompletion(
+        array $messages,
+        string $model = 'gpt-4o',
+        array $options = []
+    ): array {
+        $payload = array_merge([
+            'model' => $model,
+            'messages' => $messages,
+            'temperature' => 0.7,
+            'max_tokens' => 4096,
+        ], $options);
+
+        try {
+            $response = Http::timeout($this->timeout)
+                ->withHeaders([
+                    'Authorization' => "Bearer {$this->apiKey}",
+                    'Content-Type' => 'application/json',
+                ])
+                ->post("{$this->baseUrl}/chat/completions", $payload);
+
+            if ($response->failed()) {
+                throw new \RuntimeException(
+                    "OpenAI API error: {$response->body()}",
+                    $response->status()
+                );
+            }
+
+            return $response->json();
+        } catch (ConnectionException $e) {
+            throw new \RuntimeException(
+                "OpenAI connection failed: {$e->getMessage()}",
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * Simple chat — send a prompt and get text response.
+     */
+    public function chat(string $prompt, string $model = 'gpt-4o'): string
+    {
+        $result = $this->chatCompletion([
+            ['role' => 'user', 'content' => $prompt]
+        ], $model);
+
+        return $result['choices'][0]['message']['content'] ?? '';
+    }
+
+    /**
+     * Chat with system prompt for context.
+     */
+    public function chatWithSystem(
+        string $systemPrompt,
+        string $userMessage,
+        string $model = 'gpt-4o'
+    ): string {
+        $result = $this->chatCompletion([
+            ['role' => 'system', 'content' => $systemPrompt],
+            ['role' => 'user', 'content' => $userMessage],
+        ], $model);
+
+        return $result['choices'][0]['message']['content'] ?? '';
+    }
+}</code></pre>
+</section>
+
+<section id="gemini" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">11.3 Integrasi Google Gemini API</h2>
+
+<pre class="language-php"><code><?php
+
+namespace App\Services\AI;
+
+use Illuminate\Support\Facades\Http;
+
+class GeminiService
+{
+    protected string $apiKey;
+    protected string $baseUrl;
+
+    public function __construct()
+    {
+        $this->apiKey = config('services.gemini.api_key');
+        $this->baseUrl = config('services.gemini.base_url',
+            'https://generativelanguage.googleapis.com/v1beta');
+    }
+
+    /**
+     * Generate content using Gemini API.
+     *
+     * @param string $prompt User prompt text
+     * @param string $model Model name (default: gemini-2.0-flash)
+     * @param array $options Generation config
+     * @return array Decoded response
+     */
+    public function generateContent(
+        string $prompt,
+        string $model = 'gemini-2.0-flash',
+        array $options = []
+    ): array {
+        $url = "{$this->baseUrl}/models/{$model}:generateContent";
+
+        $payload = array_merge([
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => $prompt]
+                    ]
+                ]
+            ],
+            'generationConfig' => [
+                'temperature' => 0.7,
+                'maxOutputTokens' => 4096,
+                'topP' => 0.95,
+                'topK' => 40,
+            ]
+        ], $options);
+
+        $response = Http::timeout(60)
+            ->withHeaders([
+                'x-goog-api-key' => $this->apiKey,
+                'Content-Type' => 'application/json',
+            ])
+            ->post($url, $payload);
+
+        if ($response->failed()) {
+            throw new \RuntimeException(
+                "Gemini API error [{$response->status()}]: {$response->body()}"
+            );
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Simple text generation with Gemini.
+     */
+    public function generate(string $prompt, string $model = 'gemini-2.0-flash'): string
+    {
+        $result = $this->generateContent($prompt, $model);
+
+        return $result['candidates'][0]['content']['parts'][0]['text']
+            ?? throw new \RuntimeException('Empty Gemini response');
+    }
+
+    /**
+     * Generate with system instruction.
+     */
+    public function generateWithSystemInstruction(
+        string $systemInstruction,
+        string $prompt,
+        string $model = 'gemini-2.0-flash'
+    ): string {
+        $url = "{$this->baseUrl}/models/{$model}:generateContent";
+
+        $payload = [
+            'systemInstruction' => [
+                'parts' => [['text' => $systemInstruction]]
+            ],
+            'contents' => [
+                [
+                    'parts' => [['text' => $prompt]]
+                ]
+            ]
+        ];
+
+        $response = Http::timeout(60)
+            ->withHeaders([
+                'x-goog-api-key' => $this->apiKey,
+                'Content-Type' => 'application/json',
+            ])
+            ->post($url, $payload);
+
+        $result = $response->json();
+        return $result['candidates'][0]['content']['parts'][0]['text'] ?? '';
+    }
+}</code></pre>
+</section>
+
+<section id="deepseek" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">11.4 Integrasi DeepSeek API</h2>
+
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">DeepSeek API kompatibel dengan OpenAI SDK format, sehingga dapat menggunakan struktur payload yang sama.</p>
+
+<pre class="language-php"><code><?php
+
+namespace App\Services\AI;
+
+use Illuminate\Support\Facades\Http;
+
+class DeepSeekService
+{
+    protected string $apiKey;
+    protected string $baseUrl;
+
+    public function __construct()
+    {
+        $this->apiKey = config('services.deepseek.api_key');
+        $this->baseUrl = config('services.deepseek.base_url',
+            'https://api.deepseek.com/v1');
+    }
+
+    /**
+     * Chat completion using DeepSeek API (OpenAI-compatible).
+     *
+     * @param array $messages Message array
+     * @param string $model 'deepseek-chat' or 'deepseek-reasoner'
+     * @param array $options Additional parameters
+     * @return array API response
+     */
+    public function chatCompletion(
+        array $messages,
+        string $model = 'deepseek-chat',
+        array $options = []
+    ): array {
+        $payload = array_merge([
+            'model' => $model,
+            'messages' => $messages,
+            'temperature' => 0.7,
+            'max_tokens' => 4096,
+            'stream' => false,
+        ], $options);
+
+        $response = Http::timeout(90)
+            ->withHeaders([
+                'Authorization' => "Bearer {$this->apiKey}",
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])
+            ->post("{$this->baseUrl}/chat/completions", $payload);
+
+        if ($response->failed()) {
+            throw new \RuntimeException(
+                "DeepSeek API error: {$response->body()}",
+                $response->status()
+            );
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Simple chat with DeepSeek.
+     */
+    public function chat(string $prompt, string $model = 'deepseek-chat'): string
+    {
+        $result = $this->chatCompletion([
+            ['role' => 'user', 'content' => $prompt]
+        ], $model);
+
+        return $result['choices'][0]['message']['content'] ?? '';
+    }
+
+    /**
+     * Use DeepSeek Reasoner (R1) for complex reasoning tasks.
+     */
+    public function reason(string $prompt): string
+    {
+        return $this->chat($prompt, 'deepseek-reasoner');
+    }
+}</code></pre>
+</section>
+
+<section id="service-class" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">11.5 Service Class, Controller & Route</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">11.5.1 Service Provider untuk Binding</h3>
+<pre class="language-php"><code><?php
+// app/Providers/AIServiceProvider.php
+
+namespace App\Providers;
+
+use App\Services\AI\OpenAIService;
+use App\Services\AI\GeminiService;
+use App\Services\AI\DeepSeekService;
+use Illuminate\Support\ServiceProvider;
+
+class AIServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->singleton(OpenAIService::class);
+        $this->app->singleton(GeminiService::class);
+        $this->app->singleton(DeepSeekService::class);
+    }
+}</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">11.5.2 AIController</h3>
+<pre class="language-php"><code><?php
+// app/Http/Controllers/Api/AIController.php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Services\AI\OpenAIService;
+use App\Services\AI\GeminiService;
+use App\Services\AI\DeepSeekService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class AIController extends Controller
+{
+    public function __construct(
+        protected OpenAIService $openai,
+        protected GeminiService $gemini,
+        protected DeepSeekService $deepseek
+    ) {}
+
+    /**
+     * Chat with OpenAI.
+     */
+    public function chatOpenAI(Request $request): JsonResponse
+    {
+        $request->validate([
+            'prompt' => 'required|string|max:4000',
+            'model' => 'nullable|string|in:gpt-4o,gpt-4o-mini,gpt-4-turbo'
+        ]);
+
+        try {
+            $response = $this->openai->chat(
+                $request->input('prompt'),
+                $request->input('model', 'gpt-4o')
+            );
+
+            return response()->json([
+                'success' => true,
+                'provider' => 'openai',
+                'response' => $response,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Chat with Gemini.
+     */
+    public function chatGemini(Request $request): JsonResponse
+    {
+        $request->validate([
+            'prompt' => 'required|string|max:4000',
+        ]);
+
+        try {
+            $response = $this->gemini->generate(
+                $request->input('prompt')
+            );
+
+            return response()->json([
+                'success' => true,
+                'provider' => 'gemini',
+                'response' => $response,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Chat with DeepSeek.
+     */
+    public function chatDeepSeek(Request $request): JsonResponse
+    {
+        $request->validate([
+            'prompt' => 'required|string|max:4000',
+        ]);
+
+        try {
+            $response = $this->deepseek->chat(
+                $request->input('prompt')
+            );
+
+            return response()->json([
+                'success' => true,
+                'provider' => 'deepseek',
+                'response' => $response,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+}</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">11.5.3 Routes</h3>
+<pre class="language-php"><code><?php
+// routes/api.php
+
+use App\Http\Controllers\Api\AIController;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('ai')->middleware(['auth:sanctum', 'throttle:ai'])->group(function () {
+    Route::post('/chat/openai', [AIController::class, 'chatOpenAI']);
+    Route::post('/chat/gemini', [AIController::class, 'chatGemini']);
+    Route::post('/chat/deepseek', [AIController::class, 'chatDeepSeek']);
+});</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">11.5.4 Laravel 11 AI Configuration</h3>
+<pre class="language-php"><code><?php
+// config/ai.php — dedicated AI configuration file
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Default AI Provider
+    |--------------------------------------------------------------------------
+    */
+    'default' => env('AI_DEFAULT_PROVIDER', 'openai'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rate Limiting
+    |--------------------------------------------------------------------------
+    */
+    'rate_limiting' => [
+        'max_attempts' => env('AI_RATE_LIMIT_MAX', 60),
+        'decay_minutes' => env('AI_RATE_LIMIT_DECAY', 1),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Retry Configuration
+    |--------------------------------------------------------------------------
+    */
+    'retry' => [
+        'max_attempts' => env('AI_RETRY_MAX', 3),
+        'base_delay_ms' => env('AI_RETRY_BASE_DELAY', 1000),
+        'max_delay_ms' => env('AI_RETRY_MAX_DELAY', 10000),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Providers Configuration
+    |--------------------------------------------------------------------------
+    */
+    'providers' => [
+        'openai' => [
+            'api_key' => env('OPENAI_API_KEY'),
+            'base_url' => env('OPENAI_BASE_URL', 'https://api.openai.com/v1'),
+            'default_model' => env('OPENAI_DEFAULT_MODEL', 'gpt-4o'),
+            'timeout' => env('OPENAI_TIMEOUT', 60),
+        ],
+        'gemini' => [
+            'api_key' => env('GEMINI_API_KEY'),
+            'base_url' => env('GEMINI_BASE_URL',
+                'https://generativelanguage.googleapis.com/v1beta'),
+            'default_model' => env('GEMINI_DEFAULT_MODEL', 'gemini-2.0-flash'),
+            'timeout' => env('GEMINI_TIMEOUT', 60),
+        ],
+        'deepseek' => [
+            'api_key' => env('DEEPSEEK_API_KEY'),
+            'base_url' => env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com/v1'),
+            'default_model' => env('DEEPSEEK_DEFAULT_MODEL', 'deepseek-chat'),
+            'timeout' => env('DEEPSEEK_TIMEOUT', 90),
+        ],
+    ],
+];</code></pre>
+</section>
+
+<section id="best-practice-laravel" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">11.6 Best Practice</h2>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">11.6.1 Rate Limiting</h3>
+<pre class="language-php"><code><?php
+// app/Http/Kernel.php — rate limiter configuration (Laravel 11: bootstrap/app.php)
+
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+
+RateLimiter::for('ai', function (Request $request) {
+    // 60 requests per minute for authenticated users
+    return Limit::perMinute(60)->by(
+        optional($request->user())->id ?: $request->ip()
+    );
+});
+
+// Priority-based rate limiting (premium users get higher limits)
+RateLimiter::for('ai-premium', function (Request $request) {
+    return Limit::perMinute(300)->by($request->user()->id);
+});</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">11.6.2 Error Handling & Retry Logic</h3>
+<pre class="language-php"><code><?php
+
+namespace App\Services\AI\Concerns;
+
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+
+trait Retryable
+{
+    /**
+     * Send HTTP request with exponential backoff retry.
+     */
+    protected function sendWithRetry(
+        string $method,
+        string $url,
+        array $data,
+        array $headers,
+        int $maxRetries = 3,
+        int $baseDelayMs = 1000
+    ): \Illuminate\Http\Client\Response {
+        $attempt = 0;
+
+        retry:
+        try {
+            $response = Http::withHeaders($headers)
+                ->timeout($this->timeout ?? 60)
+                ->{$method}($url, $data);
+
+            // Retry on server errors (5xx) or rate limits (429)
+            if ($response->serverError() || $response->status() === 429) {
+                $attempt++;
+                if ($attempt < $maxRetries) {
+                    $delay = $baseDelayMs * pow(2, $attempt - 1);
+                    // Use Retry-After header if available
+                    $retryAfter = $response->header('Retry-After');
+                    if ($retryAfter) {
+                        $delay = (int) $retryAfter * 1000;
+                    }
+                    usleep($delay * 1000); // microseconds
+                    goto retry;
+                }
+            }
+
+            return $response;
+        } catch (ConnectionException $e) {
+            $attempt++;
+            if ($attempt < $maxRetries) {
+                $delay = $baseDelayMs * pow(2, $attempt - 1);
+                usleep($delay * 1000);
+                goto retry;
+            }
+            throw $e;
+        }
+    }
+}</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">11.6.3 Streaming Response</h3>
+<pre class="language-php"><code><?php
+
+namespace App\Services\AI;
+
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+class OpenAIService
+{
+    // ... (previous code)
+
+    /**
+     * Stream chat completion response — real-time token-by-token.
+     */
+    public function streamChat(
+        array $messages,
+        string $model = 'gpt-4o',
+        array $options = []
+    ): StreamedResponse {
+        $payload = array_merge([
+            'model' => $model,
+            'messages' => $messages,
+            'temperature' => 0.7,
+            'stream' => true,
+        ], $options);
+
+        return response()->stream(function () use ($payload) {
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => "{$this->baseUrl}/chat/completions",
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => [
+                    "Authorization: Bearer {$this->apiKey}",
+                    "Content-Type: application/json",
+                ],
+                CURLOPT_WRITEFUNCTION => function ($ch, $data) {
+                    // Parse SSE stream: "data: {...}\n\n"
+                    $lines = explode("\n", $data);
+                    foreach ($lines as $line) {
+                        if (str_starts_with($line, 'data: ')) {
+                            $json = substr($line, 6);
+                            if ($json === '[DONE]') {
+                                echo "data: [DONE]\n\n";
+                                ob_flush(); flush();
+                                return strlen($data);
+                            }
+                            $decoded = json_decode($json, true);
+                            $content = $decoded['choices'][0]['delta']['content']
+                                ?? '';
+                            if ($content) {
+                                echo "data: " . json_encode([
+                                    'content' => $content
+                                ]) . "\n\n";
+                                ob_flush(); flush();
+                            }
+                        }
+                    }
+                    return strlen($data);
+                },
+                CURLOPT_TIMEOUT => 120,
+            ]);
+
+            curl_exec($ch);
+
+            if (curl_errno($ch)) {
+                echo "data: " . json_encode([
+                    'error' => curl_error($ch)
+                ]) . "\n\n";
+            }
+
+            curl_close($ch);
+        }, 200, [
+            'Content-Type' => 'text/event-stream',
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'no',
+            'Connection' => 'keep-alive',
+        ]);
+    }
+}</code></pre>
+
+<h3 class="text-xl font-semibold mt-6 mb-3">11.6.4 Best Practice Ringkasan</h3>
+<table class="w-full text-sm border-collapse mb-6">
+<thead><tr class="bg-primary-100 dark:bg-primary-900/30"><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Best Practice</th><th class="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">Implementasi</th></tr></thead>
+<tbody>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Rate Limiting</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gunakan Laravel RateLimiter dengan key per-user. Beri tier berbeda (free vs premium).</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Error Handling</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Wrap API calls dengan try-catch. Klasifikasikan error (4xx client error, 5xx server error, timeout, rate limit).</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Retry Logic</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Exponential backoff dengan jitter. Retry hanya pada 5xx dan 429. Max 3 retries.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Streaming</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Gunakan Server-Sent Events (SSE) untuk streaming response. Laravel StreamedResponse + cURL.</td></tr>
+<tr><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Logging</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Log setiap API call: model, token count, latency, cost, error. Gunakan dedicated log channel.</td></tr>
+<tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-4 py-2 font-medium">Caching</td><td class="border border-gray-300 dark:border-gray-700 px-4 py-2">Cache frequent/identical requests. Gunakan hash dari prompt + parameters sebagai cache key.</td></tr>
+</tbody></table>
+</section>
+
+<section id="arsitektur-integrasi" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">11.7 Arsitektur Integrasi</h2>
+
+<div class="mermaid bg-white dark:bg-gray-800 rounded-xl p-4 my-6">
+flowchart TB
+    subgraph CLIENT["🖥️ Client"]
+        FE["Vue/React Frontend"]
+        MOBILE["Mobile App"]
+    end
+
+    subgraph LARAVEL["🔧 Laravel Application"]
+        direction TB
+        ROUTE["🚏 Routes (api.php)"]
+        MIDDLEWARE["🛡️ Middleware\n(Auth + Rate Limit + Log)"]
+        CTRL["🎮 AIController\n(Request Validation)"]
+        SVC["⚙️ AI Service Classes\n(OpenAI / Gemini / DeepSeek)"]
+        RETRY["🔄 Retry Logic\n(Exponential Backoff)"]
+    end
+
+    subgraph EXTERNAL["☁️ External AI APIs"]
+        OA["🧠 OpenAI API"]
+        GM["💎 Gemini API"]
+        DS["🐋 DeepSeek API"]
+    end
+
+    FE --> ROUTE
+    MOBILE --> ROUTE
+    ROUTE --> MIDDLEWARE
+    MIDDLEWARE --> CTRL
+    CTRL --> SVC
+    SVC --> RETRY
+    RETRY --> OA
+    RETRY --> GM
+    RETRY --> DS
+
+    OA -->|"Response"| RETRY
+    GM -->|"Response"| RETRY
+    DS -->|"Response"| RETRY
+    RETRY --> SVC
+    SVC --> CTRL
+    CTRL --> FE
+    CTRL --> MOBILE
+
+    style LARAVEL fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
+    style EXTERNAL fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+</div>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">11.8 Ringkasan</h2>
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>Integrasi AI dengan Laravel</strong> menggunakan HTTP Client untuk memanggil REST API OpenAI, Gemini, dan DeepSeek dengan Bearer Token authentication.</li>
+<li><strong>Service class pattern</strong> memisahkan logic API call dari controller: OpenAIService, GeminiService, DeepSeekService — masing-masing dengan method chat, chatCompletion, streaming.</li>
+<li><strong>Route + Controller + Middleware:</strong> Route prefix <code>/api/ai/chat/{provider}</code> dengan auth:sanctum, rate limiting, dan request validation.</li>
+<li><strong>Best Practice:</strong> Rate limiting per-user, exponential backoff retry untuk 5xx/429 errors, SSE streaming response untuk UX real-time, logging setiap API call, caching repetitive requests.</li>
+<li><strong>Security:</strong> API key di .env, jangan hardcode. Gunakan Laravel config/services.php untuk konfigurasi terpusat.</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">📝 Quiz</h4><ol class="space-y-3 text-sm"><li><p class="font-medium">1. Apa authentication method yang digunakan OpenAI dan DeepSeek API?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Basic Auth (username:password)</li><li>B. Bearer Token (Authorization: Bearer sk-...)</li><li>C. OAuth 2.0</li><li>D. API Key di query parameter</li></ul></li><li><p class="font-medium">2. Mengapa streaming response penting untuk AI chat?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Mengurangi biaya API</li><li>B. UX real-time — user melihat token muncul satu per satu, tidak perlu menunggu seluruh respons selesai</li><li>C. Meningkatkan keamanan</li><li>D. Mengurangi ukuran response</li></ul></li><li><p class="font-medium">3. Kapan sebaiknya melakukan retry pada AI API call?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Selalu retry untuk semua error</li><li>B. Hanya pada server errors (5xx) dan rate limit (429) dengan exponential backoff</li><li>C. Tidak perlu retry, langsung tampilkan error ke user</li><li>D. Retry tanpa batas sampai berhasil</li></ul></li></ol></div>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">🏋️ Latihan</h4><ol class="space-y-3 text-sm"><li><strong>Tugas 1:</strong> Buat Service class untuk OpenAI API lengkap dengan error handling dan retry logic. Uji dengan berbagai skenario error.</li><li><strong>Tugas 2:</strong> Implementasikan streaming chat endpoint di Laravel menggunakan Server-Sent Events (SSE).</li><li><strong>Tugas 3:</strong> Tambahkan rate limiting tiered: free user 30 RPM, premium user 300 RPM. Uji dengan Laravel RateLimiter.</li></ol></div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-10.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 10</a>
+  <a href="bab-12.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">BAB 12 — Deployment AI<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>

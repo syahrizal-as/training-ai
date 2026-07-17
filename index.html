@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modul Pembelajaran Artificial Intelligence</title>
+  <meta name="description" content="Modul pembelajaran AI profesional untuk mahasiswa, programmer, software engineer, dan peserta pelatihan BNSP. Mencakup pengenalan AI, LLM, Prompt Engineering, RAG, Agentic AI, dan integrasi.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a', 950: '#172554',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-php.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default' });
+  </script>
+  <style>
+    .dark pre[class*="language-"] { background: #1e293b !important; }
+    .prose h2 { scroll-margin-top: 5rem; }
+    .prose h3 { scroll-margin-top: 5rem; }
+    .mermaid svg { max-width: 100%; }
+  </style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<!-- Mobile Header -->
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <span class="ml-3 font-semibold text-sm truncate">Modul AI</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+    <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+  </button>
+</header>
+
+<!-- Sidebar Overlay (mobile) -->
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <!-- Sidebar Header -->
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0">
+    <a href="index.html" class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </div>
+      <span class="font-bold text-sm">Modul AI</span>
+    </a>
+    <button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- Search -->
+  <div class="px-3 py-2 shrink-0 relative">
+    <input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200">
+    <div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Cover & Kata Pengantar
+    </a>
+
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">
+    &copy; 2026 Modul AI v1.0
+  </div>
+</aside>
+
+<!-- Main Content -->
+<div class="lg:pl-72">
+  <!-- Desktop Header -->
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+      <span>Modul Pembelajaran Artificial Intelligence</span>
+    </div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+      <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+      <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+    </button>
+  </header>
+
+  <!-- Page Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+
+<!-- ===== COVER ===== -->
+<div class="min-h-[80vh] flex flex-col justify-center items-center text-center mb-20">
+  <div class="w-24 h-24 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-primary-500/30">
+    <svg class="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+  </div>
+
+  <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4">
+    <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-purple-600 dark:from-primary-400 dark:to-purple-400">Modul Pembelajaran</span><br>
+    <span class="text-gray-900 dark:text-white">Artificial Intelligence</span>
+  </h1>
+
+  <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mt-4 mb-8">
+    Panduan komprehensif untuk memahami kecerdasan buatan dari dasar hingga tingkat lanjut.
+    Dirancang untuk mahasiswa, programmer, software engineer, dan peserta pelatihan BNSP.
+  </p>
+
+  <div class="flex flex-wrap gap-3 justify-center mb-10">
+    <span class="px-4 py-1.5 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium rounded-full">AI Fundamentals</span>
+    <span class="px-4 py-1.5 bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-sm font-medium rounded-full">Generative AI</span>
+    <span class="px-4 py-1.5 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-sm font-medium rounded-full">LLM & RAG</span>
+    <span class="px-4 py-1.5 bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 text-sm font-medium rounded-full">Agentic AI</span>
+    <span class="px-4 py-1.5 bg-pink-100 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300 text-sm font-medium rounded-full">Integration</span>
+  </div>
+
+  <div class="text-sm text-gray-500 dark:text-gray-500 space-y-1">
+    <p><strong>Penulis:</strong> Tim Penyusun Modul AI</p>
+    <p><strong>Versi:</strong> 1.0 — Juli 2026</p>
+    <p><strong>Lisensi:</strong> Creative Commons Attribution 4.0</p>
+  </div>
+
+  <div class="mt-12">
+    <a href="#kata-pengantar" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors shadow-lg shadow-primary-500/25">
+      Mulai Membaca
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- ===== KATA PENGANTAR ===== -->
+<section id="kata-pengantar" class="mb-16 prose max-w-none">
+  <h2 class="text-3xl font-bold mb-6 pb-2 border-b-2 border-primary-500 inline-block">Kata Pengantar</h2>
+
+  <div class="bg-primary-50 dark:bg-primary-950/30 border-l-4 border-primary-500 p-6 rounded-r-xl mb-8">
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+      Puji syukur kami panjatkan kepada Tuhan Yang Maha Esa karena atas rahmat dan karunia-Nya, Modul Pembelajaran Artificial Intelligence ini dapat diselesaikan dengan baik. Modul ini disusun sebagai panduan pembelajaran komprehensif bagi siapa pun yang ingin memahami kecerdasan buatan (AI) secara mendalam, mulai dari konsep dasar hingga implementasi tingkat lanjut.
+    </p>
+  </div>
+
+  <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+    Perkembangan Artificial Intelligence dalam beberapa tahun terakhir telah mengalami akselerasi yang luar biasa. Dimulai dari peluncuran ChatGPT oleh OpenAI pada akhir tahun 2022, dunia menyaksikan revolusi teknologi yang mengubah cara manusia bekerja, belajar, dan berinteraksi dengan mesin. Hingga tahun 2026, AI telah menjadi bagian integral dari berbagai sektor industri, mulai dari kesehatan, pendidikan, keuangan, manufaktur, hingga pemerintahan.
+  </p>
+
+  <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+    Modul ini disusun dengan mengacu pada standar kompetensi BNSP/SKKNI serta mengadaptasi pendekatan dokumentasi teknis modern seperti Laravel Documentation, Microsoft Learn, dan Google Developer Documentation. Setiap bab dirancang dengan struktur yang jelas: tujuan pembelajaran, kompetensi dasar, materi, diagram, best practice, latihan, quiz, dan referensi.
+  </p>
+
+  <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+    Materi yang disajikan mencakup 14 bab utama:
+  </p>
+
+  <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300 mb-6">
+    <li><strong>BAB 1–2:</strong> Fondasi AI — pengenalan, sejarah, dan jenis-jenis AI (Narrow AI, AGI, ASI)</li>
+    <li><strong>BAB 3–5:</strong> Generative AI, Large Language Model (LLM), dan Prompt Engineering</li>
+    <li><strong>BAB 6–8:</strong> Embedding, Vector Database, dan Retrieval Augmented Generation (RAG)</li>
+    <li><strong>BAB 9–10:</strong> Model Context Protocol (MCP) dan Agentic AI</li>
+    <li><strong>BAB 11–13:</strong> Integrasi AI dengan Laravel, Deployment, dan Maintenance</li>
+    <li><strong>BAB 14:</strong> Studi kasus implementasi AI di dunia nyata</li>
+  </ul>
+
+  <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+    Kami mengucapkan terima kasih kepada seluruh pihak yang telah berkontribusi dalam penyusunan modul ini. Semoga modul ini dapat menjadi sumber belajar yang bermanfaat dan membantu pembaca dalam menguasai teknologi Artificial Intelligence.
+  </p>
+
+  <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+    Selamat belajar dan semoga sukses!
+  </p>
+</section>
+
+<!-- ===== DAFTAR ISI ===== -->
+<section id="daftar-isi" class="mb-16">
+  <h2 class="text-3xl font-bold mb-6 pb-2 border-b-2 border-primary-500 inline-block">Daftar Isi</h2>
+
+  <div class="grid sm:grid-cols-2 gap-3">
+    <a href="bab-01.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">1</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Pengenalan Artificial Intelligence</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Definisi, sejarah, evolusi AI dari 1956 hingga Agentic AI</p>
+      </div>
+    </a>
+
+    <a href="bab-02.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">2</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Jenis-Jenis Artificial Intelligence</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Narrow AI, AGI, ASI — karakteristik dan perbedaannya</p>
+      </div>
+    </a>
+
+    <a href="bab-03.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">3</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Generative AI</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Cara kerja, LLM, prompt, token, parameter model</p>
+      </div>
+    </a>
+
+    <a href="bab-04.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">4</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Large Language Model (LLM)</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Tokenisasi, embedding, transformer, attention mechanism</p>
+      </div>
+    </a>
+
+    <a href="bab-05.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">5</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Prompt Engineering</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Zero-shot, few-shot, chain of thought, structured output</p>
+      </div>
+    </a>
+
+    <a href="bab-06.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">6</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Embedding</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Vector, similarity, cosine similarity, semantic search</p>
+      </div>
+    </a>
+
+    <a href="bab-07.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">7</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Vector Database</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Pinecone, Chroma, Milvus, Weaviate, PGVector</p>
+      </div>
+    </a>
+
+    <a href="bab-08.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">8</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Retrieval Augmented Generation (RAG)</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Arsitektur, chunking, retriever, generator</p>
+      </div>
+    </a>
+
+    <a href="bab-09.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">9</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Model Context Protocol (MCP)</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Client, server, tool, resource, prompt flow</p>
+      </div>
+    </a>
+
+    <a href="bab-10.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">10</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Agentic AI</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Planner, memory, tool calling, multi-agent, autonomous task</p>
+      </div>
+    </a>
+
+    <a href="bab-11.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">11</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Integrasi AI dengan Laravel</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">REST API, OpenAI, Gemini, DeepSeek integration</p>
+      </div>
+    </a>
+
+    <a href="bab-12.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">12</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Deployment AI</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Cloud, Docker, Ollama, VPS, monitoring</p>
+      </div>
+    </a>
+
+    <a href="bab-13.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">13</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Maintenance AI</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Cost monitoring, token tracking, error handling, prompt versioning</p>
+      </div>
+    </a>
+
+    <a href="bab-14.html" class="group flex items-start gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-primary-300 dark:hover:border-primary-700 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all">
+      <span class="shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-lg flex items-center justify-center font-bold text-sm">14</span>
+      <div>
+        <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">Studi Kasus</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">10 studi kasus implementasi AI di dunia nyata</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Navigation Footer -->
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <div></div>
+  <a href="bab-01.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">
+    BAB 1 — Pengenalan AI
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="text-sm text-gray-500 dark:text-gray-400">
+          &copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0
+        </div>
+        <div class="flex gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <span>Lisensi CC BY 4.0</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

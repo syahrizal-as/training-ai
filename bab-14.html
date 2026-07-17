@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAB 14: Studi Kasus — Modul AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:{50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a',950:'#172554'}},fontFamily:{sans:['Inter','system-ui','-apple-system','sans-serif'],mono:['JetBrains Mono','Fira Code','monospace']}}}}</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,theme:document.documentElement.classList.contains('dark')?'dark':'default'});</script>
+  <style>.dark pre[class*="language-"]{background:#1e293b!important}.prose h2{scroll-margin-top:5rem}.prose h3{scroll-margin-top:5rem}.mermaid svg{max-width:100%}.callout{padding:1rem 1.25rem;border-radius:0.75rem;margin:1.5rem 0}.callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}.dark .callout-info{background:#1e3a8a30;color:#93c5fd}.callout-warning{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}.dark .callout-warning{background:#78350f30;color:#fcd34d}.callout-best{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}.dark .callout-best{background:#14532d30;color:#86efac}.case-study-card{border:1px solid #e5e7eb;border-radius:1rem;padding:1.5rem;margin-bottom:2rem;transition:all 0.2s}.dark .case-study-card{border-color:#374151}.case-study-card:hover{border-color:#93c5fd;box-shadow:0 4px 12px rgba(59,130,246,0.1)}.case-number{display:inline-flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;background:#3b82f6;color:white;border-radius:0.75rem;font-weight:700;font-size:1.25rem}</style>
+  <link href="assets/css/dark-mode.css" rel="stylesheet">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen font-sans antialiased">
+
+<header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 h-14 flex items-center px-4">
+  <button id="sidebar-open" class="p-2 -ml-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <span class="ml-3 font-semibold text-sm truncate">BAB 14 — Studi Kasus</span>
+  <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+</header>
+<div id="sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"></div>
+
+<aside id="sidebar" class="fixed top-0 left-0 z-50 w-72 h-full bg-gray-50 dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden">
+  <div class="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0"><a href="index.html" class="flex items-center gap-2"><div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><span class="font-bold text-sm">Modul AI</span></a><button id="sidebar-close" class="lg:hidden ml-auto p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+  <div class="px-3 py-2 shrink-0 relative"><input id="search-input" type="text" placeholder="Cari materi..." class="w-full px-3 py-1.5 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:text-gray-200"><div id="search-results" class="hidden absolute top-full left-3 right-3 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-60 overflow-y-auto z-50"></div></div>
+  <nav class="flex-1 overflow-y-auto px-3 py-2 text-sm">
+    <div class="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Pendahuluan</div>
+    <a href="index.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Cover & Kata Pengantar</a>
+    <div class="mt-4 mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Materi Utama</div>
+    <a href="bab-01.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 1 — Pengenalan AI</a>
+    <a href="bab-02.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 2 — Jenis-Jenis AI</a>
+    <a href="bab-03.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 3 — Generative AI</a>
+    <a href="bab-04.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 4 — LLM</a>
+    <a href="bab-05.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 5 — Prompt Engineering</a>
+    <a href="bab-06.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 6 — Embedding</a>
+    <a href="bab-07.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 7 — Vector Database</a>
+    <a href="bab-08.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 8 — RAG</a>
+    <a href="bab-09.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 9 — MCP</a>
+    <a href="bab-10.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 10 — Agentic AI</a>
+    <a href="bab-11.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 11 — Integrasi AI</a>
+    <a href="bab-12.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 12 — Deployment AI</a>
+    <a href="bab-13.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">BAB 13 — Maintenance AI</a>
+    <a href="bab-14.html" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-primary-700 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 font-medium transition-colors">BAB 14 — Studi Kasus</a>
+  </nav>
+  <div class="shrink-0 px-4 py-3 border-t border-gray-200 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-600">&copy; 2026 Modul AI v1.0</div>
+</aside>
+
+<div class="lg:pl-72">
+  <header class="hidden lg:flex sticky top-0 z-20 h-14 items-center px-8 bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>Modul AI</span><span class="text-gray-300 dark:text-gray-700">/</span><span>BAB 14: Studi Kasus</span></div>
+    <button id="theme-toggle" class="ml-auto p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"><svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
+  </header>
+
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-8">
+<div class="mb-8"><span class="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">BAB 14</span><h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-3">Studi Kasus Implementasi AI</h1><p class="text-lg text-gray-600 dark:text-gray-400">10 studi kasus nyata implementasi AI di berbagai industri dan use case: dari customer service hingga workflow automation.</p></div>
+
+<div class="callout callout-info"><h3 class="font-semibold text-lg mb-2">🎯 Tujuan Pembelajaran</h3><ul class="list-disc pl-5 space-y-1 text-sm"><li>Memahami bagaimana konsep AI diterapkan dalam skenario dunia nyata</li><li>Menganalisis arsitektur, teknologi, dan hasil dari 10 studi kasus implementasi AI</li><li>Mengidentifikasi pola dan best practice yang dapat diterapkan pada proyek sendiri</li></ul></div>
+
+<nav id="toc" class="my-8 p-5 bg-gray-50 dark:bg-gray-800/50 rounded-xl"><h3 class="font-semibold text-sm uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Daftar Studi Kasus</h3><ul class="space-y-1.5 text-sm columns-2"><li><a href="#cs1" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">1. AI Customer Service</a></li><li><a href="#cs2" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">2. AI Email Generator</a></li><li><a href="#cs3" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">3. AI Caption Generator</a></li><li><a href="#cs4" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">4. AI Chatbot</a></li><li><a href="#cs5" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">5. AI Document QA</a></li><li><a href="#cs6" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">6. AI Coding Assistant</a></li><li><a href="#cs7" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">7. AI Knowledge Base</a></li><li><a href="#cs8" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">8. AI RAG System</a></li><li><a href="#cs9" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">9. AI Agent</a></li><li><a href="#cs10" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">10. AI Workflow Automation</a></li></ul></nav>
+
+<!-- CASE STUDY 1 -->
+<section id="cs1" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">1</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Customer Service</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">E-Commerce — PT. RetailMaju Indonesia</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">PT. RetailMaju memiliki 5.000+ tiket customer service per hari dengan 50 agen manusia. Response time rata-rata 4 jam, CSAT score 72%, dan biaya operasional CS mencapai Rp 800 juta/bulan. 60% tiket adalah pertanyaan berulang (FAQ) yang sebenarnya bisa diotomatisasi.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Implementasi <strong>RAG-powered customer service chatbot</strong> yang mengotomatisasi 60% tiket FAQ menggunakan knowledge base dari dokumentasi produk, kebijakan, dan FAQ history. Tiket kompleks di-eskalasi ke agen manusia dengan routing otomatis berdasarkan kategori dan prioritas.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Arsitektur</h3>
+      <div class="mermaid bg-white dark:bg-gray-800 rounded-lg p-3 my-2 text-sm">
+flowchart LR
+    C["👤 Customer"] -->|"Chat"| API["🔧 Chat API"]
+    API -->|"Query"| RAG["🔍 RAG Engine"]
+    RAG -->|"Search"| VDB["🗄️ Pinecone"]
+    RAG -->|"Generate"| LLM["🧠 GPT-4o"]
+    LLM -->|"Answer"| API
+    API -->|"Complex?"| ESC["👨‍💼 Agent Escalation"]
+    ESC -->|"Solved"| KB["📚 Update KB"]
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">OpenAI GPT-4o, Pinecone Vector DB, LangChain, FastAPI, PostgreSQL, Redis, Docker + Kubernetes (EKS), Prometheus + Grafana.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Response Time Avg</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">4 jam</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">3 detik</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">CSAT Score</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">72%</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">89%</td></tr>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Tiket Terotomatisasi</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">0%</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">62%</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Biaya Operasional CS</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Rp 800 jt/bln</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">Rp 350 jt/bln</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 2 -->
+<section id="cs2" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">2</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Email Generator</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Marketing Agency — CreativeLab Digital</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">CreativeLab Digital mengelola email marketing untuk 50+ klien. Tim 10 copywriter menghabiskan 3-4 jam per email campaign. Konsistensi tone-of-voice antar klien sulit dijaga. Klien sering meminta revisi minor yang memakan waktu.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">AI Email Generator dengan <strong>multi-shot prompt engineering</strong> yang mempelajari tone-of-voice setiap brand dari email history. Sistem menghasilkan draft email lengkap (subject line, preheader, body, CTA) dalam hitungan detik, yang kemudian di-review dan disesuaikan oleh copywriter.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Arsitektur</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300"><strong>Input:</strong> Brand guidelines + Campaign brief + Audience segment → <strong>Prompt Engine:</strong> Few-shot examples dari email sukses sebelumnya + Dynamic variable injection → <strong>LLM:</strong> GPT-4o / Claude 3.5 → <strong>Output:</strong> 3 varian email + subject line A/B test suggestions → <strong>Human Review</strong> → <strong>Send via ESP API</strong> (Mailchimp/Klaviyo)</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">OpenAI GPT-4o, Anthropic Claude 3.5 Sonnet, Python FastAPI, PostgreSQL (brand profiles), React frontend, Mailchimp API, Klaviyo API.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Waktu per Campaign</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">3-4 jam</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">30 menit</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Open Rate</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">22%</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">31%</td></tr>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Klien Ditangani</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">50</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">120+</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 3 -->
+<section id="cs3" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">3</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Caption Generator</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Social Media — Influencer Platform</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Platform influencer dengan 10.000+ content creator kesulitan mempertahankan konsistensi posting. Creator menghabiskan 30-45 menit hanya untuk menulis caption. Engagement rate menurun karena caption generik atau tidak SEO-friendly.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">AI Caption Generator multimodal yang menerima <strong>gambar/video + brief singkat</strong> dan menghasilkan caption platform-specific (Instagram, TikTok, LinkedIn, Twitter/X) dengan tone yang disesuaikan. Dilengkapi dengan <strong>hashtag optimizer</strong> dan SEO keyword suggestions.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">GPT-4o Vision (image understanding), Claude 3.5 Sonnet (caption writing), Stable Diffusion (thumbnail generation), Python FastAPI, React Native mobile app, Redis caching.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Caption Creation Time</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">35 menit</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">2 menit</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Avg Engagement Rate</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">2.8%</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">5.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 4 -->
+<section id="cs4" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">4</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Chatbot (Banking)</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Financial Services — Bank Digital Nusantara</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Bank Digital Nusantara menerima 50.000+ chat inquiry per bulan melalui mobile banking app. Topik mencakup: cek saldo, mutasi, transfer gagal, blokir kartu, dan info produk. Response time manual 15-30 menit tidak memenuhi ekspektasi nasabah digital.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">AI Chatbot dengan <strong>intent classification + entity extraction + RAG</strong> pada knowledge base perbankan. Chatbot terintegrasi dengan core banking system melalui secure API untuk aksi real-time (cek saldo, blokir kartu). Dilengkapi <strong>fraud detection rule engine</strong> dan automatic escalation ke human agent untuk transaksi mencurigakan.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Google Gemini 2.0 Flash, Pinecone, Spring Boot (Java), PostgreSQL, Redis, Apache Kafka (event streaming), OAuth 2.0 + API Gateway, Kubernetes (GKE).</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Response Time</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">20 menit</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">< 5 detik</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Auto-Resolution Rate</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">0%</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">78%</td></tr>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Nasabah Satisfaction</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">3.2/5</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">4.6/5</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 5 -->
+<section id="cs5" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">5</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Document QA</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Legal Tech — LexDocs Indonesia</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Firma hukum menangani ratusan dokumen kontrak, regulasi, dan preseden hukum. Lawyer menghabiskan 40% waktu hanya untuk mencari informasi di dokumen. Kesalahan interpretasi dokumen dapat berakibat fatal secara hukum.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Document QA system berbasis <strong>Advanced RAG</strong> dengan semantic chunking (per clause, per pasal). Sistem dapat menjawab pertanyaan kompleks seperti "Apa kewajiban pihak pertama dalam klausul force majeure?" dengan sitasi ke pasal dan halaman spesifik. Dilengkapi <strong>cross-document comparison</strong> untuk membandingkan klausul antar kontrak.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Claude 3.5 Sonnet (long context), Weaviate Vector DB, LangChain, Unstructured.io (PDF parsing), Python FastAPI, Next.js frontend, Azure (compliance).</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Document Search Time</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">30-60 menit</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">< 10 detik</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Answer Accuracy</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">~85% (manual)</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">96% (with citations)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 6 -->
+<section id="cs6" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">6</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Coding Assistant</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Software House — DevPro Tech</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">DevPro Tech memiliki 200+ developer yang bekerja di 30+ proyek. Onboarding developer baru memakan 2-3 minggu untuk memahami codebase. Bug-fixing memakan 30% waktu development. Code review bottleneck karena senior developer terbatas.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Internal AI Coding Assistant yang terintegrasi dengan <strong>RAG pada seluruh codebase perusahaan</strong>. Developer bisa bertanya "Bagaimana cara auth di service X?" dan AI memberikan jawaban dengan referensi ke file kode spesifik. Dilengkapi <strong>automated code review</strong> dan <strong>unit test generator</strong>.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Claude 3.5 Sonnet, OpenAI GPT-4o, Code Embedding Model, Qdrant Vector DB, LangChain, VS Code Extension (TypeScript), Git integration, CI/CD pipeline (GitHub Actions).</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Onboarding Time</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">2-3 minggu</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">3-4 hari</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Bug Fix Time</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">4 jam avg</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">1.5 jam avg</td></tr>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Code Review Throughput</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">8 PR/hari/reviewer</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">20 PR/hari/reviewer</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 7 -->
+<section id="cs7" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">7</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Knowledge Base</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Enterprise — PT. Manufaktur Cemerlang</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Perusahaan manufaktur dengan 5.000+ karyawan memiliki knowledge tersebar di: SharePoint (10.000+ dokumen), SOP manuals, technical drawings, maintenance logs, dan training materials. Karyawan menghabiskan rata-rata 2 jam/hari mencari informasi. Knowledge loss terjadi saat karyawan senior resign.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300"><strong>Enterprise AI Knowledge Base</strong> dengan unified search across all document sources. Menggabungkan RAG (untuk unstructured documents) + <strong>Knowledge Graph</strong> (untuk structured relationships antar komponen, mesin, prosedur). Karyawan dapat bertanya dalam bahasa natural: "Apa prosedur maintenance mesin CNC-200?" dan mendapatkan jawaban akurat dengan referensi SOP.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Azure OpenAI GPT-4o, Azure AI Search, Neo4j (Knowledge Graph), SharePoint API, Azure Blob Storage, Power Apps frontend, Azure AD (SSO).</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Info Search Time</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">2 jam/hari</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">10 menit/hari</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Knowledge Retention</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Lost on resignation</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">100% preserved</td></tr>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Productivity Gain</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">-</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">+12% overall</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 8 -->
+<section id="cs8" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">8</div>
+    <div>
+      <h2 class="text-xl font-bold">AI RAG System</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Healthcare — MedInfo Hospital Group</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">MedInfo Hospital Group memiliki 10 rumah sakit dengan ribuan jurnal medis, clinical guidelines, dan patient records. Dokter kesulitan mengakses informasi terkini saat konsultasi pasien. Turnover perawat tinggi dan training memakan waktu 2 bulan.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Medical RAG System dengan <strong>hybrid retrieval</strong>: dense retrieval (embedding) + sparse retrieval (BM25) + <strong>re-ranking dengan cross-encoder</strong>. Sistem menganalisis jurnal medis, clinical guidelines WHO/Kemenkes, dan drug interaction database. Dilengkapi <strong>confidence scoring</strong> — jika confidence < 80%, sistem merekomendasikan konsultasi dengan spesialis.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">GPT-4o (HIPAA-compliant via Azure), MedCPT Embedding (domain-specific), Qdrant, Elasticsearch (BM25), Cross-Encoder Reranker, FastAPI, React, Azure Health Data Services.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Clinical Query Accuracy</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">N/A</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">93% (validated by doctors)</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Nurse Training Time</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">2 bulan</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">3 minggu</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 9 -->
+<section id="cs9" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">9</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Agent (Vendor Management)</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Supply Chain — PT. Logistik Integrasi</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">PT. Logistik Integrasi mengelola 500+ vendor dengan proses administrasi yang kompleks: vendor registration, performance evaluation, contract management, dan invoice processing. Tim procurement 15 orang kewalahan. Human error menyebabkan keterlambatan pembayaran dan dispute dengan vendor.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300"><strong>Multi-Agent AI System</strong> untuk vendor management: (1) Vendor Support Agent — menjawab pertanyaan vendor 24/7, (2) Performance Evaluation Agent — otomatis menghitung skor vendor berdasarkan kriteria, (3) Contract Analysis Agent — mengekstrak klausul penting dan mengingatkan renewal, (4) Invoice Processing Agent — verifikasi dan approval invoice. Semua Agent terkoordinasi oleh Orchestrator Agent.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">OpenAI Agents SDK, LangGraph, GPT-4o, MCP Server (custom tools for vendor DB, invoice system, contract repository), PostgreSQL, Laravel, Docker + Kubernetes.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Vendor Query Response</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">8 jam (business hours)</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">< 1 menit (24/7)</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Invoice Processing</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">3 hari avg</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">4 jam avg</td></tr>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Contract Renewal Missed</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">~8% per year</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY 10 -->
+<section id="cs10" class="case-study-card">
+  <div class="flex items-start gap-4 mb-4">
+    <div class="case-number">10</div>
+    <div>
+      <h2 class="text-xl font-bold">AI Workflow Automation</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Insurance — PT. Asuransi Sejahtera</p>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Latar Belakang</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Perusahaan asuransi dengan proses klaim manual yang panjang: dokumen masuk → verifikasi → penilaian → approval → pembayaran. Rata-rata waktu klaim 14 hari. 30% klaim ditolak karena dokumen tidak lengkap (dan customer tidak diberi tahu dengan jelas). Biaya operasional klaim tinggi karena butuh banyak tenaga verifikator.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Solusi AI</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300"><strong>End-to-end AI Workflow Automation:</strong> (1) Document Intelligence — OCR + AI mengekstrak data dari dokumen klaim yang di-upload (foto, PDF), (2) Completeness Check — AI memverifikasi kelengkapan dokumen dan memberi tahu customer apa yang kurang secara real-time, (3) Risk Assessment — AI menganalisis risiko klaim berdasarkan historical data, (4) Auto-Approval — klaim low-risk di-approve otomatis; high-risk di-eskalasi ke human adjuster dengan AI-generated summary.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Teknologi</h3>
+      <p class="text-sm text-gray-700 dark:text-gray-300">Azure Document Intelligence (OCR), GPT-4o (analysis + reasoning), LangGraph (workflow orchestration), Python FastAPI, PostgreSQL, Azure Service Bus (message queue), Power Apps frontend, Azure AD B2C.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2">Hasil</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="bg-gray-100 dark:bg-gray-800"><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Metric</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sebelum</th><th class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-left">Sesudah</th></tr></thead>
+        <tbody>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Claim Processing Time</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">14 hari</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">2 hari (low-risk: 4 jam)</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Rejection due to Incomplete Docs</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">30%</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">5%</td></tr>
+          <tr><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Operational Cost</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Baseline</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">-45%</td></tr>
+          <tr class="bg-gray-50 dark:bg-gray-800/50"><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">Customer NPS</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5">28</td><td class="border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-green-600 font-semibold">62</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="ringkasan" class="mb-12">
+<h2 class="text-2xl font-bold mb-4">Ringkasan Studi Kasus</h2>
+
+<div class="callout callout-best"><ul class="list-disc pl-5 space-y-2 text-sm">
+<li><strong>Pola Umum:</strong> Semua studi kasus menunjukkan kombinasi RAG + LLM + domain-specific optimization sebagai fondasi. Tidak ada solusi AI yang one-size-fits-all.</li>
+<li><strong>Key Success Factors:</strong> (1) Domain-specific chunking strategy, (2) High-quality knowledge base, (3) Human-in-the-loop untuk use case kritis, (4) Monitoring dan continuous improvement, (5) Executive buy-in.</li>
+<li><strong>ROI:</strong> Implementasi AI menghasilkan 40-80% reduksi waktu proses, 15-30% peningkatan customer satisfaction, dan 30-60% penghematan biaya operasional.</li>
+<li><strong>Technology Stack:</strong> GPT-4o dan Claude 3.5 Sonnet mendominasi sebagai LLM pilihan. Vector databases (Pinecone, Qdrant, Weaviate) menjadi backbone retrieval. LangChain/LangGraph untuk orchestration.</li>
+<li><strong>Pelajaran:</strong> Mulai dari use case kecil dengan ROI jelas, iterasi cepat, libatkan domain expert sejak awal, dan jangan underestimate pentingnya data preparation.</li>
+</ul></div>
+</section>
+
+<div class="mt-8 p-5 border border-gray-200 dark:border-gray-700 rounded-xl"><h4 class="font-semibold mb-2">📝 Quiz</h4><ol class="space-y-3 text-sm"><li><p class="font-medium">1. Apa pola arsitektur yang paling sering muncul di studi kasus?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Hanya menggunakan LLM tanpa tools</li><li>B. Kombinasi RAG + LLM + domain-specific customization</li><li>C. Hanya menggunakan rule-based system</li><li>D. Tidak ada pola yang konsisten</li></ul></li><li><p class="font-medium">2. Mengapa Human-in-the-Loop penting di use case seperti healthcare dan legal?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. AI selalu salah</li><li>B. Konsekuensi kesalahan sangat tinggi (nyawa, hukum); butuh verifikasi manusia</li><li>C. Biaya AI terlalu mahal</li><li>D. Regulasi melarang penggunaan AI</li></ul></li><li><p class="font-medium">3. Apa langkah pertama yang direkomendasikan untuk memulai proyek AI di organisasi?</p><ul class="list-[upper-alpha] pl-5 mt-1 space-y-0.5 text-gray-600 dark:text-gray-400"><li>A. Beli GPU paling mahal</li><li>B. Mulai dari use case kecil dengan ROI jelas, iterasi cepat, minimum viable product</li><li>C. Langsung bangun AGI</li><li>D. Ganti semua karyawan dengan AI</li></ul></li></ol></div>
+
+<div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+  <a href="bab-13.html" class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>BAB 13</a>
+  <a href="index.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">🏠 Kembali ke Cover<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+</div>
+</main>
+
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950"><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-gray-500 dark:text-gray-400"><div>&copy; 2026 Modul Pembelajaran Artificial Intelligence. Versi 1.0</div><div>Lisensi CC BY 4.0</div></div></div></footer>
+</div>
+</body>
+</html>
